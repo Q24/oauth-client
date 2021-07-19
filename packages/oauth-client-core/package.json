@@ -1,0 +1,60 @@
+{
+  "name": "@ilionx/oauth-client-core",
+  "version": "1.0.0-beta-1",
+  "description": "Core components for implementing Open ID Connect Implicit Flow",
+  "author": "ilionx",
+  "email": "kriemens@ilionx.com",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/Q24/hawaii-packages/tree/master/packages/oidc-implicit-core",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Q24/hawaii-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Q24/hawaii-packages/issues"
+  },
+  "keywords": [
+    "oidc",
+    "openid",
+    "oauth2",
+    "implicit",
+    "javascript",
+    "es6",
+    "wrapper",
+    "ng",
+    "es5",
+    "es2015"
+  ],
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "eslint": "^7.29.0",
+    "jest": "^27.0.6",
+    "microbundle": "^0.13.3",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.3",
+    "typedoc": "^0.21.2",
+    "typedoc-plugin-markdown": "^3.10.2",
+    "typescript": "^4.3.4"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "copyCleanHashFragment": "cp ./clean-hash-fragment.js dist/clean-hash-fragment.js",
+    "build": "npm run bundle && npm run copyCleanHashFragment && npm run typedoc",
+    "bundle": "rm -rf dist && microbundle --name OAuthClientCore --external none",
+    "dev": "microbundle watch --name OAuthClientCore --external none -o /Users/meesvandongen/conformance-suite/src/main/resources/static/oidc-test-client/dist",
+    "typedoc": "rm -rf docs && typedoc ./src/index.ts",
+    "lint": "prettier ./src/**/*.ts --write",
+    "test": "npx jest --watch"
+  },
+  "source": "./src/index.ts",
+  "main": "dist/index.js",
+  "exports": "./dist/index.modern.js",
+  "module": "dist/index.module.js",
+  "unpkg": "dist/index.umd.js",
+  "typings": "./dist/index.d.ts",
+  "dependencies": {
+    "jsrsasign-reduced": "^8.0.15"
+  }
+}
