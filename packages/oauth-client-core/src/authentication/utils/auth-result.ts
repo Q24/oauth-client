@@ -24,7 +24,7 @@ export function deleteStoredAuthResults(
     deleteStoredAuthResultsFiltered(authResultFilter);
   } else {
     LogUtil.debug(`Removed Tokens from session storage`);
-    StorageUtil.remove("-token");
+    StorageUtil.remove("-authResult");
   }
 }
 

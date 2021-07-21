@@ -1,9 +1,9 @@
-import { OidcConfig } from "./model/config.model";
+import { OAuthClientConfig } from "./model/config.model";
 
-export let config: OidcConfig = {} as OidcConfig;
+export let config: OAuthClientConfig = {} as OAuthClientConfig;
 
 export function configure(
-  configuration: ((configuration: OidcConfig) => OidcConfig) | OidcConfig,
+  configuration: ((configuration: OAuthClientConfig) => OAuthClientConfig) | OAuthClientConfig,
 ): void {
   if (typeof configuration === "function") {
     config = configuration(config);

@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, Observer } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Observable, Observer } from "rxjs";
 import {
-  OidcConfig,
+  OAuthClientConfig,
   config,
   configure,
   AuthResult,
   CsrfResult,
   getCsrfResult,
-  getStoredCsrfResult,
+  getStoredCsrfToken,
   getStoredAuthResult,
   getAuthHeader,
   getIdTokenHint,
@@ -17,19 +17,19 @@ import {
   isSessionAlive,
   obtainSession,
   silentRefresh,
-  silentLogout
-} from '@ilionx/oauth-client-core';
+  silentLogout,
+} from "@ilionx/oauth-client-core";
 
 /**
  * Open ID Connect Implicit Flow Service for Angular
  */
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class OidcService {
-  get config(): OidcConfig {
+  get config(): OAuthClientConfig {
     return config;
   }
 
-  set config(value: OidcConfig) {
+  set config(value: OAuthClientConfig) {
     configure(value);
   }
 
@@ -43,7 +43,7 @@ export class OidcService {
   }
 
   getStoredCsrfToken(): string | null {
-    return getStoredCsrfResult();
+    return getStoredCsrfToken();
   }
 
   getStoredAuthResult(): AuthResult | null {
@@ -78,9 +78,9 @@ export class OidcService {
             observer.next(status);
             observer.complete();
           },
-          (err: HttpErrorResponse) => observer.error(err),
+          (err: HttpErrorResponse) => observer.error(err)
         );
-      },
+      }
     );
   }
 
@@ -94,7 +94,7 @@ export class OidcService {
         () => {
           observer.next(false);
           observer.complete();
-        },
+        }
       );
     });
   }
@@ -109,7 +109,7 @@ export class OidcService {
         () => {
           observer.next(false);
           observer.complete();
-        },
+        }
       );
     });
   }
@@ -124,7 +124,7 @@ export class OidcService {
         () => {
           observer.next(false);
           observer.complete();
-        },
+        }
       );
     });
   }

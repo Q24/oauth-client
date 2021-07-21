@@ -2,7 +2,7 @@ export {
   AUTHORIZE_ERRORS,
   AuthorizeErrors,
   CsrfResult,
-  OidcConfig,
+  OAuthClientConfig,
   AuthResult,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 export * from "./oidc-service.service";

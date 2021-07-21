@@ -3,7 +3,7 @@ import { AuthResultFilter } from "../../auth-result-filter/model/auth-result-fil
 /**
  * Config Object for OIDC Service
  */
-export interface OidcConfig {
+export interface OAuthClientConfig {
   /**
    * Set the ID of your client
    */
