@@ -11,7 +11,6 @@ export function initConfig() {
     csrf_token_endpoint: "csrf_token_endpoint",
     validate_token_endpoint: "validate_token_endpoint",
     is_session_alive_endpoint: "is_session_alive_endpoint",
-    logout_endpoint: "logout_endpoint",
     issuer: "",
   };
 }

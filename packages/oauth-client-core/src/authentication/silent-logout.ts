@@ -4,6 +4,11 @@ import { LogUtil } from "../utils/logUtil";
 import { getIdTokenHint } from "./utils/id-token-hint";
 import { destroyIframe } from "./utils/iframe";
 
+interface SilentLogoutConfig {
+  logout_url: string;
+  post_logout_redirect_uri: string;
+}
+
 const silentLogoutStore: {
   [iFrameId: string]: Promise<void>;
 } = {};
@@ -26,7 +31,24 @@ const silentLogoutStore: {
  * function. Defaults to `silent_logout_uri` from the config.
  * @returns The promise resolves if the logout was successful, otherwise it will reject.
  */
-export function silentLogout(url = config.silent_logout_uri): Promise<void> {
+export function silentLogout(
+  silentLogoutConfig: SilentLogoutConfig,
+): Promise<void> {
+  const logout_url = silentLogoutConfig.logout_url || config.silent_logout_uri;
+  const post_logout_redirect_uri =
+    silentLogoutConfig.post_logout_redirect_uri ||
+    config.post_logout_redirect_uri;
+
+  if (!logout_url || !post_logout_redirect_uri) {
+    LogUtil.error(
+      "the logout URL or post logout redirect URL must be defined",
+      "logout_url",
+      logout_url,
+      "post_logout_redirect_uri",
+      post_logout_redirect_uri,
+    );
+    throw Error("logout_url or post_logout_redirect_uri undefined");
+  }
 
   LogUtil.debug("Silent logout by URL started");
   const iframeId = `silentLogoutIframe`;
@@ -42,7 +64,7 @@ export function silentLogout(url = config.silent_logout_uri): Promise<void> {
 
     // Store CSRF token of the new session to storage. We'll need it for logout and authenticate
     (async () => {
-      let iframeUrl = `${url}?id_token_hint=${getIdTokenHint()}`;
+      let iframeUrl = `${logout_url}?id_token_hint=${getIdTokenHint()}`;
       if (config.csrf_token_endpoint) {
         try {
           const csrfResult = await getCsrfResult();
@@ -71,7 +93,7 @@ export function silentLogout(url = config.silent_logout_uri): Promise<void> {
           LogUtil.debug(
             "Silent logout failed after 5000",
             iFrame.contentWindow?.location.href,
-            config.post_logout_redirect_uri,
+            post_logout_redirect_uri,
           );
 
           clearInterval(intervalTimer);
@@ -81,11 +103,11 @@ export function silentLogout(url = config.silent_logout_uri): Promise<void> {
         }
 
         const currentIframeURL = iFrame.contentWindow!.location.href;
-        if (currentIframeURL.indexOf(config.post_logout_redirect_uri) === 0) {
+        if (currentIframeURL.indexOf(post_logout_redirect_uri) === 0) {
           LogUtil.debug(
             "Silent logout successful",
             iFrame.contentWindow!.location.href,
-            config.post_logout_redirect_uri,
+            post_logout_redirect_uri,
           );
 
           clearInterval(intervalTimer);

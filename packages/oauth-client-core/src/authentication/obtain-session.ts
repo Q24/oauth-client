@@ -188,29 +188,32 @@ function clearHashFragmentFromUrl() {
  * If not authenticated, it will redirect to the login page.
  */
 function authorizeRedirect(): void {
+  const urlParams = getURLParameters();
+  if (urlParams["error"]) {
+    // Error in authorize redirect
+    LogUtil.error("Redirecting to Authorisation failed");
+    LogUtil.debug(`Error in authorize redirect: ${urlParams["error"]}`);
+    throw Error('redirect_failed')
+  }
+
   // Clean up Storage before we begin
   cleanSessionStorage();
 
   const scopes = transformScopesStringToArray(config.scope);
   const authorizeParams = getAuthorizeParams(scopes);
-  const urlParams = getURLParameters();
 
   // All clear ->
   // Do the authorize redirect
-  if (!urlParams["error"]) {
-    LogUtil.debug(
-      "Do authorisation redirect to SSO with options:",
-      authorizeParams,
-    );
-    assertProviderMetadata(state.providerMetadata);
-    window.location.href = `${
-      state.providerMetadata.authorization_endpoint
-    }?${toUrlParameterString(authorizeParams)}`;
-  } else {
-    // Error in authorize redirect
-    LogUtil.error("Redirecting to Authorisation failed");
-    LogUtil.debug(`Error in authorize redirect: ${urlParams["error"]}`);
-  }
+  LogUtil.debug(
+    "Do authorisation redirect to SSO with options:",
+    authorizeParams,
+  );
+  assertProviderMetadata(state.providerMetadata);
+  window.location.href = `${
+    state.providerMetadata.authorization_endpoint
+  }?${toUrlParameterString(authorizeParams)}`;
 }
 
-
+// 1 flow call
+// op basis van config gaat die of implicit flow doen of code flow.
+// de shared functionality tussen de flows moet eigenlijk in 1 functie als dat mogelijk is.

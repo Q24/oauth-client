@@ -33,7 +33,7 @@ export interface OAuthClientConfig {
   /**
    * The URL you want to be redirected to after logging out
    */
-  post_logout_redirect_uri: string;
+  post_logout_redirect_uri?: string;
 
   /**
    * Define the scopes you want access to. Each scope is separated by space.
@@ -55,11 +55,6 @@ export interface OAuthClientConfig {
    * Endpoint for checking if a session is still used somewhere
    */
   is_session_alive_endpoint?: string;
-
-  /**
-   * `POST` to this endpoint in the logout form
-   */
-  logout_endpoint: string;
 
   /**
    * Verbose logging of inner workings of the package.

@@ -2,7 +2,7 @@ import { config } from "../configuration/config.service";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { state } from "../state/state";
 import { GeneratorUtil } from "../utils/generatorUtil";
-import { ToUrlParametersPayload, toUrlParameterString } from "../utils/urlUtil";
+import { toUrlParameterString } from "../utils/urlUtil";
 import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
 import {
