@@ -1,15 +1,8 @@
 import { config } from "../configuration/config.service";
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { state } from "../state/state";
 import { GeneratorUtil } from "../utils/generatorUtil";
-import { toUrlParameterString } from "../utils/urlUtil";
 import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
-import {
-  OAuthCodeFlowAuthorizeParameters,
-} from "./model/authorization-request.model";
-import { timeout } from "../utils/timeout";
-import { AuthResult } from "../jwt/index";
+import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
 
 export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthorizeParameters {
   const state = GeneratorUtil.generateState();
@@ -34,19 +27,4 @@ export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthori
   }
 
   return oAuthCodeFlowAuthorizeParameters;
-}
-
-
-export async function codeFlowAuthorize<
-  T extends {
-    [key in keyof T]: any;
-  },
-  >(urlParameters: T): Promise<AuthResult> {
-  assertProviderMetadata(state.providerMetadata);
-  const urlParamsString = toUrlParameterString(urlParameters);
-  window.location.href = `${state.providerMetadata.authorization_endpoint}?${urlParamsString}`;
-
-  // Send Authorization code and code verifier to token endpoint -> server returns access token
-  await timeout(2000);
-  throw Error("authorize_redirect_timeout");
 }

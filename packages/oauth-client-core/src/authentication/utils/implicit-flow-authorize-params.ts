@@ -14,7 +14,7 @@ import { config } from "../../configuration/config.service";
  * the user will not be asked with any configuration.
  * @returns the parameters to use for an authorise request
  */
-export function getAuthorizeParams(
+export function createImplicitFlowAuthorizeRequestParameters(
   scopes: string[],
   promptNone = false,
 ): OpenIdImplicitAuthorizationParameters {

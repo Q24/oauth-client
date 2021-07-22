@@ -1,3 +1,4 @@
+import { authorize } from "../common/authorize";
 import { config } from "../configuration/config.service";
 import { getCsrfResult, storeCsrfToken } from "../csrf/csrf";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
@@ -15,9 +16,10 @@ import {
   getURLParameters,
   hashFragmentToAuthResult,
 } from "../utils/urlUtil";
+import { OpenIdImplicitAuthorizationParameters } from "./model/implicit-request-parameters.model";
 import { silentRefresh } from "./silent-refresh";
 import { getStoredAuthResult } from "./utils/auth-result";
-import { getAuthorizeParams } from "./utils/authorize-params";
+import { createImplicitFlowAuthorizeRequestParameters } from "./utils/implicit-flow-authorize-params";
 import { validateAndStoreAuthResult } from "./utils/validate-store-auth-result";
 
 /**
@@ -118,9 +120,7 @@ export async function obtainSession(
   } else {
     // 5 --- No token in URL or Storage, so we need to get one from SSO
     LogUtil.debug("No valid token in Storage or URL, Authorize Redirect!");
-    authorizeRedirect();
-    await timeout(2000);
-    throw Error("authorize_redirect_timeout");
+    return authorizeRedirect();
   }
 }
 
@@ -180,6 +180,16 @@ function clearHashFragmentFromUrl() {
   );
 }
 
+function ensureNoErrorInParameters() {
+  const urlParams = getURLParameters();
+  if (urlParams["error"]) {
+    // Error in authorize redirect
+    LogUtil.error("Redirecting to Authorisation failed");
+    LogUtil.debug(`Error in authorize redirect: ${urlParams["error"]}`);
+    throw Error("redirect_failed");
+  }
+}
+
 /**
  * HTTP Redirect to the Authorisation.
  *
@@ -187,20 +197,13 @@ function clearHashFragmentFromUrl() {
  * The Authorisation checks if there is a valid session. If so, it returns with token hash.
  * If not authenticated, it will redirect to the login page.
  */
-function authorizeRedirect(): void {
-  const urlParams = getURLParameters();
-  if (urlParams["error"]) {
-    // Error in authorize redirect
-    LogUtil.error("Redirecting to Authorisation failed");
-    LogUtil.debug(`Error in authorize redirect: ${urlParams["error"]}`);
-    throw Error('redirect_failed')
-  }
+async function authorizeRedirect(): Promise<AuthResult> {
+  ensureNoErrorInParameters();
 
-  // Clean up Storage before we begin
   cleanSessionStorage();
 
   const scopes = transformScopesStringToArray(config.scope);
-  const authorizeParams = getAuthorizeParams(scopes);
+  const authorizeParams = createImplicitFlowAuthorizeRequestParameters(scopes);
 
   // All clear ->
   // Do the authorize redirect
@@ -208,10 +211,8 @@ function authorizeRedirect(): void {
     "Do authorisation redirect to SSO with options:",
     authorizeParams,
   );
-  assertProviderMetadata(state.providerMetadata);
-  window.location.href = `${
-    state.providerMetadata.authorization_endpoint
-  }?${toUrlParameterString(authorizeParams)}`;
+
+  return authorize(authorizeParams);
 }
 
 // 1 flow call

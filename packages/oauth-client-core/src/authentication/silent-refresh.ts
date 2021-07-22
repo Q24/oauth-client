@@ -13,7 +13,7 @@ import {
   getURLParameters,
   hashFragmentToAuthResult,
 } from "../utils/urlUtil";
-import { getAuthorizeParams } from "./utils/authorize-params";
+import { createImplicitFlowAuthorizeRequestParameters } from "./utils/implicit-flow-authorize-params";
 import { destroyIframe } from "./utils/iframe";
 import { validateAndStoreAuthResult } from "./utils/validate-store-auth-result";
 
@@ -70,7 +70,7 @@ export async function silentRefresh(
     iFrame.style.display = "none";
 
     const promptNone = true;
-    const authorizeParams = getAuthorizeParams(scopes, promptNone);
+    const authorizeParams = createImplicitFlowAuthorizeRequestParameters(scopes, promptNone);
 
     // Append the iFrame, and set the source if the iFrame to the Authorize redirect, as long as there's no error
     // For older FireFox and IE versions first append the iFrame and then set its source attribute.
