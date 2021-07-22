@@ -7,16 +7,23 @@ import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
 import {
   OAuthCodeFlowAuthorizeParameters,
-  OAuthPKCEAuthorizeParameters,
 } from "./model/authorization-request.model";
+import { timeout } from "../utils/timeout";
+import { AuthResult } from "../jwt/index";
 
 export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthorizeParameters {
   const state = GeneratorUtil.generateState();
+  // Create code verifier
+  const code_verifier = storeAndGetNewCodeVerifier();
+  // Encode code verifier to get code challenge
+  const code_challenge = createCodeChallenge(code_verifier);
 
   const oAuthCodeFlowAuthorizeParameters: OAuthCodeFlowAuthorizeParameters = {
     client_id: config.client_id,
     response_type: "code",
     state,
+    code_challenge: code_challenge,
+    code_challenge_method: "S256",
   };
 
   if (config.redirect_uri) {
@@ -29,27 +36,17 @@ export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthori
   return oAuthCodeFlowAuthorizeParameters;
 }
 
-export function withPkceAuthorizeRequestParameters(
-  oAuthCodeFlowAuthorizeParameters: OAuthCodeFlowAuthorizeParameters,
-): OAuthPKCEAuthorizeParameters {
-  // Create code verifier
-  const code_verifier = storeAndGetNewCodeVerifier();
-  // Encode code verifier to get code challenge
-  const code_challenge = createCodeChallenge(code_verifier);
 
-  return {
-    ...oAuthCodeFlowAuthorizeParameters,
-    code_challenge: code_challenge,
-    code_challenge_method: "S256",
-  };
-}
-
-export function codeFlowAuthorize<
+export async function codeFlowAuthorize<
   T extends {
     [key in keyof T]: any;
   },
->(urlParameters: T): void {
+  >(urlParameters: T): Promise<AuthResult> {
   assertProviderMetadata(state.providerMetadata);
   const urlParamsString = toUrlParameterString(urlParameters);
   window.location.href = `${state.providerMetadata.authorization_endpoint}?${urlParamsString}`;
+
+  // Send Authorization code and code verifier to token endpoint -> server returns access token
+  await timeout(2000);
+  throw Error("authorize_redirect_timeout");
 }

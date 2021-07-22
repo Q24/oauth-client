@@ -63,12 +63,12 @@ function storeAuthResults(authResults: AuthResult[]): void {
  * If something was removed from the Array, cleanup the session storage by re-saving the cleaned auth results array.
  *
  * @returns the cleaned array.
- */
-function cleanExpiredAuthResults(
+*/
+function filterUnexpiredAuthResults(
   storedAuthResults: AuthResult[],
+  time: number,
 ): AuthResult[] {
-  const time = epochSeconds();
-  const cleanAuthResults = storedAuthResults.filter(
+  return storedAuthResults.filter(
     (authResult: AuthResult) => {
       // Auth results which don't expire should always be valid.
       if (!authResult.expires) {
@@ -77,13 +77,6 @@ function cleanExpiredAuthResults(
       return authResult.expires && authResult.expires > time + 5;
     },
   );
-
-  if (storedAuthResults.length > cleanAuthResults.length) {
-    LogUtil.debug("Updated auth results storage after clean.");
-    storeAuthResults(cleanAuthResults);
-  }
-
-  return cleanAuthResults;
 }
 
 /**
@@ -93,25 +86,26 @@ function cleanExpiredAuthResults(
  * @returns A valid Token or `null` if no token has been found.
  */
 export function getStoredAuthResult(
-  authResultFilters?: AuthResultFilter[],
+  extraAuthResultFilters?: AuthResultFilter[],
 ): AuthResult | null {
   // Get the tokens from storage, and make sure they're still valid
-  const tokens = getStoredAuthResults();
+  const authResults = getStoredAuthResults();
   // TODO: only remove access token; don't remove refresh token..
-  const tokensUnexpired = cleanExpiredAuthResults(tokens);
+  const currentTime = epochSeconds();
+  const unexpiredAuthResults = filterUnexpiredAuthResults(authResults, currentTime);
 
-  const tokensFiltered = filterAuthResults(
-    tokensUnexpired,
-    getAllAuthResultFilters(authResultFilters),
+  const applicableAuthResults = filterAuthResults(
+    unexpiredAuthResults,
+    getAllAuthResultFilters(extraAuthResultFilters),
   );
 
   // If there's no valid token return null
-  if (tokensFiltered.length < 1) {
+  if (applicableAuthResults.length < 1) {
     LogUtil.debug("No valid token found in storage");
     return null;
   }
   // Return the first valid token
-  return tokensFiltered[0];
+  return applicableAuthResults[0];
 }
 
 /**
@@ -138,7 +132,8 @@ export function storeAuthResult(authResult: AuthResult): void {
     : undefined;
   storedAuthResults.unshift(authResult);
 
-  const tokensCleaned = cleanExpiredAuthResults(storedAuthResults);
+  const currentTime = epochSeconds();
+  const tokensCleaned = filterUnexpiredAuthResults(storedAuthResults, currentTime);
 
   storeAuthResults(tokensCleaned);
 }

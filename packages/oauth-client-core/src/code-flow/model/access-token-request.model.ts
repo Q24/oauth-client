@@ -17,9 +17,6 @@ export interface OAuthCodeFlowAccessTokenParameters {
    * as described in Section 3.2.1.
    */
   client_id: string;
-}
-
-export interface OAuthCodeFlowPKCEAccessTokenParameters extends OAuthCodeFlowAccessTokenParameters {
   /**
    * Code verifier
    */

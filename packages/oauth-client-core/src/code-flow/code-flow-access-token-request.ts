@@ -5,7 +5,6 @@ import { toUrlParameterString } from "../utils/urlUtil";
 import { getStoredCodeVerifier } from "./code-verifier";
 import {
   OAuthCodeFlowAccessTokenParameters,
-  OAuthCodeFlowPKCEAccessTokenParameters,
 } from "./model/access-token-request.model";
 import { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
 
@@ -13,29 +12,18 @@ interface CreateCodeFlowAcccessTokenRequestParametersConfig {
   code: string;
 }
 
-export function createCodeFlowAcccessTokenRequestParameters({
+export function createCodeFlowAccessTokenRequestParameters({
   code,
 }: CreateCodeFlowAcccessTokenRequestParametersConfig): OAuthCodeFlowAccessTokenParameters {
+  const code_verifier = getStoredCodeVerifier();
+  if (!code_verifier) {
+    throw new Error("code_verifier not found");
+  }
   return {
     client_id: config.client_id,
     code,
     grant_type: "authorization_code",
     redirect_uri: config.redirect_uri,
-  };
-}
-
-export function withPkceAccessTokenRequestParameters(
-  oAuthCodeFlowAccessTokenParameters: OAuthCodeFlowAccessTokenParameters,
-): OAuthCodeFlowPKCEAccessTokenParameters {
-  // Create code verifier
-  const code_verifier = getStoredCodeVerifier();
-
-  if (!code_verifier) {
-    throw new Error("code_verifier not found");
-  }
-
-  return {
-    ...oAuthCodeFlowAccessTokenParameters,
     code_verifier,
   };
 }
@@ -43,7 +31,6 @@ export function withPkceAccessTokenRequestParameters(
 export async function accessTokenRequest(
   requestParameters:
     | OAuthCodeFlowAccessTokenParameters
-    | OAuthCodeFlowPKCEAccessTokenParameters
     | OAuthRefreshTokenParameters,
 ): Promise<AuthResult> {
   const urlParamsString = toUrlParameterString(requestParameters);
