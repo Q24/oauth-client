@@ -1,7 +1,9 @@
 import { discovery } from "../discovery/discovery";
 import { AuthResult } from "../jwt/model/auth-result.model";
 import { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
-import { silentRefresh } from "./silent-refresh";
+import { silentRefresh } from "../implicit-flow/implicit-flow-refresh";
+import { isCodeFlow } from "../code-flow/is-code-flow";
+import { codeFlowRefreshAccessToken } from "../code-flow/code-flow-refresh";
 
 /**
  * Check if the token expires in the next *x* seconds.
@@ -14,26 +16,37 @@ import { silentRefresh } from "./silent-refresh";
  *
  * @param authResult the token to check
  * @param tokenValidationOptions extra validations for the token
- * @returns A promise. May throw an error if the token we got from the refresh
- * is not valid.
+ * @returns A promise.
+ *
+ * @throws May throw an error if the token we got from the refresh is not valid,
+ * or if the refresh did not succeed.
  */
 export async function lazyRefresh(
   authResult: AuthResult,
   tokenValidationOptions?: AuthValidationOptions & {
     almostExpiredThreshold?: number;
   },
-): Promise<void> {
+): Promise<boolean> {
   await discovery();
   if (
     almostExpired(authResult, tokenValidationOptions?.almostExpiredThreshold)
   ) {
-    const silentRefreshToken = await silentRefresh(
-      tokenValidationOptions,
-    );
+    const silentRefreshToken = await _refresh(tokenValidationOptions);
     if (!silentRefreshToken) {
       throw Error("invalid_token");
     }
+    return true;
   }
+  return false;
+}
+
+async function _refresh(
+  tokenValidationOptions?: AuthValidationOptions,
+): Promise<AuthResult | null> {
+  if (isCodeFlow()) {
+    return codeFlowRefreshAccessToken();
+  }
+  return silentRefresh(tokenValidationOptions);
 }
 
 function almostExpired(authResult: AuthResult, threshold?: number) {

@@ -5,7 +5,6 @@ const createSessionIdStorageId = () => `${config.client_id}-session-id`;
 
 /**
  * Get the saved session ID string from storage
- * @returns {string}
  */
 export function getSessionId(): string | null {
   return StorageUtil.read(createSessionIdStorageId());
@@ -13,7 +12,6 @@ export function getSessionId(): string | null {
 
 /**
  * Saves the session ID to sessionStorage
- * @param {string} sessionId
  */
 export function saveSessionId(sessionId: string): void {
   StorageUtil.store(createSessionIdStorageId(), sessionId);

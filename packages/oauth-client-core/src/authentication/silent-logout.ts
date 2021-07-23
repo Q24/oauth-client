@@ -1,8 +1,8 @@
 import { config } from "../configuration/config.service";
 import { getCsrfResult } from "../csrf/csrf";
 import { LogUtil } from "../utils/logUtil";
-import { getIdTokenHint } from "./utils/id-token-hint";
-import { destroyIframe } from "./utils/iframe";
+import { getIdTokenHint } from "../open-id/id-token-hint";
+import { destroyIframe } from "../utils/iframe";
 
 interface SilentLogoutConfig {
   logout_url: string;

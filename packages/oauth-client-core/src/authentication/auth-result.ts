@@ -1,12 +1,13 @@
-import { getAllAuthResultFilters } from "../../auth-result-filter/all-filters";
-import { filterAuthResults } from "../../auth-result-filter/filter-auth-results";
-import { AuthResultFilter } from "../../auth-result-filter/model/auth-result-filter.model";
-import { config } from "../../configuration/config.service";
-import { AuthResult } from "../../jwt/model/auth-result.model";
-import { epochSeconds } from "../../utils/epoch-seconds";
-import { LogUtil } from "../../utils/logUtil";
-import { StorageUtil } from "../../utils/storageUtil";
-import { storeIdToken } from "./id-token-hint";
+import { getAllAuthResultFilters } from "../auth-result-filter/all-filters";
+import { filterAuthResults } from "../auth-result-filter/filter-auth-results";
+import { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
+import { config } from "../configuration/config.service";
+import { AuthResult } from "../jwt/model/auth-result.model";
+import { epochSeconds } from "../utils/epoch-seconds";
+import { LogUtil } from "../utils/logUtil";
+import { StorageUtil } from "../utils/storageUtil";
+import { storeIdToken } from "../open-id/id-token-hint";
+import { storeRefreshToken } from "../code-flow/refresh-token";
 
 /**
  * Deletes all the auth results from the storage. If authResultFilter is passed
@@ -28,7 +29,9 @@ export function deleteStoredAuthResults(
   }
 }
 
-function deleteStoredAuthResultsFiltered(authResultFilter: AuthResultFilter): void {
+function deleteStoredAuthResultsFiltered(
+  authResultFilter: AuthResultFilter,
+): void {
   const allAuthResults = getStoredAuthResults();
   const authResultsToStore = allAuthResults.filter(authResultFilter);
   storeAuthResults(authResultsToStore);
@@ -63,20 +66,18 @@ function storeAuthResults(authResults: AuthResult[]): void {
  * If something was removed from the Array, cleanup the session storage by re-saving the cleaned auth results array.
  *
  * @returns the cleaned array.
-*/
+ */
 function filterUnexpiredAuthResults(
   storedAuthResults: AuthResult[],
   time: number,
 ): AuthResult[] {
-  return storedAuthResults.filter(
-    (authResult: AuthResult) => {
-      // Auth results which don't expire should always be valid.
-      if (!authResult.expires) {
-        return true;
-      }
-      return authResult.expires && authResult.expires > time + 5;
-    },
-  );
+  return storedAuthResults.filter((authResult: AuthResult) => {
+    // Auth results which don't expire should always be valid.
+    if (!authResult.expires) {
+      return true;
+    }
+    return authResult.expires && authResult.expires > time + 5;
+  });
 }
 
 /**
@@ -90,9 +91,11 @@ export function getStoredAuthResult(
 ): AuthResult | null {
   // Get the tokens from storage, and make sure they're still valid
   const authResults = getStoredAuthResults();
-  // TODO: only remove access token; don't remove refresh token..
   const currentTime = epochSeconds();
-  const unexpiredAuthResults = filterUnexpiredAuthResults(authResults, currentTime);
+  const unexpiredAuthResults = filterUnexpiredAuthResults(
+    authResults,
+    currentTime,
+  );
 
   const applicableAuthResults = filterAuthResults(
     unexpiredAuthResults,
@@ -121,10 +124,14 @@ export function storeAuthResult(authResult: AuthResult): void {
   LogUtil.debug("storing auth result");
   const storedAuthResults = getStoredAuthResults();
 
-  // TODO: change if not using openid.
   if (authResult.id_token) {
     LogUtil.debug("Auth result has id token, storing it");
     storeIdToken(authResult.id_token);
+  }
+
+  if (authResult.refresh_token) {
+    LogUtil.debug("Auth result has refresh token, storing it");
+    storeRefreshToken(authResult.refresh_token);
   }
 
   authResult.expires = authResult.expires_in
@@ -133,7 +140,26 @@ export function storeAuthResult(authResult: AuthResult): void {
   storedAuthResults.unshift(authResult);
 
   const currentTime = epochSeconds();
-  const tokensCleaned = filterUnexpiredAuthResults(storedAuthResults, currentTime);
+  const tokensCleaned = filterUnexpiredAuthResults(
+    storedAuthResults,
+    currentTime,
+  );
 
   storeAuthResults(tokensCleaned);
+}
+
+/**
+ * checks if an object is an auth result.
+ *
+ * @param potentialAuthResult an object
+ * @returns whether or not an object is an auth result
+ */
+export function isAuthResult(
+  potentialAuthResult: Partial<AuthResult>,
+): potentialAuthResult is AuthResult {
+  if (!potentialAuthResult.id_token || !potentialAuthResult.state) {
+    return false;
+  }
+
+  return true;
 }

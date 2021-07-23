@@ -47,7 +47,6 @@ export interface AuthResult {
   session_upgrade_token?: string;
 
   /**
-   * TODO: separate this into new auth result.
    * Only for code flow.
    */
   refresh_token?: string;

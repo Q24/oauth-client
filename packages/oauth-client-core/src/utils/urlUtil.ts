@@ -1,3 +1,4 @@
+import { isAuthResult } from "../authentication/auth-result";
 import { AuthResult } from "../jwt/model/auth-result.model";
 
 /**
@@ -74,15 +75,6 @@ export function toUrlParameterString<
   return params.join("&");
 }
 
-function isAuthResult(
-  potentialAuthResult: Partial<AuthResult>,
-): potentialAuthResult is AuthResult {
-  if (!potentialAuthResult.id_token || !potentialAuthResult.state) {
-    return false;
-  }
-
-  return true;
-}
 
 /**
  *

@@ -1,5 +1,5 @@
-import { config } from "../../configuration/config.service";
-import { StorageUtil } from "../../utils/storageUtil";
+import { config } from "../configuration/config.service";
+import { StorageUtil } from "../utils/storageUtil";
 
 function createIdTokenHintKey(): string {
   return `${config.client_id}-id-token-hint`;

@@ -6,7 +6,7 @@ export { getUserInfo } from "./user-info/getUserInfo";
 export { cleanHashFragment } from "./utils/urlUtil";
 export { LogUtil } from "./utils/logUtil";
 
-export * from "./authentication/index";
+export * from "./implicit-flow/index";
 export * from "./jwt/index";
 export * from "./csrf/index";
 export * from "./configuration/index";

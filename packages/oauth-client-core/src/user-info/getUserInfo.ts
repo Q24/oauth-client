@@ -3,9 +3,9 @@ import { parseIdToken } from "../jwt/parseJwt";
 import { LogUtil } from "../utils/logUtil";
 import { getStoredUserInfo, setStoredUserInfo } from "./user-info-storage";
 import { UserInfo } from "./UserInfo.model";
-import { getAuthHeader } from "../authentication/utils/auth-header";
-import { getStoredAuthResult } from "../authentication/utils/auth-result";
+import { getStoredAuthResult } from "../authentication/auth-result";
 import { state } from "../state/state";
+import { getAuthHeader } from "../authentication/auth-header";
 
 /**
  * Due to the possibility of token substitution attacks, the UserInfo Response

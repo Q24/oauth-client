@@ -1,9 +1,9 @@
-import { OpenIdImplicitAuthorizationParameters } from "../model/implicit-request-parameters.model";
-import { GeneratorUtil } from "../../utils/generatorUtil";
-import { LogUtil } from "../../utils/logUtil";
-import { getNonce, saveNonce } from "../../utils/nonceUtil";
-import { getState, saveState } from "../../utils/stateUtil";
-import { config } from "../../configuration/config.service";
+import { OpenIdImplicitAuthorizationParameters } from "./model/implicit-request-parameters.model";
+import { GeneratorUtil } from "../utils/generatorUtil";
+import { LogUtil } from "../utils/logUtil";
+import { getNonce, saveNonce } from "../utils/nonceUtil";
+import { getState, saveState } from "../utils/stateUtil";
+import { config } from "../configuration/config.service";
 
 /**
  * Gather the URL params for Authorize redirect method
