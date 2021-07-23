@@ -6,14 +6,12 @@ import { AuthValidationOptions } from "../jwt/model/auth-validation-options.mode
 import { state } from "../state/state";
 import { LogUtil } from "../utils/logUtil";
 import { transformScopesStringToArray } from "../utils/scopeUtil";
-import { StorageUtil } from "../utils/storageUtil";
 import {
   toUrlParameterString,
-  getURLParameters,
   hashFragmentToAuthResult,
 } from "../utils/urlUtil";
 import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
-import { destroyIframe, loadIframeUrl } from "../utils/iframe";
+import { loadIframeUrl } from "../utils/iframe";
 import {
   isValidNewAuthResult,
   isValidStoredAuthResult,
