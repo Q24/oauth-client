@@ -1,12 +1,12 @@
-import { config } from "../configuration/config.service";
-import { AuthResult } from "../jwt/index";
-import { state } from "../state/state";
-import { toUrlParameterString } from "../utils/urlUtil";
 import { getStoredCodeVerifier } from "./code-verifier";
 import {
   OAuthCodeFlowAccessTokenParameters,
 } from "./model/access-token-request.model";
 import { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
+import {config} from '../../configuration/config.service';
+import {AuthResult} from '../../jwt/model/auth-result.model';
+import {toUrlParameterString} from '../../utils/url';
+import {discoveryState} from '../../discovery/discovery-state';
 
 interface CreateCodeFlowAcccessTokenRequestParametersConfig {
   code: string;
@@ -36,13 +36,13 @@ export async function accessTokenRequest(
   const urlParamsString = toUrlParameterString(requestParameters);
 
   return new Promise<AuthResult>((resolve, reject) => {
-    if (!state.providerMetadata?.token_endpoint) {
+    if (!discoveryState.providerMetadata?.token_endpoint) {
       reject("no token endpoint found");
       return;
     }
     const xhr = new XMLHttpRequest();
 
-    xhr.open("POST", state.providerMetadata.token_endpoint, true);
+    xhr.open("POST", discoveryState.providerMetadata.token_endpoint, true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     xhr.onreadystatechange = function () {

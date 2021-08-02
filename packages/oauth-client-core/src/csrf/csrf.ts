@@ -1,6 +1,6 @@
 import { CsrfResult } from "./csrf.model";
-import { LogUtil } from "../utils/logUtil";
-import { StorageUtil } from "../utils/storageUtil";
+import { LogUtil } from "../utils/log-util";
+import { StorageUtil } from "../utils/storage";
 import { config } from "../configuration/config.service";
 
 /**

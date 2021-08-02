@@ -10,47 +10,38 @@ export interface URLParams {
    */
   flush_state?: boolean;
 }
-/**
- * Return an object with URL parameters
- * @param url
- * @returns The URL parameters
- */
-export function getURLParameters(
-  url: string = window.location.href,
-): URLParams {
-  const result: URLParams = {};
-  const searchIndex = url.indexOf("?");
-  const hashIndex = url.indexOf("#");
 
-  if (searchIndex === -1 && hashIndex === -1) {
-    return result;
+export function getURLParameters<T>(): T {
+  return {
+    ...getHashParameters<T>(),
+    ...getSearchParameters<T>(),
   }
-
-  const urlStringToParse = getUrlStringToParse(url, searchIndex, hashIndex);
-
-  const urlVariablesToParse = urlStringToParse.split("&");
-
-  for (const urlVar of urlVariablesToParse) {
-    const parameter = urlVar.split("=");
-    result[parameter[0]] = parameter[1];
-  }
-
-  return result;
 }
 
-function getUrlStringToParse(
-  url: string,
-  searchIndex: number,
-  hashIndex: number,
-): string {
-  if (hashIndex !== -1) {
-    return url.substring(hashIndex + 1);
-  }
-  return url.substring(searchIndex + 1);
+export function getHashParameters<T>(): T {
+  return parseQueryParameters(window.location.hash);
 }
 
-export interface ToUrlParametersPayload {
-  redirect_uri?: string;
+export function getSearchParameters<T>(): T {
+  return parseQueryParameters(window.location.search);
+}
+
+export function parseQueryParameters<T>(queryParametersString: string): T {
+  const queryParametersArray = queryParametersString.substring(1).split("&");
+  const argsParsed = {} as T;
+  queryParametersArray.forEach((queryParameterString: string) => {
+    if (-1 === queryParameterString.indexOf("=")) {
+      argsParsed[decodeURIComponent(queryParameterString).trim()] = true;
+    } else {
+      const [key, value] = queryParameterString
+        .split("=")
+        .map((keyOrValue) => decodeURIComponent(keyOrValue).trim());
+
+      argsParsed[key] = value;
+    }
+  });
+
+  return argsParsed;
 }
 
 /**
@@ -113,4 +104,8 @@ export function hashFragmentToAuthResult(hash_fragment: string): AuthResult {
  */
 export function cleanHashFragment(url: string): string {
   return url.split("#")[0];
+}
+
+export function clearQueryParameters(): void {
+  window.history.replaceState({}, document.title, window.location.pathname);
 }

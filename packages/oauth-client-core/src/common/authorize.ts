@@ -1,18 +1,18 @@
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { AuthResult } from "../jwt/model/auth-result.model";
-import { state } from "../state/state";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { timeout } from "../utils/timeout";
-import { getURLParameters, toUrlParameterString } from "../utils/urlUtil";
+import {getURLParameters, toUrlParameterString, URLParams} from "../utils/url";
+import {discoveryState} from '../discovery/discovery-state';
 
 export async function authorize<
   T extends {
     [key in keyof T]: any;
   },
 >(urlParameters: T): Promise<AuthResult> {
-  assertProviderMetadata(state.providerMetadata);
+  assertProviderMetadata(discoveryState.providerMetadata);
   const urlParamsString = toUrlParameterString(urlParameters);
-  window.location.href = `${state.providerMetadata.authorization_endpoint}?${urlParamsString}`;
+  window.location.href = `${discoveryState.providerMetadata.authorization_endpoint}?${urlParamsString}`;
 
   // Send Authorization code and code verifier to token endpoint -> server returns access token
   await timeout(2000);
@@ -20,7 +20,7 @@ export async function authorize<
 }
 
 export function ensureNoErrorInParameters(): void {
-  const urlParams = getURLParameters();
+  const urlParams = getURLParameters<URLParams>();
   if (urlParams["error"]) {
     // Error in authorize redirect
     LogUtil.error("Redirecting to Authorisation failed");

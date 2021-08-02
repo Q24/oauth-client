@@ -4,9 +4,9 @@
  * its OAuth 2.0 endpoint locations.
  */
 import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { config } from "../configuration/config.service";
-import { state } from "../state/state";
+import {discoveryState} from './discovery-state';
 
 /**
  * OpenID Providers supporting Discovery MUST make a JSON document available at
@@ -50,7 +50,7 @@ function fetchOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
  */
 export async function getRemoteOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
   const providerMetadata = await fetchOpenIdProviderMetadata();
-  state.providerMetadata = providerMetadata;
+  discoveryState.providerMetadata = providerMetadata;
   return providerMetadata;
 }
 
@@ -60,8 +60,8 @@ export async function getRemoteOpenIdProviderMetadata(): Promise<OpenIDProviderM
  * @returns the metadata
  */
 export async function getOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
-  if (state.providerMetadata) {
-    return state.providerMetadata;
+  if (discoveryState.providerMetadata) {
+    return discoveryState.providerMetadata;
   }
   return getRemoteOpenIdProviderMetadata();
 }

@@ -1,17 +1,17 @@
 import type { JsonWebKeySet } from "./model/jwks.model";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { assertProviderMetadata } from "./assert-provider-metadata";
 import { getOpenIdProviderMetadata } from "./get-openid-provider-metadata";
-import { state } from "../state/state";
+import {discoveryState} from './discovery-state';
 
 function fetchJwks(): Promise<JsonWebKeySet> {
   return new Promise<JsonWebKeySet>((resolve, reject) => {
     LogUtil.debug("getting jwks");
     const xhr = new XMLHttpRequest();
 
-    assertProviderMetadata(state.providerMetadata);
+    assertProviderMetadata(discoveryState.providerMetadata);
 
-    xhr.open("GET", state.providerMetadata.jwks_uri, true);
+    xhr.open("GET", discoveryState.providerMetadata.jwks_uri, true);
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
@@ -44,7 +44,7 @@ export async function getRemoteJwks(): Promise<JsonWebKeySet> {
     throw Error("no_jwks_uri");
   }
   const jwks = await fetchJwks();
-  state.jwks = jwks;
+  discoveryState.jwks = jwks;
 
   return jwks;
 }
@@ -55,8 +55,8 @@ export async function getRemoteJwks(): Promise<JsonWebKeySet> {
  * @returns the jwks
  */
 export async function getJwks(): Promise<JsonWebKeySet> {
-  if (state.jwks) {
-    return state.jwks;
+  if (discoveryState.jwks) {
+    return discoveryState.jwks;
   }
   return getRemoteJwks();
 }

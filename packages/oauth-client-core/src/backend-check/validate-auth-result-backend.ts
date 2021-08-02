@@ -1,7 +1,7 @@
 import { config } from "../configuration/config.service";
 import { AuthResult } from "../jwt/model/auth-result.model";
-import { LogUtil } from "../utils/logUtil";
-import { getNonce } from "../utils/nonceUtil";
+import { LogUtil } from "../utils/log-util";
+import { getNonce } from "../utils/nonce";
 import { saveSessionId } from "./session-id";
 
 export interface ValidSession {

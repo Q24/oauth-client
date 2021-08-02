@@ -1,10 +1,10 @@
-import { getState } from "../utils/stateUtil";
-import { getQueryParameters } from "../utils/url/get-query-parameters";
 import { OAuthCodeFlowAuthorizeResponse } from "./model/authorization-response.model";
+import {getState} from '../../utils/state';
+import {getSearchParameters} from '../../utils/url';
 
 export function getCodeFromUrl(): string | null {
   const oAuthCodeFlowAuthorizeResponse =
-    getQueryParameters<OAuthCodeFlowAuthorizeResponse>();
+    getSearchParameters<OAuthCodeFlowAuthorizeResponse>();
 
   if (oAuthCodeFlowAuthorizeResponse.state !== getState()) {
     return null;

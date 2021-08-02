@@ -1,25 +1,22 @@
 import { silentRefresh } from "./implicit-flow-refresh";
-import { getStoredAuthResult, storeAuthResult } from "../authentication/auth-result";
 import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
-import { authorize, ensureNoErrorInParameters } from "../common/authorize";
-import { config } from "../configuration/config.service";
-import { discovery } from "../discovery/discovery";
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
-import {
-  isValidNewAuthResult,
-  isValidStoredAuthResult,
-} from "../jwt/validate-auth-result";
-import { cleanSessionStorage } from "../utils/clean-storage";
-import { LogUtil } from "../utils/logUtil";
-import { transformScopesStringToArray } from "../utils/scopeUtil";
-import { clearQueryParameters } from "../utils/url/clear-query-parameters";
 import {
   deleteStoredHashString,
   getAuthResultFromStoredHash,
   getAuthResultFromUrl,
 } from "./hash";
 import { getSessionUpgradeToken, sessionUpgrade } from "./session-upgrade";
+import {AuthValidationOptions} from '../../jwt/model/auth-validation-options.model';
+import {AuthResult} from '../../jwt/model/auth-result.model';
+import {discovery} from '../../discovery/discovery';
+import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
+import {getStoredAuthResult, storeAuthResult} from '../../authentication/auth-result';
+import {clearQueryParameters} from '../../utils/url';
+import {authorize, ensureNoErrorInParameters} from '../../common/authorize';
+import {cleanSessionStorage} from '../../utils/clean-session-storage';
+import {transformScopesStringToArray} from '../../utils/scope';
+import {config} from '../../configuration/config.service';
+import {LogUtil} from '../../utils/log-util';
 
 /**
  * If possible, do a session upgrade.

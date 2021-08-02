@@ -23,9 +23,9 @@ export interface AuthResult {
    */
   token_type?: "Bearer";
   /**
-   * OAuth 2.0 state value. REQUIRED if the state parameter is present in the
-   * Authorization Request. Clients MUST verify that the state value is equal to
-   * the value of state parameter in the Authorization Request.
+   * OAuth 2.0 discoveryState value. REQUIRED if the discoveryState parameter is present in the
+   * Authorization Request. Clients MUST verify that the discoveryState value is equal to
+   * the value of discoveryState parameter in the Authorization Request.
    */
   state: string;
   /**

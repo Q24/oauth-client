@@ -91,7 +91,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(
     next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
+    discoveryState: RouterStateSnapshot,
   ): Observable<boolean> {
     return new Observable((observer) => {
       const port: string = window.location.port,
@@ -102,13 +102,13 @@ export class AuthGuard implements CanActivate {
 
       // Set the current URL as redirect
       let redirectURI = `${baseRedirectUri}${this._pls.getBaseHref()}${
-        state.url
+        discoveryState.url
       }`;
 
       // Check if we can redirect to this uri, if not, go to default
       this._oidcService.config.restricted_redirect_uris.forEach(
         (restrictedUriPart) => {
-          if (state.url.indexOf(restrictedUriPart) !== -1) {
+          if (discoveryState.url.indexOf(restrictedUriPart) !== -1) {
             redirectURI = `${baseRedirectUri}`;
           }
         },

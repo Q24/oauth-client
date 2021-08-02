@@ -9,7 +9,7 @@ export class StorageUtil {
   }
 
   /**
-   * Storage function to read a key from the sessionStorage
+   * StorageUtil function to read a key from the sessionStorage
    * @param {string} key
    * @returns {string}
    */
@@ -18,7 +18,7 @@ export class StorageUtil {
   }
 
   /**
-   * Storage function to store key,value pair to the sessionStorage
+   * StorageUtil function to store key,value pair to the sessionStorage
    * @param {string} key
    * @param {string} value
    */
@@ -27,7 +27,7 @@ export class StorageUtil {
   }
 
   /**
-   * Storage function to remove key(s) from the sessionStorage
+   * StorageUtil function to remove key(s) from the sessionStorage
    * @param regexString
    */
   static remove(regexString: string): void {

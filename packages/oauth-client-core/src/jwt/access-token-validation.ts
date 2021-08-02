@@ -1,4 +1,4 @@
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { hextob64u, KJUR } from "jsrsasign-reduced";
 import { parseIdToken } from "./parseJwt";
 import type { AuthResult } from "./model/auth-result.model";

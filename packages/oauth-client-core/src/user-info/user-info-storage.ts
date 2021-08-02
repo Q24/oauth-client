@@ -1,4 +1,4 @@
-import { StorageUtil } from "../utils/storageUtil";
+import { StorageUtil } from "../utils/storage";
 import { UserInfo } from "./UserInfo.model";
 
 const userInfoStorageKey = "userInfo";

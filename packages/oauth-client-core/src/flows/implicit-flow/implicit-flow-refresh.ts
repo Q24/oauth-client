@@ -1,24 +1,16 @@
-import { config } from "../configuration/config.service";
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { discovery } from "../discovery/discovery";
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
-import { state } from "../state/state";
-import { LogUtil } from "../utils/logUtil";
-import { transformScopesStringToArray } from "../utils/scopeUtil";
-import { StorageUtil } from "../utils/storageUtil";
-import {
-  toUrlParameterString,
-  getURLParameters,
-  hashFragmentToAuthResult,
-} from "../utils/urlUtil";
 import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
-import { destroyIframe, loadIframeUrl } from "../utils/iframe";
-import {
-  isValidNewAuthResult,
-  isValidStoredAuthResult,
-} from "../jwt/validate-auth-result";
-import { storeAuthResult } from "../authentication/auth-result";
+import {AuthValidationOptions} from '../../jwt/model/auth-validation-options.model';
+import {AuthResult} from '../../jwt/model/auth-result.model';
+import {discovery} from '../../discovery/discovery';
+import {transformScopesStringToArray} from '../../utils/scope';
+import {config} from '../../configuration/config.service';
+import {LogUtil} from '../../utils/log-util';
+import {assertProviderMetadata} from '../../discovery/assert-provider-metadata';
+import {discoveryState} from '../../discovery/discovery-state';
+import {hashFragmentToAuthResult, toUrlParameterString} from '../../utils/url';
+import {loadIframeUrl} from '../../utils/iframe';
+import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
+import {storeAuthResult} from '../../authentication/auth-result';
 
 /**
  * Silently refresh an access token via iFrame.
@@ -32,7 +24,6 @@ import { storeAuthResult } from "../authentication/auth-result";
  *
  * If this function fails for any reason, the Promise will reject.
  *
- * @param tokenValidationOptions The options that a token is tested for
  * @returns A valid token
  */
 export async function silentRefresh(
@@ -44,7 +35,7 @@ export async function silentRefresh(
     authValidationOptions?.scopes ?? transformScopesStringToArray(config.scope);
   LogUtil.debug("Silent refresh started");
 
-  assertProviderMetadata(state.providerMetadata);
+  assertProviderMetadata(discoveryState.providerMetadata);
   const promptNone = true;
 
   const authorizeParams = createImplicitFlowAuthorizeRequestParameters(
@@ -53,7 +44,7 @@ export async function silentRefresh(
   );
 
   const urlToLoad = `${
-    state.providerMetadata.authorization_endpoint
+    discoveryState.providerMetadata.authorization_endpoint
   }?${toUrlParameterString(authorizeParams)}`;
 
   const loadedUrl = await loadIframeUrl(urlToLoad);

@@ -1,5 +1,5 @@
 import { IdTokenPayload } from "./model/id-token.model";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import type { JWT } from "./model/jwt.model";
 import type { AccessTokenPayload } from "./model/access-token.model";
 

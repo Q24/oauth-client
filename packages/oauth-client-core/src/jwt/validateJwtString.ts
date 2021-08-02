@@ -1,4 +1,4 @@
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 
 export function validateJwtString(token: string): void {
   LogUtil.info('validating JWT string');

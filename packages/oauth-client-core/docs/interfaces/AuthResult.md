@@ -37,7 +37,7 @@ Access Token for the UserInfo Endpoint.
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:18
+[jwt/model/auth-result.model.ts:18](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L18)
 
 ___
 
@@ -49,7 +49,7 @@ Expiry time of token
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:43
+[jwt/model/auth-result.model.ts:43](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L43)
 
 ___
 
@@ -62,7 +62,7 @@ generated.
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:39
+[jwt/model/auth-result.model.ts:39](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L39)
 
 ___
 
@@ -74,7 +74,7 @@ ID Token
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:34
+[jwt/model/auth-result.model.ts:34](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L34)
 
 ___
 
@@ -82,12 +82,11 @@ ___
 
 • `Optional` **refresh\_token**: `string`
 
-TODO: separate this into new auth result.
 Only for code flow.
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:53
+[jwt/model/auth-result.model.ts:52](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L52)
 
 ___
 
@@ -99,7 +98,7 @@ Session Upgrade token received from Authorisation
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:47
+[jwt/model/auth-result.model.ts:47](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L47)
 
 ___
 
@@ -107,13 +106,13 @@ ___
 
 • **state**: `string`
 
-OAuth 2.0 state value. REQUIRED if the state parameter is present in the
-Authorization Request. Clients MUST verify that the state value is equal to
-the value of state parameter in the Authorization Request.
+OAuth 2.0 discoveryState value. REQUIRED if the discoveryState parameter is present in the
+Authorization Request. Clients MUST verify that the discoveryState value is equal to
+the value of discoveryState parameter in the Authorization Request.
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:30
+[jwt/model/auth-result.model.ts:30](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L30)
 
 ___
 
@@ -127,4 +126,4 @@ subset. Note that the token_type value is case insensitive.
 
 #### Defined in
 
-jwt/model/auth-result.model.ts:24
+[jwt/model/auth-result.model.ts:24](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/jwt/model/auth-result.model.ts#L24)

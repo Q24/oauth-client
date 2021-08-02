@@ -1,14 +1,14 @@
 import { IdTokenPayload } from "./model/id-token.model";
-import { GeneratorUtil } from "../utils/generatorUtil";
 import { parseJwt } from "./parseJwt";
-import { getNonce } from "../utils/nonceUtil";
+import { getNonce } from "../utils/nonce";
 import { KEYUTIL, KJUR } from "jsrsasign-reduced";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { validateJwtString } from "./validateJwtString";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { JWTHeader } from "./model/jwt.model";
-import { state } from "../state/state";
 import { config } from "../configuration/config.service";
+import {epochSeconds} from '../utils/time';
+import {discoveryState} from '../discovery/discovery-state';
 
 const supportedKeyAlgs = [
   "HS256",
@@ -25,7 +25,7 @@ const supportedKeyAlgs = [
 ];
 
 function validSignature(idTokenString: string, headerData: JWTHeader): boolean {
-  const jwks = state.jwks;
+  const jwks = discoveryState.jwks;
   if (!jwks || !jwks.keys) {
     LogUtil.error("JWKs not defined");
     return false;
@@ -133,17 +133,17 @@ function azpClaimValid(idToken: IdTokenPayload) {
 }
 
 function tokenIsExpired(idToken: IdTokenPayload) {
-  return GeneratorUtil.epoch() > idToken.exp;
+  return epochSeconds() > idToken.exp;
 }
 
 function iatOffsetTooBig(idToken: IdTokenPayload) {
-  const offset = Math.abs(GeneratorUtil.epoch() - idToken.iat);
+  const offset = Math.abs(epochSeconds() - idToken.iat);
   LogUtil.debug(
     "checking issued at offset (iat)",
     "iat",
     idToken.iat,
     "epoch current",
-    GeneratorUtil.epoch(),
+    epochSeconds(),
     "offset",
     offset,
   );
@@ -163,7 +163,7 @@ function nonceIsValid(idToken: IdTokenPayload) {
  */
 export function validateIdToken(idTokenString: string): void {
   LogUtil.debug("Validating ID Token");
-  assertProviderMetadata(state.providerMetadata);
+  assertProviderMetadata(discoveryState.providerMetadata);
 
   validateJwtString(idTokenString);
   const { header, payload: idTokenPayload } =
@@ -182,7 +182,7 @@ export function validateIdToken(idTokenString: string): void {
 
   // The Issuer Identifier for the OpenID Provider (which is typically obtained
   // during Discovery) MUST exactly match the value of the iss (issuer) Claim.
-  if (idTokenPayload.iss !== state.providerMetadata.issuer) {
+  if (idTokenPayload.iss !== discoveryState.providerMetadata.issuer) {
     LogUtil.error("Issuer of ID token not the same as configured issuer");
 
     throw Error("id_token_invalid__issuer_mismatch");

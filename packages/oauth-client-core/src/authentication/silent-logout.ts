@@ -1,6 +1,6 @@
 import { config } from "../configuration/config.service";
 import { getCsrfResult } from "../csrf/csrf";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { getIdTokenHint } from "../open-id/id-token-hint";
 import { destroyIframe } from "../utils/iframe";
 

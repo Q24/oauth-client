@@ -3,11 +3,11 @@ import { filterAuthResults } from "../auth-result-filter/filter-auth-results";
 import { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
 import { config } from "../configuration/config.service";
 import { AuthResult } from "../jwt/model/auth-result.model";
-import { epochSeconds } from "../utils/epoch-seconds";
-import { LogUtil } from "../utils/logUtil";
-import { StorageUtil } from "../utils/storageUtil";
+import { epochSeconds } from "../utils/time";
+import { LogUtil } from "../utils/log-util";
+import { StorageUtil } from "../utils/storage";
 import { storeIdToken } from "../open-id/id-token-hint";
-import { storeRefreshToken } from "../code-flow/refresh-token";
+import { storeRefreshToken } from "../flows/code-flow/refresh-token";
 
 /**
  * Deletes all the auth results from the storage. If authResultFilter is passed
@@ -42,7 +42,7 @@ function createAuthResultKey() {
 }
 
 /**
- * Get all auth results stored in session Storage in an Array
+ * Get all auth results stored in session StorageUtil in an Array
  */
 function getStoredAuthResults(): AuthResult[] {
   const storedAuthResults = StorageUtil.read(createAuthResultKey());
@@ -53,7 +53,7 @@ function getStoredAuthResults(): AuthResult[] {
 }
 
 /**
- * Stores an array of auth results to the session Storage
+ * Stores an array of auth results to the session StorageUtil
  */
 function storeAuthResults(authResults: AuthResult[]): void {
   LogUtil.debug("Saved Auth Results to session storage");

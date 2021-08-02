@@ -1,11 +1,4 @@
-import {
-  getStoredAuthResult,
-  storeAuthResult,
-} from "../authentication/auth-result";
 import { getStoredRefreshToken } from "./refresh-token";
-import { authorize, ensureNoErrorInParameters } from "../common/authorize";
-import { AuthResult } from "../jwt/index";
-import { clearQueryParameters } from "../utils/url/clear-query-parameters";
 import {
   accessTokenRequest,
   createCodeFlowAccessTokenRequestParameters,
@@ -14,11 +7,12 @@ import { createCodeFlowAuthorizeRequestParameters } from "./code-flow-authorize-
 import { codeFlowRefreshAccessToken } from "./code-flow-refresh";
 import { getCodeFromUrl } from "./get-code-from-url";
 import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
-import { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
-import {
-  isValidNewAuthResult,
-  isValidStoredAuthResult,
-} from "../jwt/validate-auth-result";
+import {getStoredAuthResult, storeAuthResult} from '../../authentication/auth-result';
+import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
+import {AuthResult} from '../../jwt/model/auth-result.model';
+import {clearQueryParameters} from '../../utils/url';
+import {authorize, ensureNoErrorInParameters} from '../../common/authorize';
+import {AuthValidationOptions} from '../../jwt/model/auth-validation-options.model';
 
 export async function codeFlow(
   authValidationOptions?: AuthValidationOptions,

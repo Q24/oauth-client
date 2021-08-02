@@ -1,22 +1,15 @@
-import { config } from "../configuration/config.service";
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { state } from "../state/state";
-import { LogUtil } from "../utils/logUtil";
-import { timeout } from "../utils/timeout";
-import { clearQueryParameters } from "../utils/url/clear-query-parameters";
-import { toUrlParameterString } from "../utils/urlUtil";
-import {
-  convertHashStringToObject,
-  deleteStoredHashString,
-  getHashStringFromUrl,
-  getStoredHashString,
-} from "./hash";
+import {clearQueryParameters, getHashParameters, parseQueryParameters, toUrlParameterString} from '../../utils/url';
+import {AuthResult} from '../../jwt/model/auth-result.model';
+import {deleteStoredHashString, getStoredHashString} from './hash';
+import {config} from '../../configuration/config.service';
+import {LogUtil} from '../../utils/log-util';
+import {assertProviderMetadata} from '../../discovery/assert-provider-metadata';
+import {discoveryState} from '../../discovery/discovery-state';
+import {timeout} from '../../utils/timeout';
 
 export function getSessionUpgradeToken(): string | null {
-  const hashStringFromUrl = getHashStringFromUrl();
   const authResultFromUrl =
-    convertHashStringToObject<Partial<AuthResult>>(hashStringFromUrl);
+    getHashParameters<Partial<AuthResult>>();
   if (authResultFromUrl.session_upgrade_token) {
     clearQueryParameters();
     return authResultFromUrl.session_upgrade_token;
@@ -26,7 +19,7 @@ export function getSessionUpgradeToken(): string | null {
   if (!hashStringFromStorage) {
     return null;
   }
-  const hashResultFromStorage = convertHashStringToObject<Partial<AuthResult>>(
+  const hashResultFromStorage = parseQueryParameters<Partial<AuthResult>>(
     hashStringFromStorage,
   );
   if (!hashResultFromStorage.session_upgrade_token) {
@@ -58,8 +51,8 @@ export async function sessionUpgrade(
 
   // Do the authorize redirect
   const urlParams = toUrlParameterString(urlVars);
-  assertProviderMetadata(state.providerMetadata);
-  window.location.href = `${state.providerMetadata.issuer}/upgrade-session?${urlParams}`;
+  assertProviderMetadata(discoveryState.providerMetadata);
+  window.location.href = `${discoveryState.providerMetadata.issuer}/upgrade-session?${urlParams}`;
 
   // Send Authorization code and code verifier to token endpoint -> server returns access token
   await timeout(2000);

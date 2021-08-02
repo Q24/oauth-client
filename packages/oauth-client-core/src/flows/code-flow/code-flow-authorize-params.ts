@@ -1,11 +1,11 @@
-import { config } from "../configuration/config.service";
-import { GeneratorUtil } from "../utils/generatorUtil";
 import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
 import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
+import {generateState} from '../../utils/state';
+import {config} from '../../configuration/config.service';
 
 export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthorizeParameters {
-  const state = GeneratorUtil.generateState();
+  const state = generateState();
   // Create code verifier
   const code_verifier = storeAndGetNewCodeVerifier();
   // Encode code verifier to get code challenge

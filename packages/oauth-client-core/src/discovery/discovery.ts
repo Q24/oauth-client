@@ -1,4 +1,4 @@
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { getJwks } from "./get-jwks";
 import { getOpenIdProviderMetadata } from "./get-openid-provider-metadata";
 

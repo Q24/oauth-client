@@ -1,9 +1,8 @@
 import { OpenIdImplicitAuthorizationParameters } from "./model/implicit-request-parameters.model";
-import { GeneratorUtil } from "../utils/generatorUtil";
-import { LogUtil } from "../utils/logUtil";
-import { getNonce, saveNonce } from "../utils/nonceUtil";
-import { getState, saveState } from "../utils/stateUtil";
-import { config } from "../configuration/config.service";
+import {generateState, getState, saveState} from '../../utils/state';
+import {generateNonce, getNonce, saveNonce} from '../../utils/nonce';
+import {config} from '../../configuration/config.service';
+import {LogUtil} from '../../utils/log-util';
 
 /**
  * Gather the URL params for Authorize redirect method
@@ -18,9 +17,9 @@ export function createImplicitFlowAuthorizeRequestParameters(
   scopes: string[],
   promptNone = false,
 ): OpenIdImplicitAuthorizationParameters {
-  const storedState = getState() || GeneratorUtil.generateState();
+  const storedState = getState() || generateState();
   const authorizeParams: OpenIdImplicitAuthorizationParameters = {
-    nonce: getNonce() || GeneratorUtil.generateNonce(),
+    nonce: getNonce() || generateNonce(),
     state: storedState,
     client_id: config.client_id,
     response_type:
@@ -40,7 +39,7 @@ export function createImplicitFlowAuthorizeRequestParameters(
     authorizeParams.prompt = "none";
   }
 
-  // Save the generated state & nonce
+  // Save the generated discoveryState & nonce
   saveState(storedState);
   saveNonce(authorizeParams.nonce);
 

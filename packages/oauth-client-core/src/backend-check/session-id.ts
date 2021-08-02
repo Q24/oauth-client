@@ -1,5 +1,5 @@
 import { config } from "../configuration/config.service";
-import { StorageUtil } from "../utils/storageUtil";
+import { StorageUtil } from "../utils/storage";
 
 const createSessionIdStorageId = () => `${config.client_id}-session-id`;
 

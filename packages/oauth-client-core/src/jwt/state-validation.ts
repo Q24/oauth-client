@@ -1,17 +1,17 @@
-import { LogUtil } from "../utils/logUtil";
-import { getState } from "../utils/stateUtil";
+import { LogUtil } from "../utils/log-util";
+import { getState } from "../utils/state";
 
 /**
- * checks if the state is valid. If not throws.
+ * checks if the discoveryState is valid. If not throws.
  *
- * @param state the state from the authentication result
- * @throws `state_invalid` if state is not the same as the saved state.
+ * @param state the discoveryState from the authentication result
+ * @throws `state_invalid` if discoveryState is not the same as the saved discoveryState.
  */
 export function validateState(state: string): void {
-  LogUtil.debug("Validating state");
+  LogUtil.debug("Validating discoveryState");
   const storedState = getState();
 
-  // We received a token from SSO, so we need to validate the state
+  // We received a token from SSO, so we need to validate the discoveryState
   if (!storedState || state !== storedState) {
     LogUtil.error("Authorisation Token not valid");
     LogUtil.debug("State NOT valid");
@@ -19,7 +19,7 @@ export function validateState(state: string): void {
   }
 
   LogUtil.debug(
-    "State from URL validated against state in session storage state",
+    "State from URL validated against discoveryState in session storage discoveryState",
     storedState,
   );
 }

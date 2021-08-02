@@ -14,7 +14,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * OAuth 2.0 Client Identifier valid at the Authorization Server.
     */
    client_id: string;
- 
+
    /**
     * Define the scopes you want to add to your session. Multiple scopes will be
     * added in a single strings, separated by spaces. OpenID Connect requests
@@ -36,24 +36,24 @@ export interface OpenIdImplicitAuthorizationParameters {
     *   present (not logged in).
     */
    scope: "openid" | string;
- 
+
    /**
     * The URL you want to be redirected to after redirect from Authorisation
     */
    redirect_uri: string;
- 
+
    /**
-    * Opaque value used to maintain state between the request and the callback.
+    * Opaque value used to maintain discoveryState between the request and the callback.
     */
    state: string;
- 
+
    /**
     * used to associate a Client session with an ID Token, and to mitigate replay
     * attacks. The value is passed through unmodified from the Authentication
     * Request to the ID Token.
     */
    nonce: string;
- 
+
    /**
     * specifies how the Authorization Server displays the authentication and
     * consent user interface pages to the End-User. The defined values are:
@@ -69,7 +69,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * User Agent and present an appropriate display.
     */
    display?: "page" | "popup" | "touch" | "wap";
- 
+
    /**
     * specifies whether the Authorization Server prompts the End-User for
     * reauthentication and consent. The defined values are:
@@ -99,7 +99,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * is returned.
     */
    prompt?: "none" | "login" | "consent" | "select_account";
- 
+
    /**
     * Maximum Authentication Age. Specifies the allowable elapsed time in seconds
     * since the last time the End-User was actively authenticated by the OpenID
@@ -109,7 +109,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * max_age=0 is equivalent to prompt=login.
     */
    max_age?: number;
- 
+
    /**
     * End-User's preferred languages and scripts for the user interface,
     * represented as a space-separated list of BCP47 language tag values, ordered
@@ -120,7 +120,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * Provider.
     */
    ui_locales?: string;
- 
+
    /**
     * End-User's preferred languages and scripts for Claims being returned,
     * represented as a space-separated list of BCP47 language tag values, ordered
@@ -128,7 +128,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * supported by the OpenID Provider.
     */
    claims_locales?: string;
- 
+
    /**
     * ID Token previously issued by the Authorization Server being passed as a
     * hint about the End-User's current or past authenticated session with the
@@ -143,7 +143,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * it is used as an id_token_hint value.
     */
    id_token_hint?: string;
- 
+
    /**
     * Hint to the Authorization Server about the login identifier the End-User
     * might use to log in (if necessary). This hint can be used by a Relying
@@ -155,7 +155,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * left to the OpenID Provider's discretion.
     */
    login_hint?: string;
- 
+
    /**
     * Requested Authentication Context Class Reference values. Space-separated
     * string that specifies the acr values that the Authorization Server is being
@@ -165,7 +165,7 @@ export interface OpenIdImplicitAuthorizationParameters {
     * Value. The acr Claim is requested as a Voluntary Claim by this parameter.
     */
    acr_values?: string;
- 
+
    /**
     * This parameter is used by the Client to provide information about itself to
     * a Self-Issued OpenID Providers (OP) that would normally be provided to an

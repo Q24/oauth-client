@@ -2,10 +2,10 @@ import {
   deleteStoredRefreshToken,
   getStoredRefreshToken,
 } from "./refresh-token";
-import { AuthResult } from "../jwt/index";
-import { LogUtil } from "../utils/logUtil";
 import { accessTokenRequest } from "./code-flow-access-token-request";
 import { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
+import {AuthResult} from '../../jwt/model/auth-result.model';
+import {LogUtil} from '../../utils/log-util';
 
 /**
  * @returns the refresh parameters for the token endpoint

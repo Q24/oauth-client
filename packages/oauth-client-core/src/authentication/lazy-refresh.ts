@@ -1,9 +1,9 @@
 import { discovery } from "../discovery/discovery";
 import { AuthResult } from "../jwt/model/auth-result.model";
 import { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
-import { silentRefresh } from "../implicit-flow/implicit-flow-refresh";
-import { isCodeFlow } from "../code-flow/is-code-flow";
-import { codeFlowRefreshAccessToken } from "../code-flow/code-flow-refresh";
+import {isCodeFlow} from '../utils/is-code-flow';
+import {codeFlowRefreshAccessToken} from '../flows/code-flow/code-flow-refresh';
+import {silentRefresh} from '../flows/implicit-flow/implicit-flow-refresh';
 
 /**
  * Check if the token expires in the next *x* seconds.

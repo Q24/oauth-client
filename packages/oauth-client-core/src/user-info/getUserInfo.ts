@@ -1,11 +1,11 @@
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { parseIdToken } from "../jwt/parseJwt";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { getStoredUserInfo, setStoredUserInfo } from "./user-info-storage";
 import { UserInfo } from "./UserInfo.model";
 import { getStoredAuthResult } from "../authentication/auth-result";
-import { state } from "../state/state";
 import { getAuthHeader } from "../authentication/auth-header";
+import {discoveryState} from '../discovery/discovery-state';
 
 /**
  * Due to the possibility of token substitution attacks, the UserInfo Response
@@ -63,8 +63,8 @@ function verifyUserInfoResponse(userInfo: UserInfo) {
  * Response as defined in Section 3 of OAuth 2.0 Bearer Token Usage [RFC6750].
  */
 function fetchUserInfo(): Promise<UserInfo> {
-  assertProviderMetadata(state.providerMetadata);
-  const userinfoEndpoint = state.providerMetadata.userinfo_endpoint;
+  assertProviderMetadata(discoveryState.providerMetadata);
+  const userinfoEndpoint = discoveryState.providerMetadata.userinfo_endpoint;
   if (!userinfoEndpoint) {
     LogUtil.error(
       "Server does not implement user info endpoint, or userinfo endpoint is not set.",

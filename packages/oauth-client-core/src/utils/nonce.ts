@@ -1,5 +1,21 @@
 import { config } from "../configuration/config.service";
-import { StorageUtil } from "./storageUtil";
+import { StorageUtil } from "./storage";
+
+/**
+ * Generates a random 'nonce' string
+ * @returns {string}
+ */
+export function generateNonce(): string {
+  let text = "";
+  const possible =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 25; ) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+    i += 1;
+  }
+  return text;
+}
 
 const nonceStorageId = () => `${config.client_id}-nonce`;
 
@@ -12,7 +28,7 @@ export function getNonce(): string | null {
 }
 
 /**
- * Saves the state string to sessionStorage
+ * Saves the discoveryState string to sessionStorage
  * @param nonce
  */
 export function saveNonce(nonce: string): void {

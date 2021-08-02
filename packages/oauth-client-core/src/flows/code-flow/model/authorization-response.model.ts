@@ -17,7 +17,7 @@ export interface OAuthCodeFlowAuthorizeResponse {
   code: string;
 
   /**
-   * REQUIRED if the "state" parameter was present in the client authorization
+   * REQUIRED if the "discoveryState" parameter was present in the client authorization
    * request. The exact value received from the client.
    */
   state: string;

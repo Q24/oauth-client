@@ -1,5 +1,5 @@
 import { parseJwt } from "../jwt/parseJwt";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { AuthResultFilter } from "./model/auth-result-filter.model";
 
 /**

@@ -1,5 +1,5 @@
 import { config } from "../configuration/config.service";
-import { LogUtil } from "../utils/logUtil";
+import { LogUtil } from "../utils/log-util";
 import { getSessionId } from "./session-id";
 
 /**
