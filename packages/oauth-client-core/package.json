@@ -1,29 +1,25 @@
 {
   "name": "@ilionx/oauth-client-core",
   "version": "1.0.0-beta-1",
-  "description": "Core components for implementing Open ID Connect Implicit Flow",
+  "description": "OAuth client for implicit and code flow",
   "author": "ilionx",
-  "email": "kriemens@ilionx.com",
+  "email": "info@ilionx.com",
   "license": "GPL-3.0-or-later",
-  "homepage": "https://github.com/Q24/hawaii-packages/tree/master/packages/oidc-implicit-core",
+  "homepage": "https://github.com/Q24/oauth-client",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Q24/hawaii-packages.git"
+    "url": "git+https://github.com/Q24/oauth-client.git"
   },
   "bugs": {
-    "url": "https://github.com/Q24/hawaii-packages/issues"
+    "url": "https://github.com/Q24/oauth-client/issues"
   },
   "keywords": [
     "oidc",
     "openid",
+    "oauth",
     "oauth2",
     "implicit",
-    "javascript",
-    "es6",
-    "wrapper",
-    "ng",
-    "es5",
-    "es2015"
+    "code flow"
   ],
   "devDependencies": {
     "@types/jest": "^26.0.23",

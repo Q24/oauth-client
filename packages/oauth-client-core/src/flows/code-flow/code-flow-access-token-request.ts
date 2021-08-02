@@ -7,6 +7,7 @@ import {config} from '../../configuration/config.service';
 import {AuthResult} from '../../jwt/model/auth-result.model';
 import {toUrlParameterString} from '../../utils/url';
 import {discoveryState} from '../../discovery/discovery-state';
+import { LogUtil } from "../../utils/log-util";
 
 interface CreateCodeFlowAcccessTokenRequestParametersConfig {
   code: string;
@@ -33,6 +34,9 @@ export async function accessTokenRequest(
     | OAuthCodeFlowAccessTokenParameters
     | OAuthRefreshTokenParameters,
 ): Promise<AuthResult> {
+
+  LogUtil.debug('getting the access token from the token endpoint with parameters:', requestParameters)
+
   const urlParamsString = toUrlParameterString(requestParameters);
 
   return new Promise<AuthResult>((resolve, reject) => {

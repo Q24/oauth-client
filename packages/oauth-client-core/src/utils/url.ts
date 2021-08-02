@@ -15,7 +15,7 @@ export function getURLParameters<T>(): T {
   return {
     ...getHashParameters<T>(),
     ...getSearchParameters<T>(),
-  }
+  };
 }
 
 export function getHashParameters<T>(): T {
@@ -65,7 +65,6 @@ export function toUrlParameterString<
   }
   return params.join("&");
 }
-
 
 /**
  *

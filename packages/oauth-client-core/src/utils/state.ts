@@ -27,20 +27,20 @@ export function generateState(): string {
 
 const stateStorageId = () => `${config.client_id}-state`;
 /**
- * Get the saved discoveryState string from sessionStorage
+ * Get the saved state string from sessionStorage
  */
 export function getState(): string | null {
   const state = StorageUtil.read(stateStorageId());
   if (!state) {
-    LogUtil.debug("discoveryState was not found in storage", state);
+    LogUtil.debug("state was not found in storage", state);
     return null;
   }
-  LogUtil.debug("Got discoveryState from storage", state);
+  LogUtil.debug("Got state from storage", state);
   return state;
 }
 
 /**
- * Saves the discoveryState string to sessionStorage
+ * Saves the state string to sessionStorage
  */
 export function saveState(state: string): void {
   LogUtil.debug("State saved");

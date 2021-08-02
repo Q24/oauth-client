@@ -7,21 +7,37 @@ import { createCodeFlowAuthorizeRequestParameters } from "./code-flow-authorize-
 import { codeFlowRefreshAccessToken } from "./code-flow-refresh";
 import { getCodeFromUrl } from "./get-code-from-url";
 import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
-import {getStoredAuthResult, storeAuthResult} from '../../authentication/auth-result';
-import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {clearQueryParameters} from '../../utils/url';
-import {authorize, ensureNoErrorInParameters} from '../../common/authorize';
-import {AuthValidationOptions} from '../../jwt/model/auth-validation-options.model';
+import {
+  getStoredAuthResult,
+  storeAuthResult,
+} from "../../authentication/auth-result";
+import {
+  isValidNewAuthResult,
+  isValidStoredAuthResult,
+} from "../../jwt/validate-auth-result";
+import { AuthResult } from "../../jwt/model/auth-result.model";
+import { clearQueryParameters } from "../../utils/url";
+import { authorize, ensureNoErrorInParameters } from "../../common/authorize";
+import { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
+import { discovery } from "../../discovery/discovery";
+import { LogUtil } from "../../utils/log-util";
 
 export async function codeFlow(
   authValidationOptions?: AuthValidationOptions,
 ): Promise<AuthResult> {
-  // Get the authorization code from the URL parameters and clear parameters from URL
+  await discovery();
+
+  LogUtil.debug("Looking for a code in the URL");
   const code = getCodeFromUrl();
   if (code) {
+    LogUtil.debug(
+      "The URL does have a code; save it in memory and clear the URL",
+    );
     clearQueryParameters();
+
     const codeFlowAuthResult = await codeFlowAccessTokenFlow(code);
+    LogUtil.debug("Got auth result by token request", codeFlowAuthResult);
+
     if (codeFlowAuthResult) {
       if (await isValidNewAuthResult(codeFlowAuthResult)) {
         storeAuthResult(codeFlowAuthResult);
@@ -35,8 +51,11 @@ export async function codeFlow(
         }
       }
     }
+  } else {
+    LogUtil.debug("There is no code in the URL");
   }
 
+  LogUtil.debug("looking for auth result in storage");
   const storedAuthResult = getStoredAuthResult();
   if (
     storedAuthResult &&
@@ -45,9 +64,14 @@ export async function codeFlow(
       authValidationOptions?.extraAuthFilters || [],
     )
   ) {
+    LogUtil.debug("Found a valid auth result in storage, returning it.");
+
     return storedAuthResult;
+  } else {
+    LogUtil.debug("There is no auth result in storage");
   }
 
+  LogUtil.debug("Looking for a refresh token in storage");
   const refreshToken = getStoredRefreshToken();
   if (refreshToken) {
     const authResult = await codeFlowRefreshAccessToken();
@@ -64,6 +88,8 @@ export async function codeFlow(
         }
       }
     }
+  } else {
+    LogUtil.debug("No refresh token in storage");
   }
 
   return codeFlowAuthorizeFlow();
@@ -74,6 +100,8 @@ export async function codeFlow(
  * @returns
  */
 async function codeFlowAuthorizeFlow(): Promise<AuthResult> {
+  LogUtil.debug("Do a authorize call");
+
   ensureNoErrorInParameters();
   // Create Code Flow Authorize request parameters.
   const authorizeRequestParameters: OAuthCodeFlowAuthorizeParameters =
@@ -91,6 +119,11 @@ async function codeFlowAuthorizeFlow(): Promise<AuthResult> {
  * @returns
  */
 async function codeFlowAccessTokenFlow(code: string): Promise<AuthResult> {
+  LogUtil.debug(
+    "Getting the access token from the token endpoint with code",
+    code,
+  );
+
   const accessTokenRequestParameters =
     createCodeFlowAccessTokenRequestParameters({
       code,

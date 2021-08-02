@@ -1,11 +1,15 @@
 import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
 import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
-import {generateState} from '../../utils/state';
-import {config} from '../../configuration/config.service';
+import { generateState, saveState } from "../../utils/state";
+import { config } from "../../configuration/config.service";
+import { generateNonce, saveNonce } from "../../utils/nonce";
+import { usesOpenId } from "../../open-id/uses-openid";
 
 export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthorizeParameters {
   const state = generateState();
+  saveState(state);
+
   // Create code verifier
   const code_verifier = storeAndGetNewCodeVerifier();
   // Encode code verifier to get code challenge
@@ -18,6 +22,12 @@ export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthori
     code_challenge: code_challenge,
     code_challenge_method: "S256",
   };
+
+  if (usesOpenId()) {
+    const nonce = generateNonce();
+    saveNonce(nonce);
+    oAuthCodeFlowAuthorizeParameters.nonce = nonce;
+  }
 
   if (config.redirect_uri) {
     oAuthCodeFlowAuthorizeParameters.redirect_uri = config.redirect_uri;

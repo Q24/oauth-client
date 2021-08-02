@@ -1,14 +1,32 @@
 import { OAuthCodeFlowAuthorizeResponse } from "./model/authorization-response.model";
-import {getState} from '../../utils/state';
-import {getSearchParameters} from '../../utils/url';
+import { getState } from "../../utils/state";
+import { getSearchParameters } from "../../utils/url";
+import { LogUtil } from "../../utils/log-util";
 
 export function getCodeFromUrl(): string | null {
   const oAuthCodeFlowAuthorizeResponse =
     getSearchParameters<OAuthCodeFlowAuthorizeResponse>();
 
-  if (oAuthCodeFlowAuthorizeResponse.state !== getState()) {
+  LogUtil.debug(
+    "comparing state from response to state from request",
+    "response",
+    oAuthCodeFlowAuthorizeResponse,
+  );
+
+  const requestState = getState();
+
+  if (oAuthCodeFlowAuthorizeResponse.state !== requestState) {
+    LogUtil.warn(
+      "State from response was not the same as the state from the request",
+      "response state",
+      oAuthCodeFlowAuthorizeResponse.state,
+      "request state",
+      requestState,
+    );
     return null;
   }
+
+  LogUtil.debug("state is the same; returning the code");
 
   return oAuthCodeFlowAuthorizeResponse.code;
 }

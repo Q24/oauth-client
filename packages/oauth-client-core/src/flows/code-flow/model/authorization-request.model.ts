@@ -77,4 +77,17 @@ export interface OAuthCodeFlowAuthorizeParameters {
    * Needs to be sent if S256 is used as code_challenge method
    */
   code_challenge_method?: "S256" | "plain";
+
+  /**
+   * Value used to associate a Client session with an ID Token, and to mitigate
+   * replay attacks. The value is passed through unmodified from the
+   * Authentication Request to the ID Token. Sufficient entropy MUST be present
+   * in the nonce values used to prevent attackers from guessing values. One
+   * method to achieve this is to store a cryptographically random value as an
+   * HttpOnly a session cookie and use a cryptographic hash of the value as the
+   * nonce parameter. In that case, the nonce in the returned ID Token is
+   * compared to the hash of the session cookie to detect ID Token replay by
+   * third parties. Use of the nonce is OPTIONAL when using the code flow.
+   */
+  nonce?: string;
 }

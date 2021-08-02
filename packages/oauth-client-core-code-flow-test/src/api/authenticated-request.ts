@@ -1,8 +1,8 @@
 import {
   getAuthHeader,
   getStoredAuthResult,
+  lazyRefresh,
   obtainSession,
-  silentRefresh,
 } from "@ilionx/oauth-client-core";
 import axios, { AxiosRequestConfig } from "axios";
 import { globals } from "../globals";
@@ -19,12 +19,7 @@ const setAuthHeader = async (
   if (storedToken) {
     config.headers["Authorization"] = getAuthHeader(storedToken);
 
-    if (
-      (storedToken.expires || 0) - Math.round(new Date().getTime() / 1000.0) <
-      300
-    ) {
-      silentRefresh();
-    }
+    lazyRefresh(storedToken);
     return config;
   } else {
     const isLoggedIn = await obtainSession();

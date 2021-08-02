@@ -2,6 +2,7 @@ import { LogUtil } from "../utils/log-util";
 import { hextob64u, KJUR } from "jsrsasign-reduced";
 import { parseIdToken } from "./parseJwt";
 import type { AuthResult } from "./model/auth-result.model";
+import { isCodeFlow } from "../utils/is-code-flow";
 
 function generateAtHash(accessToken: string, sha: string): string {
   const hash = KJUR.crypto.Util.hashString(accessToken, sha);
@@ -28,6 +29,9 @@ export function validateAccessToken(authResult: AuthResult): void {
     return;
   }
   const idToken = parseIdToken(authResult.id_token);
+  if (isCodeFlow() && !idToken.payload.at_hash) {
+    return;
+  }
 
   if (
     !validateIdTokenAtHash(
@@ -36,7 +40,8 @@ export function validateAccessToken(authResult: AuthResult): void {
       idToken.header.alg,
     )
   ) {
-    throw Error("");
+    LogUtil.error("Could not validate Access Token Hash (at_hash)");
+    throw Error("at_hash invalid");
   }
 }
 
