@@ -64,7 +64,7 @@ function App() {
     issuer: "https://ilionx-test.eu.auth0.com",
     client_id: `W5lTNsN13tdjDILofiKcq8MQNbuE1DpX`,
     response_type: "code",
-    scope: "openid",
+    scope: "openid offline_access",
     redirect_uri: `${window.location.origin}/app`,
   });
 

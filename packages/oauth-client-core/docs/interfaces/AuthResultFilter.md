@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[auth-result-filter/model/auth-result-filter.model.ts:4](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/auth-result-filter/model/auth-result-filter.model.ts#L4)
+[auth-result-filter/model/auth-result-filter.model.ts:4](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/auth-result-filter/model/auth-result-filter.model.ts#L4)

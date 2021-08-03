@@ -4,8 +4,8 @@ import {
 } from "./refresh-token";
 import { accessTokenRequest } from "./code-flow-access-token-request";
 import { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {LogUtil} from '../../utils/log-util';
+import { AuthResult } from "../../jwt/model/auth-result.model";
+import { LogUtil } from "../../utils/log-util";
 
 /**
  * @returns the refresh parameters for the token endpoint

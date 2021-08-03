@@ -23,7 +23,7 @@ as described in Section 3.2.1.
 
 #### Defined in
 
-[flows/code-flow/model/access-token-request.model.ts:19](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L19)
+[flows/code-flow/model/access-token-request.model.ts:19](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L19)
 
 ___
 
@@ -35,7 +35,7 @@ The authorization code received from the authorization server.
 
 #### Defined in
 
-[flows/code-flow/model/access-token-request.model.ts:7](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L7)
+[flows/code-flow/model/access-token-request.model.ts:7](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L7)
 
 ___
 
@@ -47,7 +47,7 @@ Code verifier
 
 #### Defined in
 
-[flows/code-flow/model/access-token-request.model.ts:23](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L23)
+[flows/code-flow/model/access-token-request.model.ts:23](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L23)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[flows/code-flow/model/access-token-request.model.ts:2](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L2)
+[flows/code-flow/model/access-token-request.model.ts:2](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L2)
 
 ___
 
@@ -70,4 +70,4 @@ request as described in Section 4.1.1, and their values MUST be identical.
 
 #### Defined in
 
-[flows/code-flow/model/access-token-request.model.ts:13](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L13)
+[flows/code-flow/model/access-token-request.model.ts:13](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/access-token-request.model.ts#L13)

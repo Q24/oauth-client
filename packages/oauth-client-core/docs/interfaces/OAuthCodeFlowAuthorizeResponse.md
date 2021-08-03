@@ -30,7 +30,7 @@ is bound to the client identifier and redirection URI.
 
 #### Defined in
 
-[flows/code-flow/model/authorization-response.model.ts:17](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/authorization-response.model.ts#L17)
+[flows/code-flow/model/authorization-response.model.ts:17](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/authorization-response.model.ts#L17)
 
 ___
 
@@ -43,4 +43,4 @@ request. The exact value received from the client.
 
 #### Defined in
 
-[flows/code-flow/model/authorization-response.model.ts:23](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/authorization-response.model.ts#L23)
+[flows/code-flow/model/authorization-response.model.ts:23](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/authorization-response.model.ts#L23)

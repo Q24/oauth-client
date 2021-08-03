@@ -32,11 +32,11 @@ const silentLogoutStore: {
  * @returns The promise resolves if the logout was successful, otherwise it will reject.
  */
 export function silentLogout(
-  silentLogoutConfig: SilentLogoutConfig,
+  silentLogoutConfig?: SilentLogoutConfig,
 ): Promise<void> {
-  const logout_url = silentLogoutConfig.logout_url || config.silent_logout_uri;
+  const logout_url = silentLogoutConfig?.logout_url || config.silent_logout_uri;
   const post_logout_redirect_uri =
-    silentLogoutConfig.post_logout_redirect_uri ||
+    silentLogoutConfig?.post_logout_redirect_uri ||
     config.post_logout_redirect_uri;
 
   if (!logout_url || !post_logout_redirect_uri) {

@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[flows/code-flow/model/refresh-token-request.model.ts:2](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/refresh-token-request.model.ts#L2)
+[flows/code-flow/model/refresh-token-request.model.ts:2](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/refresh-token-request.model.ts#L2)
 
 ___
 
@@ -30,7 +30,7 @@ The refresh token issued to the client.
 
 #### Defined in
 
-[flows/code-flow/model/refresh-token-request.model.ts:7](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/refresh-token-request.model.ts#L7)
+[flows/code-flow/model/refresh-token-request.model.ts:7](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/refresh-token-request.model.ts#L7)
 
 ___
 
@@ -45,4 +45,4 @@ by the resource owner.
 
 #### Defined in
 
-[flows/code-flow/model/refresh-token-request.model.ts:15](https://github.com/Q24/oauth-client/blob/d927bd3/packages/oauth-client-core/src/flows/code-flow/model/refresh-token-request.model.ts#L15)
+[flows/code-flow/model/refresh-token-request.model.ts:15](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/model/refresh-token-request.model.ts#L15)

@@ -1,3 +1,4 @@
+export { getIdTokenHint } from "./open-id/id-token-hint";
 export { discovery } from "./discovery/discovery";
 export { isSessionAlive } from "./backend-check/session-alive";
 export { cleanSessionStorage } from "./utils/clean-session-storage";
