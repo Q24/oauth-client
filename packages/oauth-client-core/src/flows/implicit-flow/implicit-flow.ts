@@ -12,7 +12,7 @@ import {discovery} from '../../discovery/discovery';
 import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
 import {getStoredAuthResult, storeAuthResult} from '../../authentication/auth-result';
 import {clearQueryParameters} from '../../utils/url';
-import {authorize, ensureNoErrorInParameters} from '../../common/authorize';
+import {authorize, ensureNoErrorInParameters} from '../../authentication/authorize';
 import {cleanSessionStorage} from '../../utils/clean-session-storage';
 import {transformScopesStringToArray} from '../../utils/scope';
 import {config} from '../../configuration/config.service';

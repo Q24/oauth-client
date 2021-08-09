@@ -3,7 +3,7 @@ import { deleteIdTokenHint } from "../open-id/id-token-hint";
 import { deleteAllStoredRefreshTokens } from "../flows/code-flow/refresh-token";
 import { deleteSessionId } from "../backend-check/session-id";
 import { deleteStoredCsrfToken } from "../csrf/csrf";
-import { deleteStoredUserInfo } from "../user-info/user-info-storage";
+import { clearUserInfoCache } from "../user-info/user-info-state";
 import { LogUtil } from "./log-util";
 import { deleteNonce } from "./nonce";
 import { deleteState } from "./state";
@@ -21,6 +21,6 @@ export function cleanSessionStorage(): void {
   deleteNonce();
   deleteSessionId();
   deleteStoredCsrfToken();
-  deleteStoredUserInfo();
+  clearUserInfoCache();
   deleteAllStoredRefreshTokens();
 }

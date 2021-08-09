@@ -17,7 +17,7 @@ import {
 } from "../../jwt/validate-auth-result";
 import { AuthResult } from "../../jwt/model/auth-result.model";
 import { clearQueryParameters } from "../../utils/url";
-import { authorize, ensureNoErrorInParameters } from "../../common/authorize";
+import { authorize, ensureNoErrorInParameters } from "../../authentication/authorize";
 import { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
 import { discovery } from "../../discovery/discovery";
 import { LogUtil } from "../../utils/log-util";

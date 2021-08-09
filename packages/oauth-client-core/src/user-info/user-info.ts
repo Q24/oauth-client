@@ -1,11 +1,11 @@
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { parseIdToken } from "../jwt/parseJwt";
 import { LogUtil } from "../utils/log-util";
-import { getStoredUserInfo, setStoredUserInfo } from "./user-info-storage";
-import { UserInfo } from "./UserInfo.model";
+import { readUserInfoCache, setUserInfoCache } from "./user-info-state";
+import { UserInfo } from "./user-info.model";
 import { getStoredAuthResult } from "../authentication/auth-result";
 import { getAuthHeader } from "../authentication/auth-header";
-import {discoveryState} from '../discovery/discovery-state';
+import { discoveryState } from "../discovery/discovery-state";
 
 /**
  * Due to the possibility of token substitution attacks, the UserInfo Response
@@ -113,7 +113,7 @@ function fetchUserInfo(): Promise<UserInfo> {
  */
 async function getRemoteUserInfo(): Promise<UserInfo> {
   const userInfo = await fetchUserInfo();
-  setStoredUserInfo(userInfo);
+  setUserInfoCache(userInfo);
   return userInfo;
 }
 
@@ -123,9 +123,9 @@ async function getRemoteUserInfo(): Promise<UserInfo> {
  * @returns the user info
  */
 export async function getUserInfo(): Promise<UserInfo> {
-  const storedUserInfo = getStoredUserInfo();
-  if (storedUserInfo) {
-    return storedUserInfo;
+  const cachedUserInfo = readUserInfoCache();
+  if (cachedUserInfo) {
+    return cachedUserInfo;
   }
   return getRemoteUserInfo();
 }
