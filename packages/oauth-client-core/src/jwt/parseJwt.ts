@@ -1,6 +1,7 @@
-import { IdTokenPayload } from "./model/id-token.model";
-import { LogUtil } from "../utils/log-util";
+import { LogUtil } from '../utils/log-util';
+
 import type { JWT } from "./model/jwt.model";
+import type { IdTokenPayload } from "./model/id-token.model";
 import type { AccessTokenPayload } from "./model/access-token.model";
 
 function decodeJwtPart(jwtPart: string) {

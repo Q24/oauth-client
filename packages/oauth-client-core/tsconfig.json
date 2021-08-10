@@ -11,6 +11,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "target": "ESNext",
     "strict": true,
-    "lib": ["ESNext", "DOM"]
+    "lib": ["ESNext", "DOM"],
+    "importsNotUsedAsValues": "error"
   }
 }

@@ -1,15 +1,20 @@
-import {clearQueryParameters, getHashParameters, parseQueryParameters, toUrlParameterString} from '../../utils/url';
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {deleteStoredHashString, getStoredHashString} from './hash';
-import {config} from '../../configuration/config.service';
-import {LogUtil} from '../../utils/log-util';
-import {assertProviderMetadata} from '../../discovery/assert-provider-metadata';
-import {discoveryState} from '../../discovery/discovery-state';
-import {timeout} from '../../utils/timeout';
+import { config } from "../../configuration/config.service";
+import { assertProviderMetadata } from "../../discovery/assert-provider-metadata";
+import { discoveryState } from "../../discovery/discovery-state";
+import { LogUtil } from "../../utils/log-util";
+import { timeout } from "../../utils/timeout";
+import {
+  clearQueryParameters,
+  getHashParameters,
+  parseQueryParameters,
+  toUrlParameterString,
+} from "../../utils/url";
+import { deleteStoredHashString, getStoredHashString } from "./hash";
+
+import type { AuthResult } from "../../jwt/model/auth-result.model";
 
 export function getSessionUpgradeToken(): string | null {
-  const authResultFromUrl =
-    getHashParameters<Partial<AuthResult>>();
+  const authResultFromUrl = getHashParameters<Partial<AuthResult>>();
   if (authResultFromUrl.session_upgrade_token) {
     clearQueryParameters();
     return authResultFromUrl.session_upgrade_token;

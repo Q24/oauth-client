@@ -1,6 +1,3 @@
-import { isAuthResult } from "../authentication/auth-result";
-import { AuthResult } from "../jwt/model/auth-result.model";
-
 /**
  * Flush state param
  */
@@ -64,32 +61,6 @@ export function toUrlParameterString<
     params.push(`${urlVar}=${urlParameters[urlVar]}`);
   }
   return params.join("&");
-}
-
-/**
- *
- * Get Hash Fragment parameters from sessionStorage
- * @param {string} hash_fragment
- * @returns {AuthResult}
- */
-export function hashFragmentToAuthResult(hash_fragment: string): AuthResult {
-  const result: Partial<AuthResult> = {};
-  let urlVariablesToParse;
-
-  if (hash_fragment) {
-    urlVariablesToParse = hash_fragment.split("&");
-
-    for (const urlVar of urlVariablesToParse) {
-      const parameter = urlVar.split("=");
-      result[parameter[0]] = parameter[1];
-    }
-  }
-
-  if (!isAuthResult(result)) {
-    throw new Error("Hash fragment is no auth result");
-  }
-
-  return result;
 }
 
 /**

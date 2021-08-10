@@ -3,10 +3,11 @@
  * that OP is retrieved from a well-known location as a JSON document, including
  * its OAuth 2.0 endpoint locations.
  */
-import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
 import { LogUtil } from "../utils/log-util";
 import { config } from "../configuration/config.service";
-import {discoveryState} from './discovery-state';
+import { discoveryState } from "./discovery-state";
+
+import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
 
 /**
  * OpenID Providers supporting Discovery MUST make a JSON document available at

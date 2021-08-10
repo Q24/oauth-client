@@ -1,14 +1,16 @@
-import { IdTokenPayload } from "./model/id-token.model";
-import { parseJwt } from "./parseJwt";
-import { getNonce } from "../utils/nonce";
 import { KEYUTIL, KJUR } from "jsrsasign-reduced";
-import { LogUtil } from "../utils/log-util";
-import { validateJwtString } from "./validateJwtString";
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { JWTHeader } from "./model/jwt.model";
+
 import { config } from "../configuration/config.service";
-import {epochSeconds} from '../utils/time';
-import {discoveryState} from '../discovery/discovery-state';
+import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
+import { discoveryState } from "../discovery/discovery-state";
+import { LogUtil } from "../utils/log-util";
+import { getNonce } from "../utils/nonce";
+import { epochSeconds } from "../utils/time";
+import { parseJwt } from "./parseJwt";
+import { validateJwtString } from "./validateJwtString";
+
+import type { IdTokenPayload } from "./model/id-token.model";
+import type { JWTHeader } from "./model/jwt.model";
 
 const supportedKeyAlgs = [
   "HS256",

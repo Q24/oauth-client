@@ -1,6 +1,7 @@
 import { parseJwt } from "../jwt/parseJwt";
 import { LogUtil } from "../utils/log-util";
-import { AuthResultFilter } from "./model/auth-result-filter.model";
+
+import type { AuthResultFilter } from "./model/auth-result-filter.model";
 
 /**
  * check if the access token has the required scopes. The access token must be a

@@ -1,8 +1,8 @@
-import { obtainSession, configure, getUserInfo } from "../../dist/index";
+import { configure, getUserInfo, obtainSession } from "../../dist/index";
 import {
-  obtainSession,
   configure,
   getUserInfo,
+  obtainSession,
 } from "../../dist/index.modern.js";
 
 configure({

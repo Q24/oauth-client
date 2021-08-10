@@ -1,5 +1,5 @@
-import { JsonWebKeySet } from "./model/jwks.model";
-import { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
+import type { JsonWebKeySet } from "./model/jwks.model";
+import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
 
 interface DiscoveryState {
   jwks?: JsonWebKeySet;

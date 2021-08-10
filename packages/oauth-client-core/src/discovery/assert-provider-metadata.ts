@@ -1,4 +1,4 @@
-import { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
+import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
 
 export function assertProviderMetadata(
   providerMetadata?: OpenIDProviderMetadata,

@@ -1,8 +1,9 @@
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {isAuthResult} from '../../authentication/auth-result';
-import {LogUtil} from '../../utils/log-util';
-import {getHashParameters, parseQueryParameters} from '../../utils/url';
-import {StorageUtil} from '../../utils/storage';
+import { isAuthResult } from '../../authentication/auth-result';
+import { LogUtil } from '../../utils/log-util';
+import { StorageUtil } from '../../utils/storage';
+import { getHashParameters, parseQueryParameters } from '../../utils/url';
+
+import type { AuthResult } from "../../jwt/model/auth-result.model";
 
 export function getAuthResultFromUrl(): AuthResult | null {
   const authResultFromUrl = getHashParameters<Partial<AuthResult>>();

@@ -1,10 +1,11 @@
+import { config } from "../../configuration/config.service";
+import { usesOpenId } from "../../open-id/uses-openid";
+import { generateNonce, saveNonce } from "../../utils/nonce";
+import { generateState, saveState } from "../../utils/state";
 import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
-import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
-import { generateState, saveState } from "../../utils/state";
-import { config } from "../../configuration/config.service";
-import { generateNonce, saveNonce } from "../../utils/nonce";
-import { usesOpenId } from "../../open-id/uses-openid";
+
+import type { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
 
 export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthorizeParameters {
   const state = generateState();

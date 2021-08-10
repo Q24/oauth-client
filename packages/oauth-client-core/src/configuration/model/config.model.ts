@@ -1,4 +1,4 @@
-import { AuthResultFilter } from "../../auth-result-filter/model/auth-result-filter.model";
+import type { AuthResultFilter } from "../../auth-result-filter/model/auth-result-filter.model";
 
 /**
  * Config Object for OIDC Service

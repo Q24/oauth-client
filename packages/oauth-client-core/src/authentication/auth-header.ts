@@ -1,4 +1,4 @@
-import { AuthResult } from "../jwt/model/auth-result.model";
+import type { AuthResult } from "../jwt/model/auth-result.model";
 
 /**
  * Get the Authorization header for usage with rest calls.

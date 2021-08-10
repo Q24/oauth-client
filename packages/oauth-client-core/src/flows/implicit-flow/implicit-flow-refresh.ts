@@ -1,16 +1,23 @@
+import {
+  isAuthResult,
+  storeAuthResult,
+} from "../../authentication/auth-result";
+import { config } from "../../configuration/config.service";
+import { assertProviderMetadata } from "../../discovery/assert-provider-metadata";
+import { discovery } from "../../discovery/discovery";
+import { discoveryState } from "../../discovery/discovery-state";
+import {
+  isValidNewAuthResult,
+  isValidStoredAuthResult,
+} from "../../jwt/validate-auth-result";
+import { loadIframeUrl } from "../../utils/iframe";
+import { LogUtil } from "../../utils/log-util";
+import { transformScopesStringToArray } from "../../utils/scope";
+import { parseQueryParameters, toUrlParameterString } from "../../utils/url";
 import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
-import {AuthValidationOptions} from '../../jwt/model/auth-validation-options.model';
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {discovery} from '../../discovery/discovery';
-import {transformScopesStringToArray} from '../../utils/scope';
-import {config} from '../../configuration/config.service';
-import {LogUtil} from '../../utils/log-util';
-import {assertProviderMetadata} from '../../discovery/assert-provider-metadata';
-import {discoveryState} from '../../discovery/discovery-state';
-import {hashFragmentToAuthResult, toUrlParameterString} from '../../utils/url';
-import {loadIframeUrl} from '../../utils/iframe';
-import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
-import {storeAuthResult} from '../../authentication/auth-result';
+
+import type { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
+import type { AuthResult } from "../../jwt/model/auth-result.model";
 
 /**
  * Silently refresh an access token via iFrame.
@@ -48,24 +55,29 @@ export async function silentRefresh(
   }?${toUrlParameterString(authorizeParams)}`;
 
   const loadedUrl = await loadIframeUrl(urlToLoad);
-  const hashAuthResult = hashFragmentToAuthResult(loadedUrl.split("#")[1]);
+  const potentialHashAuthResult = parseQueryParameters<Partial<AuthResult>>(
+    loadedUrl.split("#")[1],
+  );
+  if (!isAuthResult(potentialHashAuthResult)) {
+    throw Error("Hash fragment is no auth result");
+  }
 
   LogUtil.debug(
     "Access Token found in silent refresh return URL, validating it",
   );
 
-  const isValid = await isValidNewAuthResult(hashAuthResult);
+  const isValid = await isValidNewAuthResult(potentialHashAuthResult);
 
   if (isValid) {
-    storeAuthResult(hashAuthResult);
+    storeAuthResult(potentialHashAuthResult);
 
     if (
       isValidStoredAuthResult(
-        hashAuthResult,
+        potentialHashAuthResult,
         authValidationOptions?.extraAuthFilters || [],
       )
     ) {
-      return hashAuthResult;
+      return potentialHashAuthResult;
     } else {
       throw Error("invalid_token");
     }

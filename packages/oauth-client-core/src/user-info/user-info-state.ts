@@ -1,4 +1,4 @@
-import { UserInfo } from "./user-info.model";
+import type { UserInfo } from "./user-info.model";
 
 const userInfoState: {
   userInfo: UserInfo | null;

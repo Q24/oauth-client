@@ -1,9 +1,10 @@
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { LogUtil } from "../utils/log-util";
-import { timeout } from "../utils/timeout";
-import {getURLParameters, toUrlParameterString, URLParams} from "../utils/url";
-import {discoveryState} from '../discovery/discovery-state';
+import { assertProviderMetadata } from '../discovery/assert-provider-metadata';
+import { discoveryState } from '../discovery/discovery-state';
+import { LogUtil } from '../utils/log-util';
+import { timeout } from '../utils/timeout';
+import { getURLParameters, toUrlParameterString, URLParams } from '../utils/url';
+
+import type { AuthResult } from "../jwt/model/auth-result.model";
 
 export async function authorize<
   T extends {

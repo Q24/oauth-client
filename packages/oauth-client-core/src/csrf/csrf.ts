@@ -1,7 +1,8 @@
-import { CsrfResult } from "./csrf.model";
+import { config } from "../configuration/config.service";
 import { LogUtil } from "../utils/log-util";
 import { StorageUtil } from "../utils/storage";
-import { config } from "../configuration/config.service";
+
+import type { CsrfResult } from "./csrf.model";
 
 /**
  * Deletes the stored CSRF Token from storage
@@ -25,7 +26,6 @@ export function getStoredCsrfToken(): string | null {
 export function storeCsrfToken(token: string): void {
   LogUtil.debug(`Storing the CSRF Token in the session storage`);
   StorageUtil.store("_csrf", token);
-
 }
 
 /**

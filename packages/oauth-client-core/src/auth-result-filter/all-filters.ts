@@ -1,5 +1,6 @@
-import { config } from "../configuration/config.service";
-import { AuthResultFilter } from "./model/auth-result-filter.model";
+import { config } from '../configuration/config.service';
+
+import type { AuthResultFilter } from "./model/auth-result-filter.model";
 
 export function getAllAuthResultFilters(
   extraAuthResultFilters?: AuthResultFilter[],

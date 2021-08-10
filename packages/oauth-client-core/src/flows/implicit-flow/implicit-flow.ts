@@ -1,22 +1,32 @@
-import { silentRefresh } from "./implicit-flow-refresh";
-import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
+import {
+  getStoredAuthResult,
+  storeAuthResult,
+} from "../../authentication/auth-result";
+import {
+  authorize,
+  ensureNoErrorInParameters,
+} from "../../authentication/authorize";
+import { config } from "../../configuration/config.service";
+import { discovery } from "../../discovery/discovery";
+import {
+  isValidNewAuthResult,
+  isValidStoredAuthResult,
+} from "../../jwt/validate-auth-result";
+import { cleanSessionStorage } from "../../utils/clean-session-storage";
+import { LogUtil } from "../../utils/log-util";
+import { transformScopesStringToArray } from "../../utils/scope";
+import { clearQueryParameters } from "../../utils/url";
 import {
   deleteStoredHashString,
   getAuthResultFromStoredHash,
   getAuthResultFromUrl,
 } from "./hash";
+import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
+import { silentRefresh } from "./implicit-flow-refresh";
 import { getSessionUpgradeToken, sessionUpgrade } from "./session-upgrade";
-import {AuthValidationOptions} from '../../jwt/model/auth-validation-options.model';
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {discovery} from '../../discovery/discovery';
-import {isValidNewAuthResult, isValidStoredAuthResult} from '../../jwt/validate-auth-result';
-import {getStoredAuthResult, storeAuthResult} from '../../authentication/auth-result';
-import {clearQueryParameters} from '../../utils/url';
-import {authorize, ensureNoErrorInParameters} from '../../authentication/authorize';
-import {cleanSessionStorage} from '../../utils/clean-session-storage';
-import {transformScopesStringToArray} from '../../utils/scope';
-import {config} from '../../configuration/config.service';
-import {LogUtil} from '../../utils/log-util';
+
+import type { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
+import type { AuthResult } from "../../jwt/model/auth-result.model";
 
 /**
  * If possible, do a session upgrade.

@@ -1,10 +1,10 @@
-import { discovery } from "../discovery/discovery";
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
-import {isCodeFlow} from '../utils/is-code-flow';
-import {codeFlowRefreshAccessToken} from '../flows/code-flow/code-flow-refresh';
-import {silentRefresh} from '../flows/implicit-flow/implicit-flow-refresh';
+import { discovery } from '../discovery/discovery';
+import { codeFlowRefreshAccessToken } from '../flows/code-flow/code-flow-refresh';
+import { silentRefresh } from '../flows/implicit-flow/implicit-flow-refresh';
+import { isCodeFlow } from '../utils/is-code-flow';
 
+import type { AuthResult } from "../jwt/model/auth-result.model";
+import type { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
 /**
  * Check if the token expires in the next *x* seconds.
  *

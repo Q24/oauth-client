@@ -1,4 +1,18 @@
-import { getStoredRefreshToken } from "./refresh-token";
+import {
+  getStoredAuthResult,
+  storeAuthResult,
+} from "../../authentication/auth-result";
+import {
+  authorize,
+  ensureNoErrorInParameters,
+} from "../../authentication/authorize";
+import { discovery } from "../../discovery/discovery";
+import {
+  isValidNewAuthResult,
+  isValidStoredAuthResult,
+} from "../../jwt/validate-auth-result";
+import { LogUtil } from "../../utils/log-util";
+import { clearQueryParameters } from "../../utils/url";
 import {
   accessTokenRequest,
   createCodeFlowAccessTokenRequestParameters,
@@ -6,21 +20,11 @@ import {
 import { createCodeFlowAuthorizeRequestParameters } from "./code-flow-authorize-params";
 import { codeFlowRefreshAccessToken } from "./code-flow-refresh";
 import { getCodeFromUrl } from "./get-code-from-url";
-import { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
-import {
-  getStoredAuthResult,
-  storeAuthResult,
-} from "../../authentication/auth-result";
-import {
-  isValidNewAuthResult,
-  isValidStoredAuthResult,
-} from "../../jwt/validate-auth-result";
-import { AuthResult } from "../../jwt/model/auth-result.model";
-import { clearQueryParameters } from "../../utils/url";
-import { authorize, ensureNoErrorInParameters } from "../../authentication/authorize";
-import { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
-import { discovery } from "../../discovery/discovery";
-import { LogUtil } from "../../utils/log-util";
+import { getStoredRefreshToken } from "./refresh-token";
+
+import type { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
+import type { AuthResult } from "../../jwt/model/auth-result.model";
+import type { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
 
 export async function codeFlow(
   authValidationOptions?: AuthValidationOptions,

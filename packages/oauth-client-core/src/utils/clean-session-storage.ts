@@ -1,8 +1,8 @@
 import { deleteStoredAuthResults } from "../authentication/auth-result";
-import { deleteIdTokenHint } from "../open-id/id-token-hint";
-import { deleteAllStoredRefreshTokens } from "../flows/code-flow/refresh-token";
 import { deleteSessionId } from "../backend-check/session-id";
 import { deleteStoredCsrfToken } from "../csrf/csrf";
+import { deleteAllStoredRefreshTokens } from "../flows/code-flow/refresh-token";
+import { deleteIdTokenHint } from "../open-id/id-token-hint";
 import { clearUserInfoCache } from "../user-info/user-info-state";
 import { LogUtil } from "./log-util";
 import { deleteNonce } from "./nonce";

@@ -1,11 +1,12 @@
+import { getAuthHeader } from "../authentication/auth-header";
+import { getStoredAuthResult } from "../authentication/auth-result";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
+import { discoveryState } from "../discovery/discovery-state";
 import { parseIdToken } from "../jwt/parseJwt";
 import { LogUtil } from "../utils/log-util";
 import { readUserInfoCache, setUserInfoCache } from "./user-info-state";
-import { UserInfo } from "./user-info.model";
-import { getStoredAuthResult } from "../authentication/auth-result";
-import { getAuthHeader } from "../authentication/auth-header";
-import { discoveryState } from "../discovery/discovery-state";
+
+import type { UserInfo } from "./user-info.model";
 
 /**
  * Due to the possibility of token substitution attacks, the UserInfo Response

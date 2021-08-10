@@ -1,5 +1,5 @@
-import {config} from '../../configuration/config.service';
-import {StorageUtil} from '../../utils/storage';
+import { config } from '../../configuration/config.service';
+import { StorageUtil } from '../../utils/storage';
 
 function createRefreshTokenStorageKey(): string {
   return `${config.client_id}-refresh-token`;

@@ -1,7 +1,8 @@
-import { OAuthCodeFlowAuthorizeResponse } from "./model/authorization-response.model";
+import { LogUtil } from "../../utils/log-util";
 import { getState } from "../../utils/state";
 import { getSearchParameters } from "../../utils/url";
-import { LogUtil } from "../../utils/log-util";
+
+import type { OAuthCodeFlowAuthorizeResponse } from "./model/authorization-response.model";
 
 export function getCodeFromUrl(): string | null {
   const oAuthCodeFlowAuthorizeResponse =

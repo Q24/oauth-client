@@ -1,13 +1,14 @@
 import { getAllAuthResultFilters } from "../auth-result-filter/all-filters";
 import { filterAuthResults } from "../auth-result-filter/filter-auth-results";
-import { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
 import { config } from "../configuration/config.service";
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { epochSeconds } from "../utils/time";
+import { storeRefreshToken } from "../flows/code-flow/refresh-token";
+import { storeIdToken } from "../open-id/id-token-hint";
 import { LogUtil } from "../utils/log-util";
 import { StorageUtil } from "../utils/storage";
-import { storeIdToken } from "../open-id/id-token-hint";
-import { storeRefreshToken } from "../flows/code-flow/refresh-token";
+import { epochSeconds } from "../utils/time";
+
+import type { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
+import type { AuthResult } from "../jwt/model/auth-result.model";
 
 /**
  * Deletes all the auth results from the storage. If authResultFilter is passed

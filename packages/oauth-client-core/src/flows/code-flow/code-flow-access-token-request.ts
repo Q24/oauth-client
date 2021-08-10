@@ -1,13 +1,12 @@
-import { getStoredCodeVerifier } from "./code-verifier";
-import {
-  OAuthCodeFlowAccessTokenParameters,
-} from "./model/access-token-request.model";
-import { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
-import {config} from '../../configuration/config.service';
-import {AuthResult} from '../../jwt/model/auth-result.model';
-import {toUrlParameterString} from '../../utils/url';
-import {discoveryState} from '../../discovery/discovery-state';
-import { LogUtil } from "../../utils/log-util";
+import { config } from '../../configuration/config.service';
+import { discoveryState } from '../../discovery/discovery-state';
+import { LogUtil } from '../../utils/log-util';
+import { toUrlParameterString } from '../../utils/url';
+import { getStoredCodeVerifier } from './code-verifier';
+
+import type { AuthResult } from '../../jwt/model/auth-result.model';
+import type { OAuthCodeFlowAccessTokenParameters } from './model/access-token-request.model';
+import type { OAuthRefreshTokenParameters } from './model/refresh-token-request.model';
 
 interface CreateCodeFlowAcccessTokenRequestParametersConfig {
   code: string;

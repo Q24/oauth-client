@@ -1,8 +1,9 @@
-import { OpenIdImplicitAuthorizationParameters } from "./model/implicit-request-parameters.model";
-import {generateState, getState, saveState} from '../../utils/state';
-import {generateNonce, getNonce, saveNonce} from '../../utils/nonce';
-import {config} from '../../configuration/config.service';
-import {LogUtil} from '../../utils/log-util';
+import { config } from "../../configuration/config.service";
+import { LogUtil } from "../../utils/log-util";
+import { generateNonce, getNonce, saveNonce } from "../../utils/nonce";
+import { generateState, getState, saveState } from "../../utils/state";
+
+import type { OpenIdImplicitAuthorizationParameters } from "./model/implicit-request-parameters.model";
 
 /**
  * Gather the URL params for Authorize redirect method

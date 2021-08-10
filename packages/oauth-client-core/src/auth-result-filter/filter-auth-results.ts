@@ -1,5 +1,5 @@
-import { AuthResult } from "../jwt/model/auth-result.model";
-import { AuthResultFilter } from "./model/auth-result-filter.model";
+import type { AuthResult } from "../jwt/model/auth-result.model";
+import type { AuthResultFilter } from "./model/auth-result-filter.model";
 
 /**
  * gets a list of authentication results which pass the filters.
