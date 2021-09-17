@@ -60,6 +60,6 @@ export async function sessionUpgrade(
   window.location.href = `${discoveryState.providerMetadata.issuer}/upgrade-session?${urlParams}`;
 
   // Send Authorization code and code verifier to token endpoint -> server returns access token
-  await timeout(2000);
+  await timeout(7000);
   throw Error("authorize_redirect_timeout");
 }
