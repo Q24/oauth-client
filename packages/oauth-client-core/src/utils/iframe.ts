@@ -30,20 +30,24 @@ export function loadIframeUrl(url: string): Promise<string> {
   if (iframeStore[url]) {
     return iframeStore[url];
   }
+  console.log(url);
 
   const promise = new Promise<string>((resolve, reject) => {
     const iFrame = document.createElement("iframe");
-    iFrame.id = url;
     iFrame.style.display = "none";
+    window.document.body.appendChild(iFrame);
+    iFrame.src = url;
 
     iFrame.onload = () => {
       if (!iFrame.contentWindow) {
         reject("iframe does not have content window");
         return;
       }
+      console.log('onload', iFrame.contentWindow.location.href);
       resolve(iFrame.contentWindow.location.href);
     };
   }).finally(() => {
+    console.log('finally');
     if (iframeStore[url]) {
       delete iframeStore[url];
     }
