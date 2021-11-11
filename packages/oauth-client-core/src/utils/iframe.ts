@@ -17,7 +17,7 @@ export function destroyIframe(iFrame: HTMLIFrameElement): void {
  * Promise.
  */
 const iframeStore: {
-  [key: string]: Promise<string>;
+  [key: string]: Promise<string> | undefined;
 } = {};
 
 /**
@@ -27,8 +27,9 @@ const iframeStore: {
  * @returns the loaded url
  */
 export function loadIframeUrl(url: string): Promise<string> {
-  if (iframeStore[url]) {
-    return iframeStore[url];
+  const storedPromise = iframeStore[url];
+  if (storedPromise) {
+    return storedPromise;
   }
 
   const promise = new Promise<string>((resolve, reject) => {
