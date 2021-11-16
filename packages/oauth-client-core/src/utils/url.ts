@@ -24,7 +24,13 @@ export function getSearchParameters<T>(): T {
 }
 
 export function parseQueryParameters<T>(queryParametersString: string): T {
-  const queryParametersArray = queryParametersString.substring(1).split("&");
+  let queryParametersArray;
+  if (queryParametersString.substring(1) === '#') {
+    queryParametersArray = queryParametersString.substring(1).split("&");
+  } else {
+    queryParametersArray = queryParametersString.split("&");
+  }
+
   const argsParsed = {} as T;
   queryParametersArray.forEach((queryParameterString: string) => {
     if (-1 === queryParameterString.indexOf("=")) {
