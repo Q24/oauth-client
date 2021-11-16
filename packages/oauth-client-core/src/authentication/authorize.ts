@@ -16,7 +16,7 @@ export async function authorize<
   window.location.href = `${discoveryState.providerMetadata.authorization_endpoint}?${urlParamsString}`;
 
   // Send Authorization code and code verifier to token endpoint -> server returns access token
-  await timeout(2000);
+  await timeout(20000);
   throw Error("authorize_redirect_timeout");
 }
 

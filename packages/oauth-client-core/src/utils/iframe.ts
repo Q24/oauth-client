@@ -1,3 +1,5 @@
+import {timeout} from "./timeout";
+
 /**
  * destroy an iframe in a IE11 friendly-manner.
  * @param iFrame the iframe to destroy
@@ -30,7 +32,6 @@ export function loadIframeUrl(url: string): Promise<string> {
   if (iframeStore[url]) {
     return iframeStore[url];
   }
-  console.log(url);
 
   const promise = new Promise<string>((resolve, reject) => {
     const iFrame = document.createElement("iframe");
@@ -43,11 +44,13 @@ export function loadIframeUrl(url: string): Promise<string> {
         reject("iframe does not have content window");
         return;
       }
-      console.log('onload', iFrame.contentWindow.location.href);
       resolve(iFrame.contentWindow.location.href);
     };
+
+    timeout(20000).then(() => {
+      reject('iFrame rejected');
+    });
   }).finally(() => {
-    console.log('finally');
     if (iframeStore[url]) {
       delete iframeStore[url];
     }
