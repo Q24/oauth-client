@@ -1,4 +1,4 @@
-import { AccessTokenPayload } from "./access-token.model";
+import type {AccessTokenPayload} from "./access-token.model";
 
 export interface JWT<T = AccessTokenPayload> {
   header: JWTHeader;
