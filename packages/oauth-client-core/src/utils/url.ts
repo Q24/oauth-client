@@ -25,7 +25,8 @@ export function getSearchParameters<T>(): T {
 
 export function parseQueryParameters<T>(queryParametersString: string): T {
   let queryParametersArray;
-  if (queryParametersString.substring(1) === '#') {
+  const firstSubstring = queryParametersString.substring(0, 1);
+  if (firstSubstring === '#' || firstSubstring === '?') {
     queryParametersArray = queryParametersString.substring(1).split("&");
   } else {
     queryParametersArray = queryParametersString.split("&");
