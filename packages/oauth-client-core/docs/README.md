@@ -1,7 +1,5 @@
 @ilionx/oauth-client-core / [Exports](modules.md)
 
-[![npm](https://img.shields.io/npm/v/@hawaii-framework/oidc-implicit-core.svg?style=flat-square)](https://www.npmjs.com/package/@hawaii-framework/oidc-implicit-core)
-
 # OIDC Implicit Core
 
 This library implements the [OIDC implicit flow](https://openid.net/specs/openid-connect-implicit-1_0.html) for use in a front-end web application. The library can be used directly with any framework of choice. While it is not strictly necessary to use wrapper, there is one [available for Angular](https://github.com/Q24/hawaii-packages/tree/master/packages/ngx-oidc-implicit).

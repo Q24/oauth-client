@@ -15,27 +15,16 @@
 - [CsrfResult](interfaces/CsrfResult.md)
 - [JWT](interfaces/JWT.md)
 - [OAuthClientConfig](interfaces/OAuthClientConfig.md)
-- [OAuthCodeFlowAccessTokenParameters](interfaces/OAuthCodeFlowAccessTokenParameters.md)
-- [OAuthCodeFlowAuthorizeParameters](interfaces/OAuthCodeFlowAuthorizeParameters.md)
-- [OAuthCodeFlowAuthorizeResponse](interfaces/OAuthCodeFlowAuthorizeResponse.md)
-- [OAuthRefreshTokenParameters](interfaces/OAuthRefreshTokenParameters.md)
-
-### Type aliases
-
-- [AuthorizeErrors](modules.md#authorizeerrors)
 
 ### Variables
 
-- [AUTHORIZE\_ERRORS](modules.md#authorize_errors)
 - [config](modules.md#config)
 
 ### Functions
 
 - [accessTokenScopeFilter](modules.md#accesstokenscopefilter)
-- [authorize](modules.md#authorize)
 - [cleanHashFragment](modules.md#cleanhashfragment)
 - [cleanSessionStorage](modules.md#cleansessionstorage)
-- [codeFlow](modules.md#codeflow)
 - [configure](modules.md#configure)
 - [deleteStoredAuthResults](modules.md#deletestoredauthresults)
 - [discovery](modules.md#discovery)
@@ -51,31 +40,8 @@
 - [parseIdToken](modules.md#parseidtoken)
 - [parseJwt](modules.md#parsejwt)
 - [silentLogout](modules.md#silentlogout)
-- [silentRefresh](modules.md#silentrefresh)
-
-## Type aliases
-
-### AuthorizeErrors
-
-Ƭ **AuthorizeErrors**: ``"invalid_client"`` \| ``"unauthorized_client"`` \| ``"invalid_grant"`` \| ``"unsupported_grant_type"`` \| ``"invalid_scope"`` \| ``"invalid_request_response_type"`` \| ``"invalid_request_type"`` \| ``"invalid_request_openid_type"`` \| ``"invalid_request_redirect_uri"`` \| ``"invalid_request_signature"`` \| ``"invalid_request_realm"`` \| ``"invalid_request_atype"`` \| ``"invalid_request_recipient"``
-
-A set of strings to match when the Authorize redirect is erroring. This is the complete list of possible error to handle.
-
-#### Defined in
-
-[authentication/model/authorize-errors.model.ts:4](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/model/authorize-errors.model.ts#L4)
 
 ## Variables
-
-### AUTHORIZE\_ERRORS
-
-• `Const` **AUTHORIZE\_ERRORS**: [`AuthorizeErrors`](modules.md#authorizeerrors)[]
-
-#### Defined in
-
-[authentication/authorize-errors.ts:3](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/authorize-errors.ts#L3)
-
-___
 
 ### config
 
@@ -83,7 +49,7 @@ ___
 
 #### Defined in
 
-[configuration/config.service.ts:3](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/configuration/config.service.ts#L3)
+[configuration/config.service.ts:3](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/config.service.ts#L3)
 
 ## Functions
 
@@ -108,33 +74,7 @@ an AuthResultFilter function
 
 #### Defined in
 
-[auth-result-filter/access-token-scope-filter.ts:12](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/auth-result-filter/access-token-scope-filter.ts#L12)
-
-___
-
-### authorize
-
-▸ **authorize**<`T`\>(`urlParameters`): `Promise`<[`AuthResult`](interfaces/AuthResult.md)\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends { [key in string \| number \| symbol]: any} |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `urlParameters` | `T` |
-
-#### Returns
-
-`Promise`<[`AuthResult`](interfaces/AuthResult.md)\>
-
-#### Defined in
-
-[common/authorize.ts:8](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/common/authorize.ts#L8)
+[auth-result-filter/access-token-scope-filter.ts:13](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/auth-result-filter/access-token-scope-filter.ts#L13)
 
 ___
 
@@ -161,7 +101,7 @@ the URL without the hash fragment
 
 #### Defined in
 
-[utils/url.ts:104](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/utils/url.ts#L104)
+[utils/url.ts:84](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/utils/url.ts#L84)
 
 ___
 
@@ -179,27 +119,7 @@ refresh token
 
 #### Defined in
 
-[utils/clean-session-storage.ts:16](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/utils/clean-session-storage.ts#L16)
-
-___
-
-### codeFlow
-
-▸ **codeFlow**(`authValidationOptions?`): `Promise`<[`AuthResult`](interfaces/AuthResult.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `authValidationOptions?` | `AuthValidationOptions` |
-
-#### Returns
-
-`Promise`<[`AuthResult`](interfaces/AuthResult.md)\>
-
-#### Defined in
-
-[flows/code-flow/code-flow.ts:25](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/code-flow/code-flow.ts#L25)
+[utils/clean-session-storage.ts:16](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/utils/clean-session-storage.ts#L16)
 
 ___
 
@@ -219,7 +139,7 @@ ___
 
 #### Defined in
 
-[configuration/config.service.ts:5](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/configuration/config.service.ts#L5)
+[configuration/config.service.ts:5](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/config.service.ts#L5)
 
 ___
 
@@ -242,7 +162,7 @@ in, only a subset will be deleted.
 
 #### Defined in
 
-[authentication/auth-result.ts:21](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/auth-result.ts#L21)
+[authentication/auth-result.ts:22](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/authentication/auth-result.ts#L22)
 
 ___
 
@@ -264,7 +184,7 @@ A promise which will resolve when the discovery is complete
 
 #### Defined in
 
-[discovery/discovery.ts:24](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/discovery/discovery.ts#L24)
+[discovery/discovery.ts:24](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/discovery/discovery.ts#L24)
 
 ___
 
@@ -272,7 +192,7 @@ ___
 
 ▸ **getAuthHeader**(`authResult`): `string`
 
-Get the Authorisation header for usage with rest calls.
+Get the Authorization header for usage with rest calls.
 
 Uses the token type present in the token.
 
@@ -288,7 +208,7 @@ Uses the token type present in the token.
 
 #### Defined in
 
-[authentication/auth-header.ts:8](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/auth-header.ts#L8)
+[authentication/auth-header.ts:8](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/authentication/auth-header.ts#L8)
 
 ___
 
@@ -304,7 +224,7 @@ Get a CSRF Token from the authorization server
 
 #### Defined in
 
-[csrf/csrf.ts:34](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/csrf/csrf.ts#L34)
+[csrf/csrf.ts:34](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/csrf/csrf.ts#L34)
 
 ___
 
@@ -331,7 +251,7 @@ During logout, the regex option should be enabled if we are not sure that the *c
 
 #### Defined in
 
-[open-id/id-token-hint.ts:15](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/open-id/id-token-hint.ts#L15)
+[open-id/id-token-hint.ts:15](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/open-id/id-token-hint.ts#L15)
 
 ___
 
@@ -355,7 +275,7 @@ A valid Token or `null` if no token has been found.
 
 #### Defined in
 
-[authentication/auth-result.ts:89](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/auth-result.ts#L89)
+[authentication/auth-result.ts:90](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/authentication/auth-result.ts#L90)
 
 ___
 
@@ -371,7 +291,7 @@ Gets the stored CSRF Token from storage
 
 #### Defined in
 
-[csrf/csrf.ts:17](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/csrf/csrf.ts#L17)
+[csrf/csrf.ts:18](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/csrf/csrf.ts#L18)
 
 ___
 
@@ -389,7 +309,7 @@ the user info
 
 #### Defined in
 
-[user-info/getUserInfo.ts:125](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/user-info/getUserInfo.ts#L125)
+[user-info/user-info.ts:126](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/user-info/user-info.ts#L126)
 
 ___
 
@@ -410,7 +330,7 @@ The status code of the HTTP response
 
 #### Defined in
 
-[backend-check/session-alive.ts:13](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/backend-check/session-alive.ts#L13)
+[backend-check/session-alive.ts:13](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/backend-check/session-alive.ts#L13)
 
 ___
 
@@ -444,7 +364,7 @@ A promise.
 
 #### Defined in
 
-[authentication/lazy-refresh.ts:24](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/lazy-refresh.ts#L24)
+[authentication/lazy-refresh.ts:24](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/authentication/lazy-refresh.ts#L24)
 
 ___
 
@@ -464,7 +384,7 @@ ___
 
 #### Defined in
 
-[authentication/obtain-session.ts:7](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/obtain-session.ts#L7)
+[authentication/obtain-session.ts:8](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/authentication/obtain-session.ts#L8)
 
 ___
 
@@ -484,7 +404,7 @@ ___
 
 #### Defined in
 
-[jwt/parseJwt.ts:45](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/jwt/parseJwt.ts#L45)
+[jwt/parseJwt.ts:46](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/jwt/parseJwt.ts#L46)
 
 ___
 
@@ -515,7 +435,7 @@ JSON Web Token
 
 #### Defined in
 
-[jwt/parseJwt.ts:27](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/jwt/parseJwt.ts#L27)
+[jwt/parseJwt.ts:28](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/jwt/parseJwt.ts#L28)
 
 ___
 
@@ -547,37 +467,4 @@ The promise resolves if the logout was successful, otherwise it will reject.
 
 #### Defined in
 
-[authentication/silent-logout.ts:34](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/authentication/silent-logout.ts#L34)
-
-___
-
-### silentRefresh
-
-▸ **silentRefresh**(`authValidationOptions?`): `Promise`<[`AuthResult`](interfaces/AuthResult.md)\>
-
-Silently refresh an access token via iFrame.
-
-Concurrent requests to this function will resolve to a
-singleton Promise.
-
-Creates an invisible iframe that navigates to the
-`authorize_endpoint` to get a new token there. Extracts
-the token from the iframe URL and returns it.
-
-If this function fails for any reason, the Promise will reject.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `authValidationOptions?` | `AuthValidationOptions` |
-
-#### Returns
-
-`Promise`<[`AuthResult`](interfaces/AuthResult.md)\>
-
-A valid token
-
-#### Defined in
-
-[flows/implicit-flow/implicit-flow-refresh.ts:29](https://github.com/Q24/oauth-client/blob/d3fb1c4/packages/oauth-client-core/src/flows/implicit-flow/implicit-flow-refresh.ts#L29)
+[authentication/silent-logout.ts:34](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/authentication/silent-logout.ts#L34)
