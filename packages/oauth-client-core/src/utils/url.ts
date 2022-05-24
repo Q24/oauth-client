@@ -88,6 +88,7 @@ export function cleanHashFragment(url: string): string {
 export function cleanCode(url: string): string {
   const cleanedUrl = new URL(url);
   cleanedUrl.searchParams.delete('code');
+  cleanedUrl.searchParams.delete('state');
   LogUtil.debug('Cleaning Code parameter from URL', url, cleanedUrl);
   return cleanedUrl.toString();
 }
