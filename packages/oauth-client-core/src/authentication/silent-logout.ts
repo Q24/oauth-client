@@ -10,7 +10,7 @@ interface SilentLogoutConfig {
 }
 
 const silentLogoutStore: {
-  [iFrameId: string]: Promise<void>;
+  [iFrameId: string]: Promise<void> | undefined;
 } = {};
 
 /**
@@ -54,8 +54,9 @@ export function silentLogout(
   const iframeId = `silentLogoutIframe`;
 
   // Checks if there is a concurrent silent logout call going on.
-  if (silentLogoutStore[iframeId]) {
-    return silentLogoutStore[iframeId];
+  const storedPromise = silentLogoutStore[iframeId];
+  if (storedPromise) {
+    return storedPromise;
   }
 
   const silentLogoutPromise = new Promise<void>((resolve, reject) => {
