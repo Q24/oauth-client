@@ -1,3 +1,5 @@
+import { LogUtil } from './log-util';
+
 /**
  * Flush state param
  */
@@ -81,6 +83,13 @@ export function toUrlParameterString<
  */
 export function cleanHashFragment(url: string): string {
   return url.split("#")[0];
+}
+
+export function cleanCode(url: string): string {
+  const cleanedUrl = new URL(url);
+  cleanedUrl.searchParams.delete('code');
+  LogUtil.debug('Cleaning Code parameter from URL', url, cleanedUrl);
+  return cleanedUrl.toString();
 }
 
 export function clearQueryParameters(): void {

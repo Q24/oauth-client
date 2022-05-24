@@ -1,7 +1,7 @@
 import { config } from '../../configuration/config.service';
 import { discoveryState } from '../../discovery/discovery-state';
 import { LogUtil } from '../../utils/log-util';
-import { toUrlParameterString } from '../../utils/url';
+import { cleanCode, toUrlParameterString } from '../../utils/url';
 import { getStoredCodeVerifier } from './code-verifier';
 
 import type { AuthResult } from '../../jwt/model/auth-result.model';
@@ -23,7 +23,7 @@ export function createCodeFlowAccessTokenRequestParameters({
     client_id: config.client_id,
     code,
     grant_type: "authorization_code",
-    redirect_uri: config.redirect_uri,
+    redirect_uri: cleanCode(config.redirect_uri),
     code_verifier,
   };
 }
