@@ -1,5 +1,4 @@
 export {
-  AUTHORIZE_ERRORS,
   AuthorizeErrors,
   CsrfResult,
   OAuthClientConfig,

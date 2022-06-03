@@ -41,7 +41,7 @@
 
 #### Defined in
 
-[utils/log-util.ts:4](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/utils/log-util.ts#L4)
+[utils/log-util.ts:4](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/log-util.ts#L4)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[utils/log-util.ts:20](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/utils/log-util.ts#L20)
+[utils/log-util.ts:20](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/log-util.ts#L20)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[utils/log-util.ts:16](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/utils/log-util.ts#L16)
+[utils/log-util.ts:16](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/log-util.ts#L16)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[utils/log-util.ts:8](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/utils/log-util.ts#L8)
+[utils/log-util.ts:8](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/log-util.ts#L8)
 
 ___
 
@@ -126,4 +126,4 @@ ___
 
 #### Defined in
 
-[utils/log-util.ts:12](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/utils/log-util.ts#L12)
+[utils/log-util.ts:12](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/log-util.ts#L12)

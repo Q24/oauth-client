@@ -1350,7 +1350,7 @@
   "resolved" "file:packages/oauth-client-angular"
   "version" "1.0.0-beta-1"
 
-"@ilionx/oauth-client-core@^1.0.0-beta-1", "@ilionx/oauth-client-core@file:/opt/hawaii/workspace/oauth-client/packages/oauth-client-core":
+"@ilionx/oauth-client-core@^1.0.1", "@ilionx/oauth-client-core@file:/opt/hawaii/workspace/oauth-client/packages/oauth-client-core":
   "resolved" "file:packages/oauth-client-core"
   "version" "1.0.1"
 

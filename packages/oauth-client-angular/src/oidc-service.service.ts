@@ -16,7 +16,7 @@ import {
   deleteStoredAuthResults,
   isSessionAlive,
   obtainSession,
-  silentRefresh,
+  lazyRefresh,
   silentLogout,
 } from "@ilionx/oauth-client-core";
 
@@ -101,16 +101,19 @@ export class OidcService {
 
   silentRefresh(): Observable<boolean> {
     return new Observable<boolean>((observer: Observer<boolean>) => {
-      silentRefresh().then(
-        () => {
-          observer.next(true);
-          observer.complete();
-        },
-        () => {
-          observer.next(false);
-          observer.complete();
-        }
-      );
+      const token = getStoredAuthResult();
+      if (token) {
+        lazyRefresh(token).then(
+            () => {
+              observer.next(true);
+              observer.complete();
+            },
+            () => {
+              observer.next(false);
+              observer.complete();
+            }
+        );
+      }
     });
   }
 

@@ -1,24 +1,27 @@
 {
   "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "@ilionx/oauth-client-angular",
-  "version": "1.0.0-beta-1",
+  "version": "1.0.1",
   "description": "OAuth and OpenID client for Angular",
   "author": "ilionx",
-  "email": "info@qnh.nl",
+  "email": "info@ilionx.com",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/Q24/hawaii-packages/tree/master/packages/ngx-oidc-implicit",
+  "homepage": "https://github.com/Q24/oauth-client",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Q24/hawaii-packages.git"
+    "url": "git+https://github.com/Q24/oauth-client.git"
   },
   "bugs": {
-    "url": "https://github.com/Q24/hawaii-packages/issues"
+    "url": "https://github.com/Q24/oauth-client/issues"
   },
   "keywords": [
     "oidc",
     "openid",
     "oauth2",
     "implicit",
+    "code",
+    "flow",
+    "pkce",
     "angular",
     "ngx",
     "ng2",
@@ -33,7 +36,7 @@
     "@angular/compiler": "^12.1.2",
     "@angular/compiler-cli": "^12.1.2",
     "@angular/core": "^12.0.0",
-    "@ilionx/oauth-client-core": "^1.0.0-beta-1",
+    "@ilionx/oauth-client-core": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "eslint": "^7.24.0",
@@ -47,6 +50,6 @@
     }
   },
   "peerDependencies": {
-    "@ilionx/oauth-client-core": "^1.0.0-beta-1"
+    "@ilionx/oauth-client-core": "^1.0.1"
   }
 }
