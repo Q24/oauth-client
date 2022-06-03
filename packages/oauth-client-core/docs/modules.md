@@ -56,7 +56,7 @@ https://openid.net/specs/openid-connect-core-1_0.html#AuthError
 
 #### Defined in
 
-[authentication/model/authorize-errors.model.ts:5](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/model/authorize-errors.model.ts#L5)
+[authentication/model/authorize-errors.model.ts:5](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/model/authorize-errors.model.ts#L5)
 
 ## Variables
 
@@ -66,7 +66,7 @@ https://openid.net/specs/openid-connect-core-1_0.html#AuthError
 
 #### Defined in
 
-[configuration/config.service.ts:3](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/configuration/config.service.ts#L3)
+[configuration/config.service.ts:3](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/configuration/config.service.ts#L3)
 
 ## Functions
 
@@ -91,7 +91,7 @@ an AuthResultFilter function
 
 #### Defined in
 
-[auth-result-filter/access-token-scope-filter.ts:13](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/auth-result-filter/access-token-scope-filter.ts#L13)
+[auth-result-filter/access-token-scope-filter.ts:13](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/auth-result-filter/access-token-scope-filter.ts#L13)
 
 ___
 
@@ -118,7 +118,7 @@ the URL without the hash fragment
 
 #### Defined in
 
-[utils/url.ts:84](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/url.ts#L84)
+[utils/url.ts:84](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/utils/url.ts#L84)
 
 ___
 
@@ -136,7 +136,7 @@ refresh token
 
 #### Defined in
 
-[utils/clean-session-storage.ts:16](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/utils/clean-session-storage.ts#L16)
+[utils/clean-session-storage.ts:16](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/utils/clean-session-storage.ts#L16)
 
 ___
 
@@ -156,7 +156,7 @@ ___
 
 #### Defined in
 
-[configuration/config.service.ts:5](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/configuration/config.service.ts#L5)
+[configuration/config.service.ts:5](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/configuration/config.service.ts#L5)
 
 ___
 
@@ -179,7 +179,7 @@ in, only a subset will be deleted.
 
 #### Defined in
 
-[authentication/auth-result.ts:22](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/auth-result.ts#L22)
+[authentication/auth-result.ts:22](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/auth-result.ts#L22)
 
 ___
 
@@ -201,7 +201,7 @@ A promise which will resolve when the discovery is complete
 
 #### Defined in
 
-[discovery/discovery.ts:24](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/discovery/discovery.ts#L24)
+[discovery/discovery.ts:24](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/discovery/discovery.ts#L24)
 
 ___
 
@@ -225,7 +225,7 @@ Uses the token type present in the token.
 
 #### Defined in
 
-[authentication/auth-header.ts:8](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/auth-header.ts#L8)
+[authentication/auth-header.ts:8](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/auth-header.ts#L8)
 
 ___
 
@@ -241,7 +241,7 @@ Get a CSRF Token from the authorization server
 
 #### Defined in
 
-[csrf/csrf.ts:34](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/csrf/csrf.ts#L34)
+[csrf/csrf.ts:34](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/csrf/csrf.ts#L34)
 
 ___
 
@@ -268,7 +268,7 @@ During logout, the regex option should be enabled if we are not sure that the *c
 
 #### Defined in
 
-[open-id/id-token-hint.ts:15](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/open-id/id-token-hint.ts#L15)
+[open-id/id-token-hint.ts:15](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/open-id/id-token-hint.ts#L15)
 
 ___
 
@@ -292,7 +292,7 @@ A valid Token or `null` if no token has been found.
 
 #### Defined in
 
-[authentication/auth-result.ts:90](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/auth-result.ts#L90)
+[authentication/auth-result.ts:90](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/auth-result.ts#L90)
 
 ___
 
@@ -308,7 +308,7 @@ Gets the stored CSRF Token from storage
 
 #### Defined in
 
-[csrf/csrf.ts:18](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/csrf/csrf.ts#L18)
+[csrf/csrf.ts:18](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/csrf/csrf.ts#L18)
 
 ___
 
@@ -326,7 +326,7 @@ the user info
 
 #### Defined in
 
-[user-info/user-info.ts:126](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/user-info/user-info.ts#L126)
+[user-info/user-info.ts:126](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/user-info/user-info.ts#L126)
 
 ___
 
@@ -347,7 +347,7 @@ The status code of the HTTP response
 
 #### Defined in
 
-[backend-check/session-alive.ts:13](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/backend-check/session-alive.ts#L13)
+[backend-check/session-alive.ts:13](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/backend-check/session-alive.ts#L13)
 
 ___
 
@@ -381,7 +381,7 @@ A promise.
 
 #### Defined in
 
-[authentication/lazy-refresh.ts:24](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/lazy-refresh.ts#L24)
+[authentication/lazy-refresh.ts:24](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/lazy-refresh.ts#L24)
 
 ___
 
@@ -401,7 +401,7 @@ ___
 
 #### Defined in
 
-[authentication/obtain-session.ts:8](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/obtain-session.ts#L8)
+[authentication/obtain-session.ts:8](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/obtain-session.ts#L8)
 
 ___
 
@@ -421,7 +421,7 @@ ___
 
 #### Defined in
 
-[jwt/parseJwt.ts:46](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/jwt/parseJwt.ts#L46)
+[jwt/parseJwt.ts:46](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/jwt/parseJwt.ts#L46)
 
 ___
 
@@ -452,7 +452,7 @@ JSON Web Token
 
 #### Defined in
 
-[jwt/parseJwt.ts:28](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/jwt/parseJwt.ts#L28)
+[jwt/parseJwt.ts:28](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/jwt/parseJwt.ts#L28)
 
 ___
 
@@ -484,4 +484,4 @@ The promise resolves if the logout was successful, otherwise it will reject.
 
 #### Defined in
 
-[authentication/silent-logout.ts:34](https://github.com/Q24/oauth-client/blob/0e7299b/packages/oauth-client-core/src/authentication/silent-logout.ts#L34)
+[authentication/silent-logout.ts:34](https://github.com/Q24/oauth-client/blob/dcd3fbc/packages/oauth-client-core/src/authentication/silent-logout.ts#L34)
