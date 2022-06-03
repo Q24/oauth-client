@@ -1,6 +1,6 @@
 {
   "name": "@ilionx/oauth-client-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "OAuth client for implicit and code flow with PKCE",
   "author": "ilionx",

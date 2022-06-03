@@ -35,7 +35,7 @@ Set the ID of your client
 
 #### Defined in
 
-[configuration/model/config.model.ts:10](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L10)
+[configuration/model/config.model.ts:10](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L10)
 
 ___
 
@@ -47,7 +47,7 @@ CSRF token endpoint
 
 #### Defined in
 
-[configuration/model/config.model.ts:47](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L47)
+[configuration/model/config.model.ts:47](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L47)
 
 ___
 
@@ -59,7 +59,7 @@ Verbose logging of inner workings of the package.
 
 #### Defined in
 
-[configuration/model/config.model.ts:62](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L62)
+[configuration/model/config.model.ts:62](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L62)
 
 ___
 
@@ -71,7 +71,7 @@ A list of filters each auth result must adhere to.
 
 #### Defined in
 
-[configuration/model/config.model.ts:84](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L84)
+[configuration/model/config.model.ts:84](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L84)
 
 ___
 
@@ -83,7 +83,7 @@ Endpoint for checking if a session is still used somewhere
 
 #### Defined in
 
-[configuration/model/config.model.ts:57](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L57)
+[configuration/model/config.model.ts:57](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L57)
 
 ___
 
@@ -96,7 +96,7 @@ authentication result.
 
 #### Defined in
 
-[configuration/model/config.model.ts:74](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L74)
+[configuration/model/config.model.ts:74](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L74)
 
 ___
 
@@ -108,7 +108,7 @@ The base issuer URL.
 
 #### Defined in
 
-[configuration/model/config.model.ts:79](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L79)
+[configuration/model/config.model.ts:79](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L79)
 
 ___
 
@@ -127,7 +127,7 @@ left to the OpenID Provider's discretion.
 
 #### Defined in
 
-[configuration/model/config.model.ts:96](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L96)
+[configuration/model/config.model.ts:96](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L96)
 
 ___
 
@@ -139,7 +139,7 @@ The URL you want to be redirected to after logging out
 
 #### Defined in
 
-[configuration/model/config.model.ts:36](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L36)
+[configuration/model/config.model.ts:36](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L36)
 
 ___
 
@@ -151,7 +151,7 @@ The URL you want to be redirected to after redirect from Authorization
 
 #### Defined in
 
-[configuration/model/config.model.ts:21](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L21)
+[configuration/model/config.model.ts:21](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L21)
 
 ___
 
@@ -164,7 +164,7 @@ In case op Open Id Connect this is usually `token id_token`
 
 #### Defined in
 
-[configuration/model/config.model.ts:16](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L16)
+[configuration/model/config.model.ts:16](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L16)
 
 ___
 
@@ -177,7 +177,7 @@ When using Open Id Connect, scope `openid` is mandatory
 
 #### Defined in
 
-[configuration/model/config.model.ts:42](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L42)
+[configuration/model/config.model.ts:42](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L42)
 
 ___
 
@@ -189,7 +189,7 @@ The URL you want to use for a silent Logout, if your stack supports it.
 
 #### Defined in
 
-[configuration/model/config.model.ts:31](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L31)
+[configuration/model/config.model.ts:31](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L31)
 
 ___
 
@@ -201,7 +201,7 @@ The URL you want to be redirected to after redirect from Authorization, while do
 
 #### Defined in
 
-[configuration/model/config.model.ts:26](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L26)
+[configuration/model/config.model.ts:26](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L26)
 
 ___
 
@@ -214,7 +214,7 @@ the audiences claim.
 
 #### Defined in
 
-[configuration/model/config.model.ts:68](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L68)
+[configuration/model/config.model.ts:68](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L68)
 
 ___
 
@@ -226,4 +226,4 @@ Validate received token endpoint
 
 #### Defined in
 
-[configuration/model/config.model.ts:52](https://github.com/Q24/oauth-client/blob/7aa96fe/packages/oauth-client-core/src/configuration/model/config.model.ts#L52)
+[configuration/model/config.model.ts:52](https://github.com/Q24/oauth-client/blob/04cb21b/packages/oauth-client-core/src/configuration/model/config.model.ts#L52)
