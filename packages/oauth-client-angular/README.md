@@ -2,7 +2,7 @@
 
 # OAuth client for Angular
 
-A wrapper for use with Angular on the [OIDC Implicit Core package](https://github.com/Q24/hawaii-packages/tree/master/packages/oidc-implicit-core). This package uses the static methods from that library and wraps them with Observables where neccessary.
+A wrapper for use with Angular on the [OIDC Oauth Core package](https://www.npmjs.com/package/@ilionx/oauth-client-core). This package uses the static methods from that library and wraps them with Observables where neccessary.
 
 ## Features
 
