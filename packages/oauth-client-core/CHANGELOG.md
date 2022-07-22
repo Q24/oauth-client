@@ -1,5 +1,9 @@
 # CHANGELOG
 
+# 1.0.3
+
+Documentation update
+
 # 1.0.1
 
 Added typing for Authorize Errors

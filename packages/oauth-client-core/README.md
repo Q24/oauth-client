@@ -1,23 +1,30 @@
-# OIDC Implicit Core
+# Oauth Client Core
 
-This library implements the [OIDC implicit flow](https://openid.net/specs/openid-connect-implicit-1_0.html) for use in a front-end web application. The library can be used directly with any framework of choice. While it is not strictly necessary to use wrapper, there is one [available for Angular](https://github.com/Q24/hawaii-packages/tree/master/packages/ngx-oidc-implicit).
+This library implements the [OIDC implicit flow](https://openid.net/specs/openid-connect-implicit-1_0.html) / [OIDC Code flow with PKCE](https://openid.net/2015/05/26/enhancing-oauth-security-for-mobile-applications-with-pkse/) for use in a front-end web application. The library can be used directly with any framework of choice. While it is not strictly necessary to use wrapper, there is one [available for Angular](https://www.npmjs.com/package/@ilionx/oauth-client-angular).
+
+## Features
+- Implicit Flow
+- Code Flow with PKCE
+- CSRF Tokens
+- Code samples
+- OpenID Connect Session Management
+- Authetication using redirect
 
 ## Roadmap
 
-- A future aim is to have this library certified as [OpenID Relying Party Implicit](https://openid.net/certification/#RPs).
+- A future aim is to have this library certified as [OpenID Relying Party] (https://openid.net/certification/#RPs).
 - Add support for [all request parameters](https://openid.net/specs/openid-connect-implicit-1_0.html#RequestParameters).
-- Add support for [Code Flow](https://openid.net/specs/openid-connect-basic-1_0.html#CodeFlow).
-- Add support for [Code Flow with PKCE](https://developers.onelogin.com/openid-connect/guides/auth-flow-pkce).
 - Move to native Web Crypto API when IE11 support is not needed anymore.
+- Authentication using popup
 
 ## API Reference
 
-The API reference can be found in the `docs folder`.
+The API reference can be found in the `docs` folder.
 
 ## How to set the OIDC Config
 
 ```ts
-import { configure } from "@hawaii-framework/oidc-implicit-core";
+import { configure } from "@ilionx/oauth-client-core";
 
 configure({
   authorisation: "",
@@ -38,7 +45,7 @@ import {
   getAuthHeader,
   getStoredAuthResult,
   silentRefresh,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 import axios, { AxiosRequestConfig } from "axios";
 
 const setAuthHeader = async (
@@ -84,7 +91,7 @@ axios.interceptors.request.use(setAuthHeader, (error) => {
 On a page level, users should be redirected if they are not authenticated. For this, you can use the check session method. Do note that this method returns a Promise.
 
 ```ts
-import { checkSession } from "@hawaii-framework/oidc-implicit-core";
+import { checkSession } from "@ilionx/oauth-client-core";
 
 async function processProtectedRoute(): Promise<void> {
   try {
@@ -103,7 +110,7 @@ async function processProtectedRoute(): Promise<void> {
 On a component level, you need to make sure at least a auth result is stored
 
 ```ts
-import { getStoredAuthResult } from "@hawaii-framework/oidc-implicit-core";
+import { getStoredAuthResult } from "@ilionx/oauth-client-core";
 
 // If a auth result is stored, we can assume the user is logged in.
 // This call is synchronous and will as such not influence rendering the page.
@@ -124,7 +131,7 @@ import {
   getAuthHeader,
   getStoredAuthResult,
   silentRefresh,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 import { AxiosRequestConfig } from "axios";
 
 const refreshTokenAboutToExpire = (authResult?: AuthResult) => {
@@ -177,7 +184,7 @@ Most of the time, it is not needed to create a custom login page. The default pa
 If you are going to create a custom CIAM login page, you need to make sure that besides the username and password, you also send a Cross Site Request Forgery token (csrf) to the SSO server. This can be obtained with the `getCsrfResult()` method.
 
 ```ts
-import { getCsrfResult } from "@hawaii-framework/oidc-implicit-core";
+import { getCsrfResult } from "@ilionx/oauth-client-core";
 
 getCsrfResult();
 
@@ -188,7 +195,7 @@ getCsrfResult();
 An auth token will be present in a response from the server after a successful login. This token must be stored on the user's local computer. The auth token is present in the hash fragment of the redirect url from the server to the client. So, you need to make sure you will not clear the URL before saving it locally.
 
 ```ts
-import { checkSession } from "@hawaii-framework/oidc-implicit-core";
+import { checkSession } from "@ilionx/oauth-client-core";
 
 async function calledWhenTryingToAuthenticateUser() {
   // The check session method is used for both checking if the user is logged in
@@ -215,7 +222,7 @@ import {
   getCsrfResult,
   getIdTokenHint,
   getStoredCsrfResult,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 
 // The LOGOUT_ENDPOINT can be requested from
 config.logout_endpoint;
@@ -260,7 +267,7 @@ The `isSessionAlive` call does not count as user activity, and will as such not 
 import {
   getStoredAuthResult,
   isSessionAlive,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 
 const autoLogoutInterval = setInterval(() => {
   // Get stored auth result either returns a non-expired token or null
@@ -297,7 +304,7 @@ The logged out page is used to show the user that he has been logged out. Next t
 Remove possible left-overs of the previous session.
 
 ```ts
-import { cleanSessionStorage } from "@hawaii-framework/oidc-implicit-core";
+import { cleanSessionStorage } from "@ilionx/oauth-client-core";
 
 // Upon opening the logged out page
 cleanSessionStorage();
@@ -344,7 +351,7 @@ It is possible to write a custom filter for the (stored) auth results. This vali
 import {
   getStoredAuthResult,
   parseJwt,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 
 getStoredAuthResult([
   (authResult) => {
@@ -370,7 +377,7 @@ With a silent logout, you are logged out in the background. This means that you 
 import {
   cleanSessionStorage,
   silentLogout,
-} from "@hawaii-framework/oidc-implicit-core";
+} from "@ilionx/oauth-client-core";
 
 silentLogout()
   .then(() => {
