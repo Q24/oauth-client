@@ -3,10 +3,7 @@
  * that OP is retrieved from a well-known location as a JSON document, including
  * its OAuth 2.0 endpoint locations.
  */
-import { LogUtil } from "../utils/log-util";
-import { config } from "../configuration/config.service";
-import { discoveryState } from "./discovery-state";
-
+import { Client } from "../client";
 import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.model";
 
 /**
@@ -18,10 +15,12 @@ import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.mo
  * this specification and MUST be returned using the application/json content
  * type.
  */
-function fetchOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
-  LogUtil.debug("getting provider metadata");
+function fetchOpenIdProviderMetadata(
+  client: Client,
+): Promise<OpenIDProviderMetadata> {
+  client.logger.debug("getting provider metadata");
 
-  const openIdConfigurationUrl = `${config.issuer}/.well-known/openid-configuration`;
+  const openIdConfigurationUrl = `${client.config.issuer}/.well-known/openid-configuration`;
 
   return new Promise<OpenIDProviderMetadata>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -31,11 +30,17 @@ function fetchOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status <= 300) {
           const providerMetadata = JSON.parse(xhr.responseText);
-          LogUtil.debug("successfully got provider metadata", providerMetadata);
+          client.logger.debug(
+            "successfully got provider metadata",
+            providerMetadata,
+          );
 
           resolve(providerMetadata);
         } else {
-          LogUtil.error("could not get provider metadata", xhr.statusText);
+          client.logger.error(
+            "could not get provider metadata",
+            xhr.statusText,
+          );
           reject(xhr.statusText);
         }
       }
@@ -49,9 +54,11 @@ function fetchOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
  *
  * @returns the metadata
  */
-export async function getRemoteOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
-  const providerMetadata = await fetchOpenIdProviderMetadata();
-  discoveryState.providerMetadata = providerMetadata;
+export async function getRemoteOpenIdProviderMetadata(
+  client: Client,
+): Promise<OpenIDProviderMetadata> {
+  const providerMetadata = await fetchOpenIdProviderMetadata(client);
+  client.providerMetadata = providerMetadata;
   return providerMetadata;
 }
 
@@ -60,9 +67,11 @@ export async function getRemoteOpenIdProviderMetadata(): Promise<OpenIDProviderM
  *
  * @returns the metadata
  */
-export async function getOpenIdProviderMetadata(): Promise<OpenIDProviderMetadata> {
-  if (discoveryState.providerMetadata) {
-    return discoveryState.providerMetadata;
+export async function getOpenIdProviderMetadata(
+  client: Client,
+): Promise<OpenIDProviderMetadata> {
+  if (client.providerMetadata) {
+    return client.providerMetadata;
   }
-  return getRemoteOpenIdProviderMetadata();
+  return getRemoteOpenIdProviderMetadata(client);
 }

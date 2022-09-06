@@ -1,4 +1,4 @@
-import { config } from "../configuration/config.service";
+import { Client } from "../client";
 import { StorageUtil } from "./storage";
 
 /**
@@ -17,22 +17,22 @@ export function generateNonce(): string {
   return text;
 }
 
-const nonceStorageId = () => `${config.client_id}-nonce`;
+const nonceStorageId = (client: Client) => `${client.config.client_id}-nonce`;
 
 /**
  * Get the saved nonce string from storage
  * @returns {string}
  */
-export function getNonce(): string | null {
-  return StorageUtil.read(nonceStorageId());
+export function getNonce(client: Client): string | null {
+  return StorageUtil.read(nonceStorageId(client));
 }
 
 /**
  * Saves the discoveryState string to sessionStorage
  * @param nonce
  */
-export function saveNonce(nonce: string): void {
-  StorageUtil.store(nonceStorageId(), nonce);
+export function saveNonce(client: Client, nonce: string): void {
+  StorageUtil.store(nonceStorageId(client), nonce);
 }
 
 /**

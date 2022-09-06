@@ -1,0 +1,34 @@
+{
+  "name": "@ilionx/oauth-client-react",
+  "version": "1.0.0",
+  "description": "",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build",
+    "lint": "eslint *.ts*"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.0.18",
+    "@types/react-dom": "^18.0.6",
+    "eslint": "^8.23.0",
+    "eslint-config-custom": "*",
+    "tsconfig": "*",
+    "parcel": "^2.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@ilionx/oauth-client-core": "*",
+    "@parcel/transformer-typescript-types": "^2.7.0",
+    "typescript": "4.7.4"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@ilionx/oauth-client-core": "*"
+  }
+}

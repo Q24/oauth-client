@@ -28,7 +28,7 @@ import { OAuthClientConfig } from '@ilionx/oauth-client-angular';
 import { InjectionToken } from '@angular/core';
 
 export let OIDC_CONFIG_CONSTANTS = new InjectionToken<OAuthClientConfig>(
-  'sso-config.constants',
+  'sso-client.config.constants',
 );
 
 export const OidcConfigDefaults: OAuthClientConfig = {
@@ -43,7 +43,6 @@ export const OidcConfigDefaults: OAuthClientConfig = {
 
 ## Implementation
 
-
 ### `auth.guard.ts`
 
 In your scaffolded setup, add a Guard. If you're using multiple lazy loaded modules, make sure you add the guard to your Shared Module
@@ -56,52 +55,50 @@ export class AuthGuard implements CanActivate {
     @Inject(OIDC_CONFIG_CONSTANTS) private _ssoConfigConstants: OidcConfig,
     @Inject(APP_CONSTANTS) private _appConstants: AppConstantsModel,
     private _pls: PathLocationStrategy,
-    private _router: Router,
+    private _router: Router
   ) {
     this._oidcService.config = this._ssoConfigConstants;
   }
 
-    canActivate(
-        next: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean> {
-        return new Observable((observer) => {
-            const port: string = window.location.port;
-            const protocol: string = window.location.protocol;
-            const hostname: string = window.location.hostname;
-            const baseRedirectUri = `${protocol}//${hostname}${
-                port ? `:${port}` : ''
-            }`;
-            const localToken = this._oidcService.getStoredAuthResult();
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
+    return new Observable((observer) => {
+      const port: string = window.location.port;
+      const protocol: string = window.location.protocol;
+      const hostname: string = window.location.hostname;
+      const baseRedirectUri = `${protocol}//${hostname}${
+        port ? `:${port}` : ""
+      }`;
+      const localToken = this._oidcService.getStoredAuthResult();
 
-            // Set the redirect uri in this instance
-            this._oidcService.config.redirect_uri = `${baseRedirectUri}${this._pls.getBaseHref()}${
-                state.url
-            }`;
+      // Set the redirect uri in this instance
+      this._oidcService.client.config.redirect_uri = `${baseRedirectUri}${this._pls.getBaseHref()}${
+        state.url
+      }`;
 
-            // Do the session check
-            this._oidcService.checkSession().subscribe(
-                (authenticated: boolean) => {
-                    // Check if the token expires in the next (x) seconds,
-                    // if so, set trigger a silent refresh of the Access Token in the OIDC Service.
-                    if (
-                        localToken &&
-                        localToken.expires -
-                        Math.round(new Date().getTime() / 1000.0) <
-                        300
-                    ) {
-                        this._oidcService.silentRefresh().subscribe();
-                    }
-                    
-                    observer.next(authenticated);
-                    observer.complete();
-                },
-                () => {
-                    // Do your error stuff
-                },
-            );
-        });
-    }
+      // Do the session check
+      this._oidcService.checkSession().subscribe(
+        (authenticated: boolean) => {
+          // Check if the token expires in the next (x) seconds,
+          // if so, set trigger a silent refresh of the Access Token in the OIDC Service.
+          if (
+            localToken &&
+            localToken.expires - Math.round(new Date().getTime() / 1000.0) < 300
+          ) {
+            this._oidcService.silentRefresh().subscribe();
+          }
+
+          observer.next(authenticated);
+          observer.complete();
+        },
+        () => {
+          // Do your error stuff
+        }
+      );
+    });
+  }
 }
 ```
 
@@ -112,7 +109,7 @@ Use the guard on routes:
 ```ts
 const routes: Routes = [
   {
-    path: '',
+    path: "",
     component: SomeComponent,
     canActivate: [AuthGuard],
   },
@@ -131,19 +128,19 @@ export class RestService {
   constructor(
     private _http: HttpClient,
     @Inject(OIDC_CONFIG_CONSTANTS) private _ssoConfigConstants: OidcConfig,
-    private _oidcService: OidcService,
+    private _oidcService: OidcService
   ) {
     // Set the config according to globals set for this app
     this._oidcService.config = this._ssoConfigConstants;
 
     // Append the JSON content type header
-    this._headers = this._headers.set('Content-Type', 'application/json');
+    this._headers = this._headers.set("Content-Type", "application/json");
   }
 
   public get(
     url: string,
     requiresAuthHeaders: boolean,
-    queryParams?: object | undefined,
+    queryParams?: object | undefined
   ): Observable<any> {
     const options: any = {};
 
@@ -165,62 +162,61 @@ export class RestService {
     return this._http.get(url, options).pipe(
       catchError((err: HttpErrorResponse) => {
         return observableThrowError(err.error);
-      }),
+      })
     );
   }
 
-    /**
-     * Sets the Authentication header we the access token as Bearer header.
-     * It also checks if a token is about to expire, if so a session storage item will be set,
-     * that will trigger a token refresh on the next route change, so flows will not be interrupted
-     * by browser redirects to SSO Authority.
-     * @private
-     */
-    private _setAuthHeader(): Observable<boolean> {
-        return this.authGuardService.authenticatedStatus$.pipe(
-            skipWhile((status) => status === AuthenticatedStatus.initial),
-            take(1),
-            switchMap((authStatus) => {
-                if (authStatus === AuthenticatedStatus.authenticated) {
-                    return this._oidcService.checkSession();
-                }
-                // Wait for a max of 3 seconds for a redirect. This is because
-                // using location.href = is not synchronous; And thus doesn't
-                // prevent further code from executing. It should however take
-                // very little time. If we wait for 3 whole seconds, we know
-                // something must be very wrong if the error Not authenticated
-                // still occurs.
-                return timer(3000).pipe(
-                    switchMap(() => observableThrowError('Not authenticated')),
-                );
-            }),
-            tap(() => {
-                const localToken = this._oidcService.getStoredAuthResult();
-                // Check if local token is there
-                // Set the header
-                this._headers = this._headers.set(
-                    'Authorization',
-                    this._oidcService.getAuthHeader(),
-                );
-
-                // Check if the token expires in the next (x) seconds,
-                // if so, set trigger a silent refresh of the Access Token in the OIDC Service
-                if (
-                    localToken.expires -
-                    Math.round(new Date().getTime() / 1000.0) <
-                    this._envService.env.sso.token_almost_expired_threshold
-                ) {
-                    this._oidcService.silentRefresh().subscribe();
-                }
-            }),
+  /**
+   * Sets the Authentication header we the access token as Bearer header.
+   * It also checks if a token is about to expire, if so a session storage item will be set,
+   * that will trigger a token refresh on the next route change, so flows will not be interrupted
+   * by browser redirects to SSO Authority.
+   * @private
+   */
+  private _setAuthHeader(): Observable<boolean> {
+    return this.authGuardService.authenticatedStatus$.pipe(
+      skipWhile((status) => status === AuthenticatedStatus.initial),
+      take(1),
+      switchMap((authStatus) => {
+        if (authStatus === AuthenticatedStatus.authenticated) {
+          return this._oidcService.checkSession();
+        }
+        // Wait for a max of 3 seconds for a redirect. This is because
+        // using location.href = is not synchronous; And thus doesn't
+        // prevent further code from executing. It should however take
+        // very little time. If we wait for 3 whole seconds, we know
+        // something must be very wrong if the error Not authenticated
+        // still occurs.
+        return timer(3000).pipe(
+          switchMap(() => observableThrowError("Not authenticated"))
         );
-    }
+      }),
+      tap(() => {
+        const localToken = this._oidcService.getStoredAuthResult();
+        // Check if local token is there
+        // Set the header
+        this._headers = this._headers.set(
+          "Authorization",
+          this._oidcService.getAuthHeader()
+        );
+
+        // Check if the token expires in the next (x) seconds,
+        // if so, set trigger a silent refresh of the Access Token in the OIDC Service
+        if (
+          localToken.expires - Math.round(new Date().getTime() / 1000.0) <
+          this._envService.env.sso.token_almost_expired_threshold
+        ) {
+          this._oidcService.silentRefresh().subscribe();
+        }
+      })
+    );
+  }
 }
 ```
 
 ### custom login page
 
-You can configure a custom login page, that's part of the angular stack, therefore there is a login endpoint in the config.
+You can configure a custom login page, that's part of the angular stack, therefore there is a login endpoint in the client.config.
 Make sure you point the OIDC config to the proper URL within the angular stack. After that a login page is pretty straight forward.
 The form should (for security purposes) be a classic form HTTP POST.
 
@@ -260,8 +256,8 @@ Here is the bare basics:
 
 ```typescript
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
+  selector: "app-login",
+  templateUrl: "./login.component.html",
 })
 export class LoginComponent implements OnInit, OnDestroy {
   /**
@@ -269,29 +265,27 @@ export class LoginComponent implements OnInit, OnDestroy {
    * @type {FormControl}
    * @private
    */
-  public _csrf: FormControl = new FormControl('', Validators.required);
+  public _csrf: FormControl = new FormControl("", Validators.required);
   /**
    * Username or E-mail address
    * @type {FormControl}
    */
-  public j_username: FormControl = new FormControl('', Validators.required);
+  public j_username: FormControl = new FormControl("", Validators.required);
 
   /**
    * Password form
    * @type {FormControl}
    */
-  public j_password: FormControl = new FormControl('', Validators.required);
+  public j_password: FormControl = new FormControl("", Validators.required);
 
   constructor(
     public oidcService: OidcService,
-    @Inject(OIDC_CONFIG_CONSTANTS) private _ssoConfigConstants: OidcConfig,
+    @Inject(OIDC_CONFIG_CONSTANTS) private _ssoConfigConstants: OidcConfig
   ) {
     this.oidcService.config = this._ssoConfigConstants;
   }
 
-  ngOnInit() {
- 
-  }
+  ngOnInit() {}
 }
 ```
 

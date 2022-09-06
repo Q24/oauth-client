@@ -1,5 +1,5 @@
-import { config } from "../configuration/config.service";
+import { Client } from "../client";
 
-export function usesOpenId(): boolean {
-  return config.scope.includes("openid");
+export function usesOpenId(client: Client): boolean {
+  return client.config.scope.includes("openid");
 }

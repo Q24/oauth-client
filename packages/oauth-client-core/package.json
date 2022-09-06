@@ -23,18 +23,17 @@
     "code flow"
   ],
   "devDependencies": {
-    "@types/jest": "^26.0.23",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
-    "eslint": "^7.29.0",
-    "jest": "^27.0.6",
-    "jsrsasign-reduced": "^8.0.15",
-    "microbundle": "^0.13.3",
-    "prettier": "^2.3.2",
-    "ts-jest": "^27.0.3",
-    "typedoc": "^0.21.2",
-    "typedoc-plugin-markdown": "^3.10.2",
-    "typescript": "^4.3.4"
+    "@types/jest": "^29.0.0",
+    "eslint": "^8.23.0",
+    "eslint-config-custom": "*",
+    "jest": "^29.0.1",
+    "microbundle": "^0.15.1",
+    "prettier": "^2.7.1",
+    "ts-jest": "^28.0.8",
+    "tsconfig": "*",
+    "typedoc": "^0.23.13",
+    "typedoc-plugin-markdown": "^3.13.5",
+    "typescript": "^4.8.2"
   },
   "scripts": {
     "prepublishOnly": "npm run build",
@@ -44,7 +43,6 @@
     "dev": "microbundle watch --name OAuthClientCore --external none",
     "dev:2": "microbundle watch --name OAuthClientCore --external none -o /Users/meesvandongen/conformance-suite/src/main/resources/static/oidc-test-client/dist",
     "typedoc": "rm -rf docs && typedoc ./src/index.ts",
-    "lint": "prettier ./src/**/*.ts --write",
     "test": "npx jest --watch"
   },
   "source": "./src/index.ts",
@@ -56,5 +54,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {}
+  "dependencies": {
+    "jest-environment-jsdom": "^29.0.1"
+  }
 }

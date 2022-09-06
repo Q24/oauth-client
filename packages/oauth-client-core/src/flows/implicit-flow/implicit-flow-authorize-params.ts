@@ -1,5 +1,4 @@
-import { config } from "../../configuration/config.service";
-import { LogUtil } from "../../utils/log-util";
+import { Client } from "../../client";
 import { generateNonce, getNonce, saveNonce } from "../../utils/nonce";
 import { generateState, getState, saveState } from "../../utils/state";
 
@@ -15,25 +14,26 @@ import type { OpenIdImplicitAuthorizationParameters } from "./model/implicit-req
  * @returns the parameters to use for an authorise request
  */
 export function createImplicitFlowAuthorizeRequestParameters(
+  client: Client,
   scopes: string[],
   promptNone = false,
 ): OpenIdImplicitAuthorizationParameters {
-  const storedState = getState() || generateState();
+  const storedState = getState(client) ?? generateState();
   const authorizeParams: OpenIdImplicitAuthorizationParameters = {
-    nonce: getNonce() || generateNonce(),
+    nonce: getNonce(client) ?? generateNonce(),
     state: storedState,
-    client_id: config.client_id,
-    response_type:
-      config.response_type as OpenIdImplicitAuthorizationParameters["response_type"],
+    client_id: client.config.client_id,
+    response_type: client.config
+      .response_type as OpenIdImplicitAuthorizationParameters["response_type"],
     redirect_uri:
-      promptNone && config.silent_refresh_uri
-        ? config.silent_refresh_uri
-        : config.redirect_uri,
+      promptNone && client.config.silent_refresh_uri
+        ? client.config.silent_refresh_uri
+        : client.config.redirect_uri,
     scope: scopes.join(" "),
   };
 
-  if (config.login_hint) {
-    authorizeParams.login_hint = config.login_hint;
+  if (client.config.login_hint) {
+    authorizeParams.login_hint = client.config.login_hint;
   }
 
   if (promptNone) {
@@ -41,9 +41,9 @@ export function createImplicitFlowAuthorizeRequestParameters(
   }
 
   // Save the generated discoveryState & nonce
-  saveState(storedState);
-  saveNonce(authorizeParams.nonce);
+  saveState(client, storedState);
+  saveNonce(client, authorizeParams.nonce);
 
-  LogUtil.debug("Gather the Authorize Params", authorizeParams);
+  client.logger.debug("Gather the Authorize Params", authorizeParams);
   return authorizeParams;
 }

@@ -1,5 +1,4 @@
-import { config } from "../configuration/config.service";
-import { LogUtil } from "../utils/log-util";
+import { Client } from "../client";
 import { getSessionId } from "./session-id";
 
 /**
@@ -10,15 +9,17 @@ import { getSessionId } from "./session-id";
  *
  * @returns The status code of the HTTP response
  */
-export function isSessionAlive(): Promise<{ status: number }> {
-  LogUtil.debug("Get Session Alive info from SSO");
+export function isSessionAlive(
+  client: Client,
+): Promise<{ status: number }> {
+  client.logger.debug("Get Session Alive info from SSO");
 
   return new Promise<{ status: number }>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
 
     xhr.open(
       "GET",
-      `${config.is_session_alive_endpoint}/${getSessionId()}`,
+      `${client.config.is_session_alive_endpoint}/${getSessionId(client)}`,
       true,
     );
 

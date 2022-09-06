@@ -1,8 +1,8 @@
-import { config } from '../configuration/config.service';
-import { StorageUtil } from '../utils/storage';
+import { Client } from "../client";
+import { StorageUtil } from "../utils/storage";
 
-function createIdTokenHintKey(): string {
-  return `${config.client_id}-id-token-hint`;
+function createIdTokenHintKey(client: Client): string {
+  return `${client.config.client_id}-id-token-hint`;
 }
 
 /**
@@ -12,7 +12,10 @@ function createIdTokenHintKey(): string {
  * Pass the `{regex: true}` option, to search for any ID Token Hint by regex
  * During logout, the regex option should be enabled if we are not sure that the *client_id* will remain stable.
  */
-export function getIdTokenHint(options = { regex: false }): string | null {
+export function getIdTokenHint(
+  client: Client,
+  options = { regex: false },
+): string | null {
   if (options.regex) {
     const regex = new RegExp(/-id-token-hint/);
     const storageArray = Object.keys(StorageUtil.storage).filter((key) =>
@@ -20,14 +23,14 @@ export function getIdTokenHint(options = { regex: false }): string | null {
     );
     return storageArray.length > 0 ? StorageUtil.read(storageArray[0]) : null;
   }
-  return StorageUtil.read(createIdTokenHintKey());
+  return StorageUtil.read(createIdTokenHintKey(client));
 }
 
 /**
  * Saves the ID token hint to sessionStorage
  */
-export function storeIdToken(idTokenHint: string): void {
-  StorageUtil.store(createIdTokenHintKey(), idTokenHint);
+export function storeIdToken(client: Client, idTokenHint: string): void {
+  StorageUtil.store(createIdTokenHintKey(client), idTokenHint);
 }
 
 /**

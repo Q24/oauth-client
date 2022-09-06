@@ -1,6 +1,5 @@
+import { Client } from "../client";
 import { StorageUtil } from "./storage";
-import { LogUtil } from "./log-util";
-import { config } from "../configuration/config.service";
 
 /**
  * Generates a random 'discoveryState' string
@@ -25,32 +24,32 @@ export function generateState(): string {
   return text;
 }
 
-const stateStorageId = () => `${config.client_id}-state`;
+const stateStorageId = (client: Client) => `${client.config.client_id}-state`;
 /**
  * Get the saved state string from sessionStorage
  */
-export function getState(): string | null {
-  const state = StorageUtil.read(stateStorageId());
+export function getState(client: Client): string | null {
+  const state = StorageUtil.read(stateStorageId(client));
   if (!state) {
-    LogUtil.debug("state was not found in storage", state);
+    client.logger.debug("state was not found in storage", state);
     return null;
   }
-  LogUtil.debug("Got state from storage", state);
+  client.logger.debug("Got state from storage", state);
   return state;
 }
 
 /**
  * Saves the state string to sessionStorage
  */
-export function saveState(state: string): void {
-  LogUtil.debug("State saved");
-  StorageUtil.store(stateStorageId(), state);
+export function saveState(client: Client, state: string): void {
+  client.logger.debug("State saved");
+  StorageUtil.store(stateStorageId(client), state);
 }
 
 /**
  * Deletes the discoveryState from sessionStorage
  */
-export function deleteState(): void {
-  LogUtil.debug(`Deleted state`);
+export function deleteState(client: Client): void {
+  client.logger.debug(`Deleted state`);
   StorageUtil.remove("-discoveryState");
 }

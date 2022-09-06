@@ -1,28 +1,33 @@
 import { validateAuthResultBackend } from "../backend-check/validate-auth-result-backend";
 import { usesOpenId } from "../open-id/uses-openid";
-import { isCodeFlow } from "../utils/is-code-flow";
+import isCodeFlow from "../utils/is-code-flow";
 import { validateAccessToken } from "./access-token-validation";
 import { validateIdToken } from "./id-token-validation";
 import { validateState } from "./state-validation";
 
 import type { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
 import type { AuthResult } from "./model/auth-result.model";
-export function validateAuthResult(authResult: AuthResult): void {
-  if (!isCodeFlow()) {
-    validateState(authResult.state);
+import { Client } from "../client";
+export function validateAuthResult(
+  client: Client,
+  authResult: AuthResult,
+): void {
+  if (!isCodeFlow(client)) {
+    validateState(client, authResult.state);
   }
-  if (usesOpenId()) {
-    validateIdToken(authResult.id_token);
-    validateAccessToken(authResult);
+  if (usesOpenId(client)) {
+    validateIdToken(client, authResult.id_token);
+    validateAccessToken(client, authResult);
   }
 }
 
 export async function isValidNewAuthResult(
+  client: Client,
   authResult: AuthResult,
 ): Promise<boolean> {
   try {
-    validateAuthResult(authResult);
-    await validateAuthResultBackend(authResult);
+    validateAuthResult(client, authResult);
+    await validateAuthResultBackend(client, authResult);
     return true;
   } catch (error) {
     return false;

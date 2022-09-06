@@ -1,10 +1,11 @@
-import { discovery } from '../discovery/discovery';
-import { codeFlowRefreshAccessToken } from '../flows/code-flow/code-flow-refresh';
-import { silentRefresh } from '../flows/implicit-flow/implicit-flow-refresh';
-import { isCodeFlow } from '../utils/is-code-flow';
+import { discovery } from "../discovery/discovery";
+import { codeFlowRefreshAccessToken } from "../flows/code-flow/code-flow-refresh";
+import { silentRefresh } from "../flows/implicit-flow/implicit-flow-refresh";
+import isCodeFlow from "../utils/is-code-flow";
 
 import type { AuthResult } from "../jwt/model/auth-result.model";
 import type { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";
+import { Client } from "../client";
 /**
  * Check if the token expires in the next *x* seconds.
  *
@@ -22,16 +23,17 @@ import type { AuthValidationOptions } from "../jwt/model/auth-validation-options
  * or if the refresh did not succeed.
  */
 export async function lazyRefresh(
+  client: Client,
   authResult: AuthResult,
   tokenValidationOptions?: AuthValidationOptions & {
     almostExpiredThreshold?: number;
   },
 ): Promise<boolean> {
-  await discovery();
+  await discovery(client);
   if (
     almostExpired(authResult, tokenValidationOptions?.almostExpiredThreshold)
   ) {
-    const silentRefreshToken = await _refresh(tokenValidationOptions);
+    const silentRefreshToken = await _refresh(client, tokenValidationOptions);
     if (!silentRefreshToken) {
       throw Error("invalid_token");
     }
@@ -41,12 +43,13 @@ export async function lazyRefresh(
 }
 
 async function _refresh(
+  client: Client,
   tokenValidationOptions?: AuthValidationOptions,
 ): Promise<AuthResult | null> {
-  if (isCodeFlow()) {
-    return codeFlowRefreshAccessToken();
+  if (isCodeFlow(client)) {
+    return codeFlowRefreshAccessToken(client);
   }
-  return silentRefresh(tokenValidationOptions);
+  return silentRefresh(client, tokenValidationOptions);
 }
 
 function almostExpired(authResult: AuthResult, threshold?: number) {

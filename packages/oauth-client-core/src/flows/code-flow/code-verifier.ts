@@ -1,3 +1,5 @@
+import { encode } from "../../utils/base64-url";
+
 const codeVerifierStorageKey = "code_verifier";
 
 export function storeCodeVerifier(code_verifier: string): void {
@@ -9,15 +11,8 @@ export function getStoredCodeVerifier(): string | null {
 }
 
 export function generateCodeVerifier(): string {
-  let text = "";
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-
-  for (let i = 0; i < 128; ) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-    i += 1;
-  }
-  return text;
+  const randomBytes = crypto.getRandomValues(new Uint8Array(32));
+  return encode(randomBytes);
 }
 
 /**

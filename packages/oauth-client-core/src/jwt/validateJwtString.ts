@@ -1,17 +1,17 @@
-import { LogUtil } from "../utils/log-util";
+import { Client } from "../client";
 
-export function validateJwtString(token: string): void {
-  LogUtil.info('validating JWT string');
+export function validateJwtString(client: Client, token: string): void {
+  client.logger.info("validating JWT string");
 
-  if (typeof token !== 'string') {
-    LogUtil.error('token is not a string', token);
-    throw Error('jwt_string_invalid');
+  if (typeof token !== "string") {
+    client.logger.error("token is not a string", token);
+    throw Error("jwt_string_invalid");
   }
 
-  const parts = token.split('.');
+  const parts = token.split(".");
 
   if (parts.length !== 3) {
-    LogUtil.error('token doesn\'t have 3 parts', token);
-    throw Error('jwt_string_invalid');
+    client.logger.error("token doesn't have 3 parts", token);
+    throw Error("jwt_string_invalid");
   }
 }

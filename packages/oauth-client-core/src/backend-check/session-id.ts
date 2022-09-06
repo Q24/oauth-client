@@ -1,20 +1,21 @@
-import { config } from "../configuration/config.service";
+import { Client } from "../client";
 import { StorageUtil } from "../utils/storage";
 
-const createSessionIdStorageId = () => `${config.client_id}-session-id`;
+const createSessionIdStorageId = (client: Client) =>
+  `${client.config.client_id}-session-id`;
 
 /**
  * Get the saved session ID string from storage
  */
-export function getSessionId(): string | null {
-  return StorageUtil.read(createSessionIdStorageId());
+export function getSessionId(client: Client): string | null {
+  return StorageUtil.read(createSessionIdStorageId(client));
 }
 
 /**
  * Saves the session ID to sessionStorage
  */
-export function saveSessionId(sessionId: string): void {
-  StorageUtil.store(createSessionIdStorageId(), sessionId);
+export function saveSessionId(client: Client,sessionId: string): void {
+  StorageUtil.store(createSessionIdStorageId(client), sessionId);
 }
 
 /**

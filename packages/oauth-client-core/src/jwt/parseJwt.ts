@@ -1,21 +1,12 @@
-import { LogUtil } from '../utils/log-util';
-
-import type { JWT } from "./model/jwt.model";
+import type { JWT, JWTHeader } from "./model/jwt.model";
 import type { IdTokenPayload } from "./model/id-token.model";
 import type { AccessTokenPayload } from "./model/access-token.model";
+import { decode } from "../utils/base64-url";
 
-function decodeJwtPart(jwtPart: string) {
-  const base64 = jwtPart.replace(/-/g, "+").replace(/_/g, "/");
-  const jsonPayload = decodeURIComponent(
-    atob(base64)
-      .split("")
-      .map((c) => {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join(""),
+function isValid<T>(arr: any[]): arr is [JWTHeader, T, Uint8Array] {
+  return (
+    arr.length === 3 && typeof arr[0] === "object" && typeof arr[1] === "object"
   );
-
-  return JSON.parse(jsonPayload);
 }
 
 /**
@@ -26,22 +17,28 @@ function decodeJwtPart(jwtPart: string) {
  * @returns JSON Web Token
  */
 export function parseJwt<T = AccessTokenPayload>(token: string): JWT<T> {
-  const parts = token.split(".");
-  if (parts.length < 3) {
-    LogUtil.error("token is not a jwt token", token);
-    throw new Error("token is not a JWT token");
+  try {
+    const arr = token
+      .split(".")
+      .map(decode)
+      .map((uint8Array, index) =>
+        index === 0 || index === 1
+          ? JSON.parse(Buffer.from(uint8Array).toString("utf8"))
+          : uint8Array,
+      );
+    if (isValid<T>(arr)) {
+      return {
+        header: arr[0],
+        payload: arr[1],
+        signature: arr[2],
+      };
+    }
+    throw new Error();
+  } catch {
+    throw Error("The serialization of the jwt is invalid.");
   }
-
-  const header = parts[0];
-  const payload = parts[1];
-  const verifySignature = parts[2];
-
-  return {
-    header: decodeJwtPart(header),
-    payload: decodeJwtPart(payload),
-    verifySignature,
-  };
 }
 
-export const parseIdToken = (token: string): JWT<IdTokenPayload> =>
-  parseJwt<IdTokenPayload>(token);
+export function parseIdToken(token: string): JWT<IdTokenPayload> {
+  return parseJwt<IdTokenPayload>(token);
+}

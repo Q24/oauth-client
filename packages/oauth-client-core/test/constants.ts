@@ -1,3 +1,9 @@
+import { OAuthClientConfig } from "../src/client";
+import { JsonWebKeySet } from "../src/discovery/model/jwks.model";
+import * as jwks from "./jwk_uri.json";
+import * as openid_configuration from "./openid-configuration.json";
+import * as jwt_response from "./jwt_response.json";
+
 const client_id = "client_id";
 
 // scopes: email, openid
@@ -36,10 +42,22 @@ const sampleToken3 = {
   expires: 4000000000,
 };
 
+const oAuthClientConfig: OAuthClientConfig = {
+  client_id,
+  issuer: "https://localhost:3001/sso/",
+  redirect_uri: "https://localhost:3001/sso/callback",
+  response_type: "code",
+  scope: "openid email",
+};
+
 export const constants = {
   client_id,
   sampleToken1,
   sampleIdTokenHint1,
   sampleToken2,
   sampleToken3,
+  oAuthClientConfig,
+  jwks: jwks as JsonWebKeySet,
+  openid_configuration,
+  jwt_response,
 };

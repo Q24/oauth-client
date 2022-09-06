@@ -1,9 +1,8 @@
 import { getAuthHeader } from "../authentication/auth-header";
 import { getStoredAuthResult } from "../authentication/auth-result";
+import { Client } from "../client";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { discoveryState } from "../discovery/discovery-state";
 import { parseIdToken } from "../jwt/parseJwt";
-import { LogUtil } from "../utils/log-util";
 import { readUserInfoCache, setUserInfoCache } from "./user-info-state";
 
 import type { UserInfo } from "./user-info.model";
@@ -15,8 +14,8 @@ import type { UserInfo } from "./user-info.model";
  * verified to exactly match the sub Claim in the ID Token; if they do not
  * match, the UserInfo Response values MUST NOT be used.
  */
-function verifyUserInfoResponse(userInfo: UserInfo) {
-  const authResult = getStoredAuthResult();
+function verifyUserInfoResponse(client: Client, userInfo: UserInfo) {
+  const authResult = getStoredAuthResult(client);
   if (!authResult) {
     throw new Error("could not get auth result from local storage");
   }
@@ -63,11 +62,11 @@ function verifyUserInfoResponse(userInfo: UserInfo) {
  * When an error condition occurs, the UserInfo Endpoint returns an Error
  * Response as defined in Section 3 of OAuth 2.0 Bearer Token Usage [RFC6750].
  */
-function fetchUserInfo(): Promise<UserInfo> {
-  assertProviderMetadata(discoveryState.providerMetadata);
-  const userinfoEndpoint = discoveryState.providerMetadata.userinfo_endpoint;
+function fetchUserInfo(client: Client): Promise<UserInfo> {
+  assertProviderMetadata(client.providerMetadata);
+  const userinfoEndpoint = client.providerMetadata.userinfo_endpoint;
   if (!userinfoEndpoint) {
-    LogUtil.error(
+    client.logger.error(
       "Server does not implement user info endpoint, or userinfo endpoint is not set.",
     );
     throw new Error("User info endpoint not set");
@@ -75,7 +74,7 @@ function fetchUserInfo(): Promise<UserInfo> {
 
   return new Promise<UserInfo>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    const authResult = getStoredAuthResult();
+    const authResult = getStoredAuthResult(client);
     if (!authResult) {
       throw new Error("could not get auth result from local storage");
     }
@@ -90,10 +89,10 @@ function fetchUserInfo(): Promise<UserInfo> {
         if (xhr.status >= 200 && xhr.status <= 300) {
           const userInfo = JSON.parse(xhr.responseText);
 
-          if (verifyUserInfoResponse(userInfo)) {
+          if (verifyUserInfoResponse(client, userInfo)) {
             resolve(userInfo);
           } else {
-            LogUtil.error(
+            client.logger.error(
               "The subject of the user info response is not the same as the id token",
             );
             reject("userinfo_response_invalid");
@@ -112,8 +111,8 @@ function fetchUserInfo(): Promise<UserInfo> {
  *
  * @returns the user info
  */
-async function getRemoteUserInfo(): Promise<UserInfo> {
-  const userInfo = await fetchUserInfo();
+async function getRemoteUserInfo(client: Client): Promise<UserInfo> {
+  const userInfo = await fetchUserInfo(client);
   setUserInfoCache(userInfo);
   return userInfo;
 }
@@ -123,10 +122,10 @@ async function getRemoteUserInfo(): Promise<UserInfo> {
  *
  * @returns the user info
  */
-export async function getUserInfo(): Promise<UserInfo> {
+export async function getUserInfo(client: Client): Promise<UserInfo> {
   const cachedUserInfo = readUserInfoCache();
   if (cachedUserInfo) {
     return cachedUserInfo;
   }
-  return getRemoteUserInfo();
+  return getRemoteUserInfo(client);
 }

@@ -1,8 +1,9 @@
-import { KJUR, hextob64u } from "jsrsasign-reduced";
+import { sha256 } from "../../crypto";
+import { encode } from "../../utils/base64-url";
 
-export function createCodeChallenge(code_verifier: string): string {
-  const hash = KJUR.crypto.Util.hashString(code_verifier, 'sha256');
-  const code_challenge = hextob64u(hash);
+export async function createCodeChallenge(code_verifier: string): Promise<string> {
+  const hash = await sha256(code_verifier);
+  const challenge = encode(hash);
 
-  return code_challenge;
+  return challenge;
 }

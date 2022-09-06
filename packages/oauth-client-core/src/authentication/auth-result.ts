@@ -1,14 +1,13 @@
 import { getAllAuthResultFilters } from "../auth-result-filter/all-filters";
 import { filterAuthResults } from "../auth-result-filter/filter-auth-results";
-import { config } from "../configuration/config.service";
 import { storeRefreshToken } from "../flows/code-flow/refresh-token";
 import { storeIdToken } from "../open-id/id-token-hint";
-import { LogUtil } from "../utils/log-util";
 import { StorageUtil } from "../utils/storage";
 import { epochSeconds } from "../utils/time";
 
 import type { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
 import type { AuthResult } from "../jwt/model/auth-result.model";
+import { Client } from "../client";
 
 /**
  * Deletes all the auth results from the storage. If authResultFilter is passed
@@ -20,33 +19,35 @@ import type { AuthResult } from "../jwt/model/auth-result.model";
  * like Array.prototype.filter())
  */
 export function deleteStoredAuthResults(
+  client: Client,
   authResultFilter?: (authResult: Readonly<AuthResult>) => boolean,
 ): void {
   if (authResultFilter) {
-    deleteStoredAuthResultsFiltered(authResultFilter);
+    deleteStoredAuthResultsFiltered(client, authResultFilter);
   } else {
-    LogUtil.debug(`Removed Tokens from session storage`);
+    client.logger.debug(`Removed Tokens from session storage`);
     StorageUtil.remove("-authResult");
   }
 }
 
 function deleteStoredAuthResultsFiltered(
+  client: Client,
   authResultFilter: AuthResultFilter,
 ): void {
-  const allAuthResults = getStoredAuthResults();
+  const allAuthResults = getStoredAuthResults(client);
   const authResultsToStore = allAuthResults.filter(authResultFilter);
-  storeAuthResults(authResultsToStore);
+  storeAuthResults(client, authResultsToStore);
 }
 
-function createAuthResultKey() {
-  return `${config.client_id}-authResult`;
+function createAuthResultKey(client: Client) {
+  return `${client.config.client_id}-authResult`;
 }
 
 /**
  * Get all auth results stored in session StorageUtil in an Array
  */
-function getStoredAuthResults(): AuthResult[] {
-  const storedAuthResults = StorageUtil.read(createAuthResultKey());
+function getStoredAuthResults(client: Client): AuthResult[] {
+  const storedAuthResults = StorageUtil.read(createAuthResultKey(client));
   if (!storedAuthResults) {
     return [];
   }
@@ -56,9 +57,9 @@ function getStoredAuthResults(): AuthResult[] {
 /**
  * Stores an array of auth results to the session StorageUtil
  */
-function storeAuthResults(authResults: AuthResult[]): void {
-  LogUtil.debug("Saved Auth Results to session storage");
-  StorageUtil.store(createAuthResultKey(), JSON.stringify(authResults));
+function storeAuthResults(client: Client, authResults: AuthResult[]): void {
+  client.logger.debug("Saved Auth Results to session storage");
+  StorageUtil.store(createAuthResultKey(client), JSON.stringify(authResults));
 }
 
 /**
@@ -88,10 +89,11 @@ function filterUnexpiredAuthResults(
  * @returns A valid Token or `null` if no token has been found.
  */
 export function getStoredAuthResult(
+  client: Client,
   extraAuthResultFilters?: AuthResultFilter[],
 ): AuthResult | null {
   // Get the tokens from storage, and make sure they're still valid
-  const authResults = getStoredAuthResults();
+  const authResults = getStoredAuthResults(client);
   const currentTime = epochSeconds();
   const unexpiredAuthResults = filterUnexpiredAuthResults(
     authResults,
@@ -100,12 +102,12 @@ export function getStoredAuthResult(
 
   const applicableAuthResults = filterAuthResults(
     unexpiredAuthResults,
-    getAllAuthResultFilters(extraAuthResultFilters),
+    getAllAuthResultFilters(client, extraAuthResultFilters),
   );
 
   // If there's no valid token return null
   if (applicableAuthResults.length < 1) {
-    LogUtil.debug("No valid token found in storage");
+    client.logger.debug("No valid token found in storage");
     return null;
   }
   // Return the first valid token
@@ -121,18 +123,18 @@ export function getStoredAuthResult(
  * * Save the new token array
  * * Return the cleaned set of Tokens
  */
-export function storeAuthResult(authResult: AuthResult): void {
-  LogUtil.debug("storing auth result");
-  const storedAuthResults = getStoredAuthResults();
+export function storeAuthResult(client: Client, authResult: AuthResult): void {
+  client.logger.debug("storing auth result");
+  const storedAuthResults = getStoredAuthResults(client);
 
   if (authResult.id_token) {
-    LogUtil.debug("Auth result has id token, storing it");
-    storeIdToken(authResult.id_token);
+    client.logger.debug("Auth result has id token, storing it");
+    storeIdToken(client, authResult.id_token);
   }
 
   if (authResult.refresh_token) {
-    LogUtil.debug("Auth result has refresh token, storing it");
-    storeRefreshToken(authResult.refresh_token);
+    client.logger.debug("Auth result has refresh token, storing it");
+    storeRefreshToken(client, authResult.refresh_token);
   }
 
   authResult.expires = authResult.expires_in
@@ -146,7 +148,7 @@ export function storeAuthResult(authResult: AuthResult): void {
     currentTime,
   );
 
-  storeAuthResults(tokensCleaned);
+  storeAuthResults(client, tokensCleaned);
 }
 
 /**

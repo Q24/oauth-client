@@ -1,5 +1,5 @@
+import { Client } from "../client";
 import { parseJwt } from "../jwt/parseJwt";
-import { LogUtil } from "../utils/log-util";
 
 import type { AuthResultFilter } from "./model/auth-result-filter.model";
 
@@ -10,14 +10,17 @@ import type { AuthResultFilter } from "./model/auth-result-filter.model";
  * @param scopes the scopes to check for
  * @returns an AuthResultFilter function
  */
-export function accessTokenScopeFilter(scopes: string[]): AuthResultFilter {
+export function accessTokenScopeFilter(
+  client: Client,
+  scopes: string[],
+): AuthResultFilter {
   return (authResult) => {
     if (!authResult.access_token) {
       throw Error(
         "Access Token Scope Filter is active, but access token is not defined",
       );
     }
-    LogUtil.debug(
+    client.logger.debug(
       "Running the access token scope filter for authResult:",
       authResult,
     );
@@ -29,9 +32,9 @@ export function accessTokenScopeFilter(scopes: string[]): AuthResultFilter {
       ),
     );
     if (valid) {
-      LogUtil.debug("Access Token Scope is valid");
+      client.logger.debug("Access Token Scope is valid");
     } else {
-      LogUtil.error(
+      client.logger.error(
         "Access Token Scope is invalid",
         "required scopes",
         scopes,

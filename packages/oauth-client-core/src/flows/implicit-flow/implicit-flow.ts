@@ -6,14 +6,12 @@ import {
   authorize,
   ensureNoErrorInParameters,
 } from "../../authentication/authorize";
-import { config } from "../../configuration/config.service";
 import { discovery } from "../../discovery/discovery";
 import {
   isValidNewAuthResult,
   isValidStoredAuthResult,
 } from "../../jwt/validate-auth-result";
 import { cleanSessionStorage } from "../../utils/clean-session-storage";
-import { LogUtil } from "../../utils/log-util";
 import { transformScopesStringToArray } from "../../utils/scope";
 import { clearQueryParameters } from "../../utils/url";
 import {
@@ -27,6 +25,7 @@ import { getSessionUpgradeToken, sessionUpgrade } from "./session-upgrade";
 
 import type { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
 import type { AuthResult } from "../../jwt/model/auth-result.model";
+import { Client } from "../../client";
 
 /**
  * If possible, do a session upgrade.
@@ -47,20 +46,21 @@ import type { AuthResult } from "../../jwt/model/auth-result.model";
  * @throws It will reject (as well as redirect) in case the check did not pass.
  */
 export async function implicitFlow(
+  client: Client,
   authValidationOptions?: AuthValidationOptions,
 ): Promise<AuthResult> {
-  await discovery();
+  await discovery(client);
 
   const sessionUpgradeToken = getSessionUpgradeToken();
   if (sessionUpgradeToken) {
-    return sessionUpgrade(sessionUpgradeToken);
+    return sessionUpgrade(client, sessionUpgradeToken);
   }
 
   // 1. Get the auth result from the URL parameters and clear parameters from URL
-  const authResultFromUrl = getAuthResultFromUrl();
+  const authResultFromUrl = getAuthResultFromUrl(client);
   if (authResultFromUrl) {
-    if (await isValidNewAuthResult(authResultFromUrl)) {
-      storeAuthResult(authResultFromUrl);
+    if (await isValidNewAuthResult(client, authResultFromUrl)) {
+      storeAuthResult(client, authResultFromUrl);
       clearQueryParameters();
       if (
         isValidStoredAuthResult(
@@ -77,8 +77,8 @@ export async function implicitFlow(
   //    and clear it afterwards.
   const authResultFromStoredHash = getAuthResultFromStoredHash();
   if (authResultFromStoredHash) {
-    if (await isValidNewAuthResult(authResultFromStoredHash)) {
-      storeAuthResult(authResultFromStoredHash);
+    if (await isValidNewAuthResult(client, authResultFromStoredHash)) {
+      storeAuthResult(client, authResultFromStoredHash);
       deleteStoredHashString();
       if (
         isValidStoredAuthResult(
@@ -92,7 +92,7 @@ export async function implicitFlow(
   }
 
   // 3. Get the auth result from the session storage
-  const storedAuthResult = getStoredAuthResult();
+  const storedAuthResult = getStoredAuthResult(client);
   if (
     storedAuthResult &&
     isValidStoredAuthResult(
@@ -107,11 +107,12 @@ export async function implicitFlow(
 
   // 4. get the auth result from a silent refresh
   const authResultFromSilentRefresh = await silentRefresh(
+    client,
     authValidationOptions,
   ).catch(() => null);
   if (authResultFromSilentRefresh) {
-    if (await isValidNewAuthResult(authResultFromSilentRefresh)) {
-      storeAuthResult(authResultFromSilentRefresh);
+    if (await isValidNewAuthResult(client, authResultFromSilentRefresh)) {
+      storeAuthResult(client, authResultFromSilentRefresh);
       if (
         isValidStoredAuthResult(
           authResultFromSilentRefresh,
@@ -125,7 +126,7 @@ export async function implicitFlow(
 
   // There is no auth result; try to get one for the next time we call this
   // function, by redirecting to the authorize endpoint.
-  return implicitFlowAuthorizeFlow();
+  return implicitFlowAuthorizeFlow(client);
 }
 
 /**
@@ -135,20 +136,23 @@ export async function implicitFlow(
  * The Authorisation checks if there is a valid session. If so, it returns with token hash.
  * If not authenticated, it will redirect to the login page.
  */
-async function implicitFlowAuthorizeFlow(): Promise<AuthResult> {
-  ensureNoErrorInParameters();
+async function implicitFlowAuthorizeFlow(client: Client): Promise<AuthResult> {
+  ensureNoErrorInParameters(client);
 
-  cleanSessionStorage();
+  cleanSessionStorage(client);
 
-  const scopes = transformScopesStringToArray(config.scope);
-  const authorizeParams = createImplicitFlowAuthorizeRequestParameters(scopes);
+  const scopes = transformScopesStringToArray(client.config.scope);
+  const authorizeParams = createImplicitFlowAuthorizeRequestParameters(
+    client,
+    scopes,
+  );
 
   // All clear ->
   // Do the authorize redirect
-  LogUtil.debug(
+  client.logger.debug(
     "Do authorisation redirect to SSO with options:",
     authorizeParams,
   );
 
-  return authorize(authorizeParams);
+  return authorize(client, authorizeParams);
 }

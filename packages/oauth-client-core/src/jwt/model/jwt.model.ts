@@ -1,15 +1,15 @@
-import type {AccessTokenPayload} from "./access-token.model";
+import type { AccessTokenPayload } from "./access-token.model";
 
-export interface JWT<T = AccessTokenPayload> {
+export type JWT<T = AccessTokenPayload> = {
   header: JWTHeader;
   payload: T;
-  verifySignature: string;
-}
+  signature: Uint8Array;
+};
 
 /**
  * See https://datatracker.ietf.org/doc/html/rfc7515
  */
- export interface JWTHeader {
+export interface JWTHeader {
   /**
    * # 4.1.1.  "alg" (Algorithm) Header Parameter
    * identifies the cryptographic algorithm used to secure the JWS.  The JWS

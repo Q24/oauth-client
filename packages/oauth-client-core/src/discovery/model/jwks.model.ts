@@ -1,3 +1,17 @@
+export type Alg =
+  | "HS256"
+  | "HS384"
+  | "HS512"
+  | "PS256"
+  | "PS384"
+  | "PS512"
+  | "RS256"
+  | "RS384"
+  | "RS512"
+  | "ES256"
+  | "ES384"
+  | "none";
+
 /**
  * # 4.  JSON Web Key (JWK) Format
  *
@@ -140,7 +154,7 @@ export interface JWK {
    * that contains a Collision-Resistant Name.  The "alg" value is a
    * case-sensitive ASCII string.  Use of this member is OPTIONAL.
    */
-  alg?: string;
+  alg?: Alg;
 
   /**
    * # 4.5.  "kid" (Key ID) Parameter
@@ -208,7 +222,7 @@ export interface JWK {
    * certificate.  See the last paragraph of Section 4.6 for additional guidance
    * on this.
    */
-  x5c?: string;
+  x5c?: string[];
 
   /**
    * # 4.8. "x5t" (X.509 Certificate SHA-1 Thumbprint) Parameter

@@ -1,8 +1,8 @@
-import { OidcService } from "../src/index";
+import { createClient, OAuthClientConfig } from "../src/client";
 import { constants } from "./constants";
 
-export function initConfig() {
-  OidcService.OidcConfigService.config = {
+export function createTestClient(config?: Partial<OAuthClientConfig>) {
+  const client = createClient({
     client_id: constants.client_id,
     response_type: "id_token token",
     redirect_uri: "localhost",
@@ -12,5 +12,11 @@ export function initConfig() {
     validate_token_endpoint: "validate_token_endpoint",
     is_session_alive_endpoint: "is_session_alive_endpoint",
     issuer: "",
-  };
+    ...(config ?? {}),
+  });
+
+  client.jwks = constants.jwks;
+  client.providerMetadata = constants.openid_configuration;
+
+  return client;
 }

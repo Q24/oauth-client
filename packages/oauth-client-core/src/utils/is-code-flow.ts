@@ -1,5 +1,5 @@
-import { config } from "../configuration/config.service";
+import { Client } from "../client";
 
-export function isCodeFlow(): boolean {
-  return config.response_type.includes("code");
+export default function isCodeFlow(client: Client): boolean {
+  return client.config.response_type.includes("code");
 }

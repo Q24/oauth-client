@@ -5,4 +5,4 @@ export { lazyRefresh } from "./lazy-refresh";
 export { silentLogout } from "./silent-logout";
 export { getAuthHeader } from "./auth-header";
 export { getStoredAuthResult } from "./auth-result";
-export { AuthorizeErrors } from "./model/authorize-errors.model";
+export type { AuthorizeErrors } from "./model/authorize-errors.model";

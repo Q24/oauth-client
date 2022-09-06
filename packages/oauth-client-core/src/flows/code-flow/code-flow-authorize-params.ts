@@ -1,4 +1,4 @@
-import { config } from "../../configuration/config.service";
+import { Client } from "../../client";
 import { usesOpenId } from "../../open-id/uses-openid";
 import { generateNonce, saveNonce } from "../../utils/nonce";
 import { generateState, saveState } from "../../utils/state";
@@ -7,34 +7,36 @@ import { storeAndGetNewCodeVerifier } from "./code-verifier";
 
 import type { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
 
-export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthorizeParameters {
+export async function createCodeFlowAuthorizeRequestParameters(
+  client: Client,
+): Promise<OAuthCodeFlowAuthorizeParameters> {
   const state = generateState();
-  saveState(state);
+  saveState(client, state);
 
   // Create code verifier
-  const code_verifier = storeAndGetNewCodeVerifier();
+  const code_verifier = await storeAndGetNewCodeVerifier();
   // Encode code verifier to get code challenge
-  const code_challenge = createCodeChallenge(code_verifier);
+  const code_challenge = await createCodeChallenge(code_verifier);
 
   const oAuthCodeFlowAuthorizeParameters: OAuthCodeFlowAuthorizeParameters = {
-    client_id: config.client_id,
+    client_id: client.config.client_id,
     response_type: "code",
     state,
-    code_challenge: code_challenge,
+    code_challenge,
     code_challenge_method: "S256",
   };
 
-  if (usesOpenId()) {
+  if (usesOpenId(client)) {
     const nonce = generateNonce();
-    saveNonce(nonce);
+    saveNonce(client, nonce);
     oAuthCodeFlowAuthorizeParameters.nonce = nonce;
   }
 
-  if (config.redirect_uri) {
-    oAuthCodeFlowAuthorizeParameters.redirect_uri = config.redirect_uri;
+  if (client.config.redirect_uri) {
+    oAuthCodeFlowAuthorizeParameters.redirect_uri = client.config.redirect_uri;
   }
-  if (config.scope) {
-    oAuthCodeFlowAuthorizeParameters.scope = config.scope;
+  if (client.config.scope) {
+    oAuthCodeFlowAuthorizeParameters.scope = client.config.scope;
   }
 
   return oAuthCodeFlowAuthorizeParameters;

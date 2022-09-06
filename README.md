@@ -1,52 +1,52 @@
-# oauth client (@ilionx)
+# Turborepo starter
 
-## Making, updating versioning and releasing packages
+This is an official npm starter turborepo.
 
-### Prerequisites:
-* Make sure you have an account at [npmjs.com](https://www.npmjs.com)
-* Have yourself added to the [@ilionx](https://www.npmjs.com/org/ilionx/) team
+## What's inside?
 
-### Create your package
-* Go to `./packages/` and add a directory for you package, keeping naming conventions in mind. 
-<br>
-_Be descriptive please!
-I.e.: `ngx-package-name` for Angular (2+) packages, `angularjs-package-name` for AngularJs (1), and `js-package-name` for Vanilla JS packages and so on_
+This turborepo uses [npm](https://www.npmjs.com/) as a package manager. It includes the following packages/apps:
 
-* `npm init` and follow instructions
+### Apps and Packages
+
+- `docs`: a [Next.js](https://nextjs.org) app
+- `web`: another [Next.js](https://nextjs.org) app
+- `ui`: a stub React component library shared by both `web` and `docs` applications
+- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `tsconfig`: `tsclient.config.json`s used throughout the monorepo
+
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+
+### Utilities
+
+This turborepo has some additional tools already setup for you:
+
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
+### Build
+
+To build all apps and packages, run the following command:
+
 ```
-_"license": "Apache-2.0",_
-_"repository": {"type": "git","url": "git+https://github.com/Q24/hawaii-packages.git" }_
+npm run build
 ```
-* Make sure you make a **scoped name** (in the **@hawaii-framework** scope) in the `package.json` 
+
+### Develop
+
+To develop all apps and packages, run the following command:
+
 ```
-I.e: `"name": "@hawaii-framework/ngx-package-name",`
+npm run dev
 ```
-* Add linting, hinting, ignore and editor config files, the whole shebang.
-* Add a *README.me*, and add some basic information about your package, and start a *CHANGELOG.md* file.
-* `cd` to your new package root
-* `npm set init.author.name "YOUR NAME"`
-* `npm set ini.author.email "YOUR EMAIL"` (**Note** => _this **will** be public_)
-* `npm set init.author.url "https://www.qnh.nl"`
-* `npm adduser` and login with your npmjs.com account credentials
-* **Make sure version nr of `package.json` is the same as version nr. `lerna.json`.**
-* `npm publish ----access public`
 
-### Commiting
+## Useful Links
 
-This package uses [commitizen](https://github.com/commitizen/cz-cli). 
-Don't install it globally, just just `npx`.
-So, when you're ready to commit your work, run:
-`git add .`
-`npx git-cz`  
+Learn more about the power of Turborepo:
 
-### Publishing
-// TODO
- 
- ### Publish Alpha/Beta/Nightly/Whatever
- You'll want to use the `--npm-tag`. This way, you can publicly install your dev version, but it won't 'release' it to people using the plugin.
- 
- How this works? https://docs.npmjs.com/cli/dist-tag
- Please use their conventions.
- 
- So, do this:
- * `npm publish --npm-tag=beta`
+- [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
+- [Caching](https://turborepo.org/docs/core-concepts/caching)
+- [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
+- [Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)
+- [Configuration Options](https://turborepo.org/docs/reference/configuration)
+- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)

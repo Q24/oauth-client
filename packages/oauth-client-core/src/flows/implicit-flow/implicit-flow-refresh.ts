@@ -2,22 +2,22 @@ import {
   isAuthResult,
   storeAuthResult,
 } from "../../authentication/auth-result";
-import { config } from "../../configuration/config.service";
+
 import { assertProviderMetadata } from "../../discovery/assert-provider-metadata";
 import { discovery } from "../../discovery/discovery";
-import { discoveryState } from "../../discovery/discovery-state";
 import {
   isValidNewAuthResult,
   isValidStoredAuthResult,
 } from "../../jwt/validate-auth-result";
 import { loadIframeUrl } from "../../utils/iframe";
-import { LogUtil } from "../../utils/log-util";
+
 import { transformScopesStringToArray } from "../../utils/scope";
 import { parseQueryParameters, toUrlParameterString } from "../../utils/url";
 import { createImplicitFlowAuthorizeRequestParameters } from "./implicit-flow-authorize-params";
 
 import type { AuthValidationOptions } from "../../jwt/model/auth-validation-options.model";
 import type { AuthResult } from "../../jwt/model/auth-result.model";
+import { Client } from "../../client";
 
 /**
  * Silently refresh an access token via iFrame.
@@ -34,24 +34,27 @@ import type { AuthResult } from "../../jwt/model/auth-result.model";
  * @returns A valid token
  */
 export async function silentRefresh(
+  client: Client,
   authValidationOptions?: AuthValidationOptions,
 ): Promise<AuthResult> {
-  await discovery();
+  await discovery(client);
 
   const scopes: string[] =
-    authValidationOptions?.scopes ?? transformScopesStringToArray(config.scope);
-  LogUtil.debug("Silent refresh started");
+    authValidationOptions?.scopes ??
+    transformScopesStringToArray(client.config.scope);
+  client.logger.debug("Silent refresh started");
 
-  assertProviderMetadata(discoveryState.providerMetadata);
+  assertProviderMetadata(client.providerMetadata);
   const promptNone = true;
 
   const authorizeParams = createImplicitFlowAuthorizeRequestParameters(
+    client,
     scopes,
     promptNone,
   );
 
   const urlToLoad = `${
-    discoveryState.providerMetadata.authorization_endpoint
+    client.providerMetadata.authorization_endpoint
   }?${toUrlParameterString(authorizeParams)}`;
 
   const loadedUrl = await loadIframeUrl(urlToLoad);
@@ -62,14 +65,14 @@ export async function silentRefresh(
     throw Error("Hash fragment is no auth result");
   }
 
-  LogUtil.debug(
+  client.logger.debug(
     "Access Token found in silent refresh return URL, validating it",
   );
 
-  const isValid = await isValidNewAuthResult(potentialHashAuthResult);
+  const isValid = await isValidNewAuthResult(client, potentialHashAuthResult);
 
   if (isValid) {
-    storeAuthResult(potentialHashAuthResult);
+    storeAuthResult(client, potentialHashAuthResult);
 
     if (
       isValidStoredAuthResult(
@@ -78,9 +81,8 @@ export async function silentRefresh(
       )
     ) {
       return potentialHashAuthResult;
-    } else {
-      throw Error("invalid_token");
     }
+    throw Error("invalid_token");
   }
   throw Error("invalid_token");
 }

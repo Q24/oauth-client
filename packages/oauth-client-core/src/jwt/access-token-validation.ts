@@ -1,15 +1,20 @@
-import { LogUtil } from "../utils/log-util";
-import { KJUR, hextob64u } from "jsrsasign-reduced";
 import { parseIdToken } from "./parseJwt";
 import type { AuthResult } from "./model/auth-result.model";
-import { isCodeFlow } from "../utils/is-code-flow";
+import isCodeFlow from "../utils/is-code-flow";
+import { hexToBuffer, sha256 } from "../crypto";
+import { Client } from "../client";
+import { encode } from "../utils/base64-url";
 
-function generateAtHash(accessToken: string, sha: string): string {
-  const hash = KJUR.crypto.Util.hashString(accessToken, sha);
-  const first128bits = hash.substr(0, hash.length / 2);
-  const testData = hextob64u(first128bits);
+export async function findAtHash(
+  accessToken: string,
+  sha: string,
+): Promise<string> {
+  const hex = await sha256(accessToken);
+  const first128bits = hex.substring(0, hex.length / 2);
+  const buffer = hexToBuffer(first128bits);
+  const atHash = encode(buffer);
 
-  return testData;
+  return atHash;
 }
 
 /**
@@ -23,48 +28,56 @@ function generateAtHash(accessToken: string, sha: string): string {
  *
  * @param authResult the result from the authentication call
  */
-export function validateAccessToken(authResult: AuthResult): void {
+export function validateAccessToken(
+  client: Client,
+  authResult: AuthResult,
+): void {
   // If there is no access token, we don't have to validate it.
   if (!authResult.access_token) {
     return;
   }
   const idToken = parseIdToken(authResult.id_token);
-  if (isCodeFlow() && !idToken.payload.at_hash) {
+  if (isCodeFlow(client) && !idToken.payload.at_hash) {
     return;
   }
 
   if (
     !validateIdTokenAtHash(
+      client,
       authResult.access_token,
       idToken.payload.at_hash,
       idToken.header.alg,
     )
   ) {
-    LogUtil.error("Could not validate Access Token Hash (at_hash)");
+    client.logger.error("Could not validate Access Token Hash (at_hash)");
     throw Error("at_hash invalid");
   }
 }
 
-function validateIdTokenAtHash(
+async function validateIdTokenAtHash(
+  client: Client,
   accessToken: string,
   atHash: string,
   idTokenAlg: string,
-): boolean {
-  LogUtil.debug("validating at_hash", atHash);
+): Promise<boolean> {
+  client.logger.debug("validating at_hash", atHash);
 
-  const sha = idTokenAlg.includes("384")
+  const secureHashAlgorithm = idTokenAlg.includes("384")
     ? "sha348"
     : idTokenAlg.includes("512")
     ? "sha512"
     : "sha256";
 
-  const testData = generateAtHash(accessToken, sha);
-  LogUtil.debug("at_hash client validation not decoded:" + testData);
+  const testData = await findAtHash(accessToken, secureHashAlgorithm);
+  client.logger.debug("at_hash client validation not decoded:" + testData);
   if (testData === atHash) {
     return true;
-  } else {
-    const testValue = generateAtHash(decodeURIComponent(accessToken), sha);
-    LogUtil.debug("-gen access--", testValue);
-    return testValue === atHash;
   }
+
+  const testData2 = await findAtHash(
+    decodeURIComponent(accessToken),
+    secureHashAlgorithm,
+  );
+  client.logger.debug("-gen access--", testData2);
+  return testData2 === atHash;
 }

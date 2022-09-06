@@ -1,0 +1,14 @@
+{
+  "name": "@ilionx/oauth-client-example-docs",
+  "private": "true",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ilionx/oauth-client-core": "*",
+    "axios": "^0.21.1"
+  }
+}

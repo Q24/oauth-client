@@ -253,7 +253,7 @@ export interface OpenIDProviderMetadata {
    * parameter. Pre-registration is REQUIRED when the value is true. If omitted,
    * the default value is false.
    */
-  require_request_uri_registration: boolean;
+  require_request_uri_registration?: boolean;
 
   /**
    * URL that the OpenID Provider provides to the person registering the Client

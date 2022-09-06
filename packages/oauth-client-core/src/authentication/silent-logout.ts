@@ -1,6 +1,5 @@
-import { config } from "../configuration/config.service";
+import { Client } from "../client";
 import { getCsrfResult } from "../csrf/csrf";
-import { LogUtil } from "../utils/log-util";
 import { getIdTokenHint } from "../open-id/id-token-hint";
 import { destroyIframe } from "../utils/iframe";
 
@@ -10,7 +9,7 @@ interface SilentLogoutConfig {
 }
 
 const silentLogoutStore: {
-  [iFrameId: string]: Promise<void>;
+  [iFrameId: string]: Promise<void> | undefined;
 } = {};
 
 /**
@@ -28,19 +27,21 @@ const silentLogoutStore: {
  * This *page* should make a POST request to the logout endpoint of the SSO server
  * in an automated fashion, which will cause the user to be logged out.
  * The `id_token_hint` and `csrf_token` will be supplied to the *page* via this
- * function. Defaults to `silent_logout_uri` from the config.
+ * function. Defaults to `silent_logout_uri` from the client.config.
  * @returns The promise resolves if the logout was successful, otherwise it will reject.
  */
 export function silentLogout(
+  client: Client,
   silentLogoutConfig?: SilentLogoutConfig,
 ): Promise<void> {
-  const logout_url = silentLogoutConfig?.logout_url || config.silent_logout_uri;
+  const logout_url =
+    silentLogoutConfig?.logout_url || client.config.silent_logout_uri;
   const post_logout_redirect_uri =
     silentLogoutConfig?.post_logout_redirect_uri ||
-    config.post_logout_redirect_uri;
+    client.config.post_logout_redirect_uri;
 
   if (!logout_url || !post_logout_redirect_uri) {
-    LogUtil.error(
+    client.logger.error(
       "the logout URL or post logout redirect URL must be defined",
       "logout_url",
       logout_url,
@@ -50,7 +51,7 @@ export function silentLogout(
     throw Error("logout_url or post_logout_redirect_uri undefined");
   }
 
-  LogUtil.debug("Silent logout by URL started");
+  client.logger.debug("Silent logout by URL started");
   const iframeId = `silentLogoutIframe`;
 
   // Checks if there is a concurrent silent logout call going on.
@@ -64,24 +65,24 @@ export function silentLogout(
 
     // Store CSRF token of the new session to storage. We'll need it for logout and authenticate
     (async () => {
-      let iframeUrl = `${logout_url}?id_token_hint=${getIdTokenHint()}`;
-      if (config.csrf_token_endpoint) {
+      let iframeUrl = `${logout_url}?id_token_hint=${getIdTokenHint(client)}`;
+      if (client.config.csrf_token_endpoint) {
         try {
-          const csrfResult = await getCsrfResult();
+          const csrfResult = await getCsrfResult(client);
           iframeUrl += `&csrf_token=${csrfResult.csrf_token}`;
         } catch (error) {
-          LogUtil.debug("no CsrfToken");
+          client.logger.debug("no CsrfToken");
           reject("no_csrf_token");
         }
       }
 
-      LogUtil.debug(`Do silent logout with URL`, iframeUrl);
+      client.logger.debug(`Do silent logout with URL`, iframeUrl);
       iFrame.src = iframeUrl;
     })();
 
     // Handle the result of the Authorize Redirect in the iFrame
     iFrame.onload = () => {
-      LogUtil.debug("silent logout iFrame onload triggered", iFrame);
+      client.logger.debug("silent logout iFrame onload triggered", iFrame);
 
       let timeout = 5000;
       const interval = 50;
@@ -90,7 +91,7 @@ export function silentLogout(
         timeout = timeout - interval;
 
         if (timeout <= 0) {
-          LogUtil.debug(
+          client.logger.debug(
             "Silent logout failed after 5000",
             iFrame.contentWindow?.location.href,
             post_logout_redirect_uri,
@@ -104,7 +105,7 @@ export function silentLogout(
 
         const currentIframeURL = iFrame.contentWindow!.location.href;
         if (currentIframeURL.indexOf(post_logout_redirect_uri) === 0) {
-          LogUtil.debug(
+          client.logger.debug(
             "Silent logout successful",
             iFrame.contentWindow!.location.href,
             post_logout_redirect_uri,

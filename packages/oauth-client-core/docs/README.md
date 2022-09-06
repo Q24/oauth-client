@@ -5,6 +5,7 @@
 This library implements the [OIDC implicit flow](https://openid.net/specs/openid-connect-implicit-1_0.html) / [OIDC Code flow with PKCE](https://openid.net/2015/05/26/enhancing-oauth-security-for-mobile-applications-with-pkse/) for use in a front-end web application. The library can be used directly with any framework of choice. While it is not strictly necessary to use wrapper, there is one [available for Angular](https://www.npmjs.com/package/@ilionx/oauth-client-angular).
 
 ## Features
+
 - Implicit Flow
 - Code Flow with PKCE
 - CSRF Tokens
@@ -56,11 +57,12 @@ const setAuthHeader = async (
   const storedAuthResult = getStoredAuthResult();
 
   if (storedAuthResult) {
-    config.headers["Authorization"] = getAuthHeader(storedAuthResult);
+    client.config.headers["Authorization"] = getAuthHeader(storedAuthResult);
 
     // For info see Token Expiration section in Readme
     if (
-      (storedAuthResult.expires || 0) - Math.round(new Date().getTime() / 1000.0) <
+      (storedAuthResult.expires || 0) -
+        Math.round(new Date().getTime() / 1000.0) <
       300
     ) {
       silentRefresh();
@@ -85,7 +87,6 @@ const setAuthHeader = async (
 axios.interceptors.request.use(setAuthHeader, (error) => {
   Promise.reject(error);
 });
-
 ```
 
 ## How do I check if the user is authenticated?
@@ -106,7 +107,6 @@ async function processProtectedRoute(): Promise<void> {
     return;
   }
 }
-
 ```
 
 On a component level, you need to make sure at least a auth result is stored
@@ -117,7 +117,6 @@ import { getStoredAuthResult } from "@ilionx/oauth-client-core";
 // If a auth result is stored, we can assume the user is logged in.
 // This call is synchronous and will as such not influence rendering the page.
 getStoredAuthResult();
-
 ```
 
 ## Token expiration
@@ -167,12 +166,11 @@ checkSession().then((authResult) => {
 const storedAuthResult = getStoredAuthResult();
 const config: AxiosRequestConfig = {};
 if (storedAuthResult) {
-  config.headers["Authorization"] = getAuthHeader(storedAuthResult);
+  client.config.headers["Authorization"] = getAuthHeader(storedAuthResult);
   // After adding the headers, we request
   // a new token (if it is about to expire).
   refreshTokenAboutToExpire(storedAuthResult);
 }
-
 ```
 
 ## Login
@@ -189,7 +187,6 @@ If you are going to create a custom CIAM login page, you need to make sure that 
 import { getCsrfResult } from "@ilionx/oauth-client-core";
 
 getCsrfResult();
-
 ```
 
 ### Processing the response from the server
@@ -205,7 +202,6 @@ async function calledWhenTryingToAuthenticateUser() {
   // After the URL has been saved, it will be cleared.
   await checkSession();
 }
-
 ```
 
 The current implementation of the redirect from the server only goes to a single URL. This means that restoring the user session (the url where the user was before logging in) is a responsibility of the front-end. Take into account that routes which do not require authentication should not call the check session function (as it will trigger a login).
@@ -227,10 +223,10 @@ import {
 } from "@ilionx/oauth-client-core";
 
 // The LOGOUT_ENDPOINT can be requested from
-config.logout_endpoint;
+client.config.logout_endpoint;
 
 // The POST_LOGOUT_REDIRECT_URI can be requested from
-config.post_logout_redirect_uri;
+client.config.post_logout_redirect_uri;
 
 // The CSRF_TOKEN can be requested from
 //  Synchronously (try this first)
@@ -240,7 +236,6 @@ getCsrfResult();
 
 // The ID_TOKEN_HINT can be requested from
 getIdTokenHint({ regex: true });
-
 ```
 
 ```html
@@ -266,10 +261,7 @@ In the case a user may still be logged in on another client, they should not be 
 The `isSessionAlive` call does not count as user activity, and will as such not lengthen the session.
 
 ```ts
-import {
-  getStoredAuthResult,
-  isSessionAlive,
-} from "@ilionx/oauth-client-core";
+import { getStoredAuthResult, isSessionAlive } from "@ilionx/oauth-client-core";
 
 const autoLogoutInterval = setInterval(() => {
   // Get stored auth result either returns a non-expired token or null
@@ -292,7 +284,6 @@ const autoLogoutInterval = setInterval(() => {
     });
   }
 }, 15000);
-
 ```
 
 ## Logged out page
@@ -310,7 +301,6 @@ import { cleanSessionStorage } from "@ilionx/oauth-client-core";
 
 // Upon opening the logged out page
 cleanSessionStorage();
-
 ```
 
 ### Logout pixel
@@ -350,10 +340,7 @@ If you are creating a logout pixel, you need to:
 It is possible to write a custom filter for the (stored) auth results. This validator will be used to get a valid result from the stored results (a list of all previously saved auth results). This is useful if the auth results you are using have some non-standard behavior.
 
 ```ts
-import {
-  getStoredAuthResult,
-  parseJwt,
-} from "@ilionx/oauth-client-core";
+import { getStoredAuthResult, parseJwt } from "@ilionx/oauth-client-core";
 
 getStoredAuthResult([
   (authResult) => {
@@ -366,7 +353,6 @@ getStoredAuthResult([
     return false;
   },
 ]);
-
 ```
 
 ## FAQ
@@ -376,10 +362,7 @@ getStoredAuthResult([
 With a silent logout, you are logged out in the background. This means that you are not redirected to a logged-out page. However, the access token will be invalidated. You would use this when you need the user to be logged out in order to perform a certain action. If you are going to use this method, be sure to clean the session storage afterwards.
 
 ```ts
-import {
-  cleanSessionStorage,
-  silentLogout,
-} from "@ilionx/oauth-client-core";
+import { cleanSessionStorage, silentLogout } from "@ilionx/oauth-client-core";
 
 silentLogout()
   .then(() => {
@@ -388,7 +371,6 @@ silentLogout()
   .catch(() => {
     // Handle errors when logout has failed.
   });
-
 ```
 
 ### What is a silent refresh?

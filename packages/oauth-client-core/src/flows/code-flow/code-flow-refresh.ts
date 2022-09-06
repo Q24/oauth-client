@@ -1,4 +1,3 @@
-import { LogUtil } from "../../utils/log-util";
 import { accessTokenRequest } from "./code-flow-access-token-request";
 import {
   deleteStoredRefreshToken,
@@ -7,11 +6,14 @@ import {
 
 import type { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
 import type { AuthResult } from "../../jwt/model/auth-result.model";
+import { Client } from "../../client";
 /**
  * @returns the refresh parameters for the token endpoint
  */
-export function createCodeFlowRefreshRequestParameters(): OAuthRefreshTokenParameters {
-  const refreshToken = getStoredRefreshToken();
+export function createCodeFlowRefreshRequestParameters(
+  client: Client,
+): OAuthRefreshTokenParameters {
+  const refreshToken = getStoredRefreshToken(client);
   if (!refreshToken) {
     throw Error("no refresh token");
   }
@@ -29,14 +31,16 @@ export function createCodeFlowRefreshRequestParameters(): OAuthRefreshTokenParam
  *
  * @returns An Auth result, if the refresh was successful, otherwise null
  */
-export async function codeFlowRefreshAccessToken(): Promise<AuthResult | null> {
-  const requestParameters = createCodeFlowRefreshRequestParameters();
+export async function codeFlowRefreshAccessToken(
+  client: Client,
+): Promise<AuthResult | null> {
+  const requestParameters = createCodeFlowRefreshRequestParameters(client);
   try {
-    return accessTokenRequest(requestParameters);
+    return accessTokenRequest(client, requestParameters);
   } catch (e) {
-    LogUtil.error("Could not successfully refresh the access token", e);
+    client.logger.error("Could not successfully refresh the access token", e);
     return null;
   } finally {
-    deleteStoredRefreshToken();
+    deleteStoredRefreshToken(client);
   }
 }

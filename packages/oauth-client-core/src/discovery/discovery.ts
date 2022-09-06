@@ -1,4 +1,4 @@
-import { LogUtil } from "../utils/log-util";
+import { Client } from "../client";
 import { getJwks } from "./get-jwks";
 import { getOpenIdProviderMetadata } from "./get-openid-provider-metadata";
 
@@ -7,9 +7,9 @@ import { getOpenIdProviderMetadata } from "./get-openid-provider-metadata";
  */
 let discoveryPromise: Promise<void> | null = null;
 
-async function _discovery() {
-  await getOpenIdProviderMetadata();
-  await getJwks();
+async function _discovery(client: Client) {
+  await getOpenIdProviderMetadata(client);
+  await getJwks(client);
 }
 
 /**
@@ -21,13 +21,13 @@ async function _discovery() {
  *
  * @returns A promise which will resolve when the discovery is complete
  */
-export async function discovery(): Promise<void> {
+export async function discovery(client: Client): Promise<void> {
   if (discoveryPromise) {
     return discoveryPromise;
   }
-  discoveryPromise = _discovery().catch((reason) => {
+  discoveryPromise = _discovery(client).catch((reason) => {
     discoveryPromise = null;
-    LogUtil.error("Discovery failed", reason);
+    client.logger.error("Discovery failed", reason);
     throw Error(reason);
   });
   return discoveryPromise;

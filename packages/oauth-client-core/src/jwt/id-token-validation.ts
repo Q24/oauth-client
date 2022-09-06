@@ -1,9 +1,5 @@
 import { KEYUTIL, KJUR } from "jsrsasign-reduced";
-
-import { config } from "../configuration/config.service";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
-import { discoveryState } from "../discovery/discovery-state";
-import { LogUtil } from "../utils/log-util";
 import { getNonce } from "../utils/nonce";
 import { epochSeconds } from "../utils/time";
 import { parseJwt } from "./parseJwt";
@@ -11,6 +7,9 @@ import { validateJwtString } from "./validateJwtString";
 
 import type { IdTokenPayload } from "./model/id-token.model";
 import type { JWTHeader } from "./model/jwt.model";
+import { Client } from "../client";
+import { JWK } from "../discovery/model/jwks.model";
+import { verifyJwt } from "../utils/verify-jwt/verify-jwt";
 
 const supportedKeyAlgs = [
   "HS256",
@@ -26,99 +25,98 @@ const supportedKeyAlgs = [
   "PS512",
 ];
 
-function validSignature(idTokenString: string, headerData: JWTHeader): boolean {
-  const jwks = discoveryState.jwks;
-  if (!jwks || !jwks.keys) {
-    LogUtil.error("JWKs not defined");
+export async function validateSignature(
+  client: Client,
+  idTokenString: string,
+  headerData: JWTHeader,
+): Promise<boolean> {
+  const jwks = client.jwks;
+  if (!jwks?.keys) {
+    client.logger.error("JWKs not defined");
     return false;
   }
 
   if (!headerData.alg) {
-    LogUtil.warn("ID Token has invalid JOSE Header");
+    client.logger.warn("ID Token has invalid JOSE Header");
     return false;
   }
 
-  const kid = headerData.kid;
-  const alg = headerData.alg;
+  const { kid, alg } = headerData;
 
   if (!supportedKeyAlgs.includes(alg as string)) {
-    LogUtil.warn("alg not supported", alg);
-
+    client.logger.warn("alg not supported", alg);
     return false;
   }
 
-  // No kid in the Jose header
-  if (kid) {
-    const keyToValidate = jwks.keys.find((key) => key.kid === kid);
-    if (!keyToValidate) {
-      LogUtil.warn("Didn't find key to validate");
-      return false;
-    }
-    const publicKey = KEYUTIL.getKey(keyToValidate);
-    const isValid = KJUR.jws.JWS.verify(idTokenString, publicKey, [alg]);
-    if (!isValid) {
-      LogUtil.warn("incorrect Signature, validation failed for id_token");
-    }
-    return isValid;
-  } else {
-    const jwtKtyToUse = alg.charAt(0) === "E" ? "EC" : "RSA";
-    let keyToValidate;
+  const keyType = algToKty(alg);
+  const [jwk, error] = getJWKToValidate(jwks.keys, kid, keyType);
 
-    // If only one key, use it
-    if (jwks.keys.length === 1 && jwks.keys[0].kty === jwtKtyToUse) {
-      keyToValidate = jwks.keys[0];
-    } else {
-      // More than one key
-      // Make sure there's exactly 1 key candidate
-      // kty "RSA" and "EC" use "sig"
-      const matchingKeys = jwks.keys.filter(
-        (key) => key.kty === jwtKtyToUse && key.use === "sig",
-      );
-
-      if (matchingKeys.length > 1) {
-        LogUtil.warn(
-          "no ID Token kid claim in JOSE header and multiple supplied in jwks_uri",
-        );
-        return false;
-      }
-      keyToValidate = matchingKeys[0];
-    }
-
-    if (!keyToValidate) {
-      LogUtil.warn(
-        "no keys found, incorrect Signature, validation failed for id_token",
-      );
-
-      return false;
-    }
-
-    const isValid = KJUR.jws.JWS.verify(
-      idTokenString,
-      KEYUTIL.getKey(keyToValidate),
-      [alg],
-    );
-
-    if (!isValid) {
-      LogUtil.warn("incorrect Signature, validation failed for id_token");
-    }
-
-    return isValid;
+  if (error !== null) {
+    client.logger.warn(error);
+    return false;
   }
+
+  const verifyJwtError = await verifyJwt(idTokenString, jwk);
+
+  if (verifyJwtError !== null) {
+    client.logger.error(verifyJwtError);
+    return false;
+  }
+
+  return true;
 }
 
-function hasClientIdAudience(idToken: IdTokenPayload) {
-  return idToken.aud.includes(config.client_id);
+function algToKty(alg: string) {
+  return alg.startsWith("E") ? "EC" : "RSA";
 }
 
-function hasOnlyTrustedAudiences(idToken: IdTokenPayload) {
+function getJWKToValidate(
+  keys: JWK[],
+  kid: string | undefined,
+  kty: "EC" | "RSA",
+): [JWK, null] | [null, string] {
+  if (kid) {
+    const jwk = keys.find((key) => key.kid === kid);
+    if (jwk) {
+      return [jwk, null];
+    }
+    return [null, "no matching kid found"];
+  }
+
+  if (keys.length === 1 && keys[0].kty === kty) {
+    return [keys[0], null];
+  }
+
+  const matchingKeys = keys.filter(
+    (key) => key.kty === kty && key.use === "sig",
+  );
+
+  if (matchingKeys.length === 0) {
+    return [null, "no matching keys found"];
+  }
+  if (matchingKeys.length > 1) {
+    return [
+      null,
+      "no ID Token kid claim in JOSE header and multiple supplied in jwks_uri",
+    ];
+  }
+
+  return [matchingKeys[0], null];
+}
+
+function hasClientIdAudience(client: Client, idToken: IdTokenPayload) {
+  return idToken.aud.includes(client.config.client_id);
+}
+
+function hasOnlyTrustedAudiences(client: Client, idToken: IdTokenPayload) {
   if (typeof idToken.aud === "string") {
-    return idToken.aud === config.client_id;
+    return idToken.aud === client.config.client_id;
   }
   return idToken.aud.every((audience) => {
-    if (idToken.aud === config.client_id) {
+    if (idToken.aud === client.config.client_id) {
       return true;
     }
-    return (config.trusted_audiences || []).includes(audience);
+    return (client.config.trusted_audiences || []).includes(audience);
   });
 }
 
@@ -130,17 +128,17 @@ function hasAzpClaim(idToken: IdTokenPayload) {
   return typeof idToken.azp !== "undefined";
 }
 
-function azpClaimValid(idToken: IdTokenPayload) {
-  return idToken.azp === config.client_id;
+function azpClaimValid(client: Client, idToken: IdTokenPayload) {
+  return idToken.azp === client.config.client_id;
 }
 
 function tokenIsExpired(idToken: IdTokenPayload) {
   return epochSeconds() > idToken.exp;
 }
 
-function iatOffsetTooBig(idToken: IdTokenPayload) {
+function iatOffsetTooBig(client: Client, idToken: IdTokenPayload) {
   const offset = Math.abs(epochSeconds() - idToken.iat);
-  LogUtil.debug(
+  client.logger.debug(
     "checking issued at offset (iat)",
     "iat",
     idToken.iat,
@@ -149,11 +147,11 @@ function iatOffsetTooBig(idToken: IdTokenPayload) {
     "offset",
     offset,
   );
-  return offset > (config.issuedAtMaxOffset || 30);
+  return offset > (client.config.issuedAtMaxOffset || 30);
 }
 
-function nonceIsValid(idToken: IdTokenPayload) {
-  return getNonce() === idToken.nonce;
+function nonceIsValid(client: Client, idToken: IdTokenPayload) {
+  return getNonce(client) === idToken.nonce;
 }
 
 /**
@@ -163,29 +161,32 @@ function nonceIsValid(idToken: IdTokenPayload) {
  *
  * @param idTokenString the id token as JWT string
  */
-export function validateIdToken(idTokenString: string): void {
-  LogUtil.debug("Validating ID Token");
-  assertProviderMetadata(discoveryState.providerMetadata);
+export async function validateIdToken(
+  client: Client,
+  idTokenString: string,
+): Promise<void> {
+  client.logger.debug("Validating ID Token");
+  assertProviderMetadata(client.providerMetadata);
 
-  validateJwtString(idTokenString);
+  validateJwtString(client, idTokenString);
   const { header, payload: idTokenPayload } =
     parseJwt<IdTokenPayload>(idTokenString);
 
   if (!idTokenPayload.sub) {
-    LogUtil.error("The ID Token does not have a sub claim");
+    client.logger.error("The ID Token does not have a sub claim");
 
     throw Error("id_token_invalid__no_sub");
   }
   if (!idTokenPayload.iat) {
-    LogUtil.error("The ID Token does not have a iat claim");
+    client.logger.error("The ID Token does not have a iat claim");
 
     throw Error("id_token_invalid__no_iat");
   }
 
   // The Issuer Identifier for the OpenID Provider (which is typically obtained
   // during Discovery) MUST exactly match the value of the iss (issuer) Claim.
-  if (idTokenPayload.iss !== discoveryState.providerMetadata.issuer) {
-    LogUtil.error("Issuer of ID token not the same as configured issuer");
+  if (idTokenPayload.iss !== client.providerMetadata.issuer) {
+    client.logger.error("Issuer of ID token not the same as configured issuer");
 
     throw Error("id_token_invalid__issuer_mismatch");
   }
@@ -194,15 +195,17 @@ export function validateIdToken(idTokenString: string): void {
   // client_id value registered at the Issuer identified by the iss (issuer)
   // Claim as an audience. The ID Token MUST be rejected if the ID Token does
   // not list the Client as a valid audience,
-  if (!hasClientIdAudience(idTokenPayload)) {
-    LogUtil.error("The ID token does not have the client_id as audience.");
+  if (!hasClientIdAudience(client, idTokenPayload)) {
+    client.logger.error(
+      "The ID token does not have the client_id as audience.",
+    );
 
     throw Error("id_token_invalid__no_client_id");
   }
 
   // or if it contains additional audiences not trusted by the Client.
-  if (!hasOnlyTrustedAudiences(idTokenPayload)) {
-    LogUtil.error(
+  if (!hasOnlyTrustedAudiences(client, idTokenPayload)) {
+    client.logger.error(
       "One or more of the audiences this payload has is not trusted.",
     );
 
@@ -212,7 +215,7 @@ export function validateIdToken(idTokenString: string): void {
   // If the ID Token contains multiple audiences, the Client SHOULD verify that
   // an azp Claim is present.
   if (hasMultipleAudiences(idTokenPayload) && !hasAzpClaim(idTokenPayload)) {
-    LogUtil.error(
+    client.logger.error(
       "The ID token has multiple audiences, but no AZP claim is present",
     );
 
@@ -221,8 +224,8 @@ export function validateIdToken(idTokenString: string): void {
 
   // If an azp (authorized party) Claim is present, the Client SHOULD verify
   // that its client_id is the Claim Value.
-  if (hasAzpClaim(idTokenPayload) && !azpClaimValid(idTokenPayload)) {
-    LogUtil.error("The AZP claim does not equal the client_id");
+  if (hasAzpClaim(idTokenPayload) && !azpClaimValid(client, idTokenPayload)) {
+    client.logger.error("The AZP claim does not equal the client_id");
 
     throw Error("id_token_invalid__azp_invalid");
   }
@@ -230,7 +233,7 @@ export function validateIdToken(idTokenString: string): void {
   // The current time MUST be before the time represented by the exp Claim
   // (possibly allowing for some small leeway to account for clock skew).
   if (tokenIsExpired(idTokenPayload)) {
-    LogUtil.error("The ID token is expired");
+    client.logger.error("The ID token is expired");
 
     throw Error("id_token_invalid__expired");
   }
@@ -238,8 +241,10 @@ export function validateIdToken(idTokenString: string): void {
   // The iat Claim can be used to reject tokens that were issued too far away
   // from the current time, limiting the amount of time that nonces need to be
   // stored to prevent attacks. The acceptable range is Client specific.
-  if (iatOffsetTooBig(idTokenPayload)) {
-    LogUtil.error("The ID token issued at claim (iat) is from too long ago.");
+  if (iatOffsetTooBig(client, idTokenPayload)) {
+    client.logger.error(
+      "The ID token issued at claim (iat) is from too long ago.",
+    );
 
     throw Error("id_token_invalid__iat_too_old");
   }
@@ -248,8 +253,8 @@ export function validateIdToken(idTokenString: string): void {
   // value as the one that was sent in the Authentication Request. The Client
   // SHOULD check the nonce value for replay attacks. The precise method for
   // detecting replay attacks is Client specific.
-  if (!nonceIsValid(idTokenPayload)) {
-    LogUtil.error("The ID token nonce does not equal the stored nonce.");
+  if (!nonceIsValid(client, idTokenPayload)) {
+    client.logger.error("The ID token nonce does not equal the stored nonce.");
 
     throw Error("id_token_invalid__nonce_invalid");
   }
@@ -260,8 +265,16 @@ export function validateIdToken(idTokenString: string): void {
   // The alg value SHOULD be RS256. Validation of tokens using other signing
   // algorithms is described in the OpenID Connect Core 1.0 [OpenID.Core]
   // specification.
-  if (!validSignature(idTokenString, header)) {
-    LogUtil.error("The ID token signature is invalid");
+  const validateSignatureError = await validateSignature(
+    client,
+    idTokenString,
+    header,
+  );
+  if (validateSignatureError !== null) {
+    client.logger.error(
+      "The ID token signature is invalid",
+      validateSignatureError,
+    );
 
     throw Error("id_token_invalid__invalid_signature");
   }
