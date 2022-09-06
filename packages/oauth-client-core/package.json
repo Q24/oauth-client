@@ -23,38 +23,36 @@
     "code flow"
   ],
   "devDependencies": {
+    "@swc/core": "^1.2.248",
+    "@swc/jest": "^0.2.22",
     "@types/jest": "^29.0.0",
     "eslint": "^8.23.0",
     "eslint-config-custom": "*",
     "jest": "^29.0.1",
-    "microbundle": "^0.15.1",
+    "jest-environment-jsdom": "^29.0.1",
+    "parcel": "^2.7.0",
     "prettier": "^2.7.1",
-    "ts-jest": "^28.0.8",
     "tsconfig": "*",
     "typedoc": "^0.23.13",
     "typedoc-plugin-markdown": "^3.13.5",
     "typescript": "^4.8.2"
   },
   "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build && npm run copyCleanHashFragment && npm run typedoc",
+    "lint": "eslint *.ts*",
     "prepublishOnly": "npm run build",
     "copyCleanHashFragment": "cp ./clean-hash-fragment.js dist/clean-hash-fragment.js",
-    "build": "npm run bundle && npm run copyCleanHashFragment && npm run typedoc",
-    "bundle": "rm -rf dist && microbundle --name OAuthClientCore --external none",
-    "dev": "microbundle watch --name OAuthClientCore --external none",
-    "dev:2": "microbundle watch --name OAuthClientCore --external none -o /Users/meesvandongen/conformance-suite/src/main/resources/static/oidc-test-client/dist",
     "typedoc": "rm -rf docs && typedoc ./src/index.ts",
-    "test": "npx jest --watch"
+    "test": "npx jest --watch",
+    "tsc": "tsc --noEmit",
+    "tsc:watch": "tsc --noEmit --watch"
   },
   "source": "./src/index.ts",
   "main": "dist/index.js",
-  "exports": "./dist/index.modern.js",
   "module": "dist/index.module.js",
-  "unpkg": "dist/index.umd.js",
-  "typings": "./dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "jest-environment-jsdom": "^29.0.1"
   }
 }

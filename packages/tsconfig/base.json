@@ -16,7 +16,9 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["@types/jest"],
+    "noEmit": true
   },
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-import { encode } from "../../utils/base64-url";
+import { base64urlEncode } from "../../utils/base64-url";
 
 const codeVerifierStorageKey = "code_verifier";
 
@@ -12,7 +12,7 @@ export function getStoredCodeVerifier(): string | null {
 
 export function generateCodeVerifier(): string {
   const randomBytes = crypto.getRandomValues(new Uint8Array(32));
-  return encode(randomBytes);
+  return base64urlEncode(randomBytes);
 }
 
 /**

@@ -1,4 +1,5 @@
 import { Alg } from "../../discovery/model/jwks.model";
+import { toUint8Array } from "../text-encoding";
 import { getAlgorithm } from "./verify-algorithm";
 
 export async function verifySignature(
@@ -16,16 +17,18 @@ export async function verifySignature(
 
   const algorithm = getAlgorithm(alg);
 
+  const uint8Array = toUint8Array(signingInput);
+
   const valid = await crypto.subtle.verify(
     algorithm,
     key,
     signature,
-    Buffer.from(signingInput),
+    uint8Array,
   );
 
   if (valid) {
     return null;
   }
 
-  return `The signature is invalid: ${JSON.stringify(algorithm, null, 2)}`;
+  return `The signature is invalid for the given key and algorithm ${alg}.`;
 }

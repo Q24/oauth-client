@@ -1,4 +1,3 @@
-import { KEYUTIL, KJUR } from "jsrsasign-reduced";
 import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { getNonce } from "../utils/nonce";
 import { epochSeconds } from "../utils/time";

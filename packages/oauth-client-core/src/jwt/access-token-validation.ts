@@ -1,18 +1,19 @@
 import { parseIdToken } from "./parseJwt";
 import type { AuthResult } from "./model/auth-result.model";
 import isCodeFlow from "../utils/is-code-flow";
-import { hexToBuffer, sha256 } from "../crypto";
+import { hashArrayToHex, hexToBuffer, sha256 } from "../crypto";
 import { Client } from "../client";
-import { encode } from "../utils/base64-url";
+import { base64urlEncode } from "../utils/base64-url";
 
 export async function findAtHash(
   accessToken: string,
   sha: string,
 ): Promise<string> {
-  const hex = await sha256(accessToken);
+  const hash = await sha256(accessToken);
+  const hex = hashArrayToHex(hash);
   const first128bits = hex.substring(0, hex.length / 2);
   const buffer = hexToBuffer(first128bits);
-  const atHash = encode(buffer);
+  const atHash = base64urlEncode(buffer);
 
   return atHash;
 }

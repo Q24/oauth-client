@@ -1,7 +1,8 @@
 import type { JWT, JWTHeader } from "./model/jwt.model";
 import type { IdTokenPayload } from "./model/id-token.model";
 import type { AccessTokenPayload } from "./model/access-token.model";
-import { decode } from "../utils/base64-url";
+import { base64urlDecode } from "../utils/base64-url";
+import { fromUint8Array } from "../utils/text-encoding";
 
 function isValid<T>(arr: any[]): arr is [JWTHeader, T, Uint8Array] {
   return (
@@ -20,12 +21,14 @@ export function parseJwt<T = AccessTokenPayload>(token: string): JWT<T> {
   try {
     const arr = token
       .split(".")
-      .map(decode)
-      .map((uint8Array, index) =>
-        index === 0 || index === 1
-          ? JSON.parse(Buffer.from(uint8Array).toString("utf8"))
-          : uint8Array,
-      );
+      .map(base64urlDecode)
+      .map((uint8Array, index) => {
+        if (index === 0 || index === 1) {
+          const str = fromUint8Array(uint8Array);
+          return JSON.parse(str);
+        }
+        return uint8Array;
+      });
     if (isValid<T>(arr)) {
       return {
         header: arr[0],
