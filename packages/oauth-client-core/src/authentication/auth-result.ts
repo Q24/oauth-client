@@ -2,12 +2,12 @@ import { getAllAuthResultFilters } from "../auth-result-filter/all-filters";
 import { filterAuthResults } from "../auth-result-filter/filter-auth-results";
 import { storeRefreshToken } from "../flows/code-flow/refresh-token";
 import { storeIdToken } from "../open-id/id-token-hint";
-import { StorageUtil } from "../utils/storage";
 import { epochSeconds } from "../utils/time";
 
 import type { AuthResultFilter } from "../auth-result-filter/model/auth-result-filter.model";
 import type { AuthResult } from "../jwt/model/auth-result.model";
 import { Client } from "../client";
+import { removeByRegex } from "../utils/storage";
 
 /**
  * Deletes all the auth results from the storage. If authResultFilter is passed
@@ -26,7 +26,7 @@ export function deleteStoredAuthResults(
     deleteStoredAuthResultsFiltered(client, authResultFilter);
   } else {
     client.logger.debug(`Removed Tokens from session storage`);
-    StorageUtil.remove("-authResult");
+    removeByRegex(client.storage, "-authResult");
   }
 }
 
@@ -44,10 +44,10 @@ function createAuthResultKey(client: Client) {
 }
 
 /**
- * Get all auth results stored in session StorageUtil in an Array
+ * Get all auth results stored in session in an Array
  */
 function getStoredAuthResults(client: Client): AuthResult[] {
-  const storedAuthResults = StorageUtil.read(createAuthResultKey(client));
+  const storedAuthResults = client.storage.getItem(createAuthResultKey(client));
   if (!storedAuthResults) {
     return [];
   }
@@ -55,11 +55,14 @@ function getStoredAuthResults(client: Client): AuthResult[] {
 }
 
 /**
- * Stores an array of auth results to the session StorageUtil
+ * Stores an array of auth results to the session
  */
 function storeAuthResults(client: Client, authResults: AuthResult[]): void {
   client.logger.debug("Saved Auth Results to session storage");
-  StorageUtil.store(createAuthResultKey(client), JSON.stringify(authResults));
+  client.storage.setItem(
+    createAuthResultKey(client),
+    JSON.stringify(authResults),
+  );
 }
 
 /**

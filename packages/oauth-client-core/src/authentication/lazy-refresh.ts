@@ -1,7 +1,7 @@
 import { discovery } from "../discovery/discovery";
 import { codeFlowRefreshAccessToken } from "../flows/code-flow/code-flow-refresh";
 import { silentRefresh } from "../flows/implicit-flow/implicit-flow-refresh";
-import isCodeFlow from "../utils/is-code-flow";
+import isCodeFlow from "../flows/code-flow/is-code-flow";
 
 import type { AuthResult } from "../jwt/model/auth-result.model";
 import type { AuthValidationOptions } from "../jwt/model/auth-validation-options.model";

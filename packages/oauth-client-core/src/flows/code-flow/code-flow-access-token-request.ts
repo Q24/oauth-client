@@ -5,6 +5,7 @@ import type { AuthResult } from "../../jwt/model/auth-result.model";
 import type { OAuthCodeFlowAccessTokenParameters } from "./model/access-token-request.model";
 import type { OAuthRefreshTokenParameters } from "./model/refresh-token-request.model";
 import { Client } from "../../client";
+import { discovery } from "../../discovery/discovery";
 
 interface CreateCodeFlowAcccessTokenRequestParametersConfig {
   code: string;
@@ -33,6 +34,8 @@ export async function accessTokenRequest(
     | OAuthCodeFlowAccessTokenParameters
     | OAuthRefreshTokenParameters,
 ): Promise<AuthResult> {
+  const { providerMetadata } = await discovery(client);
+
   client.logger.debug(
     "getting the access token from the token endpoint with parameters:",
     requestParameters,
@@ -40,26 +43,21 @@ export async function accessTokenRequest(
 
   const urlParamsString = toUrlParameterString(requestParameters);
 
-  return new Promise<AuthResult>((resolve, reject) => {
-    if (!client.providerMetadata?.token_endpoint) {
-      reject("no token endpoint found");
-      return;
-    }
-    const xhr = new XMLHttpRequest();
-
-    xhr.open("POST", client.providerMetadata.token_endpoint, true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          const csrfResult = JSON.parse(xhr.responseText) as AuthResult;
-          resolve(csrfResult);
-        } else {
-          reject(xhr.statusText);
-        }
-      }
-    };
-    xhr.send(urlParamsString);
+  const response = await fetch(`${providerMetadata.token_endpoint}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: urlParamsString,
   });
+
+  if (!response.ok) {
+    client.logger.error("Failed to fetch access token", response);
+    throw new Error("Failed to fetch access token");
+  }
+
+  const json = await response.json();
+
+  client.logger.debug("access token response", json);
+  return json;
 }

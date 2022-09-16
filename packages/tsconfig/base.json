@@ -18,7 +18,8 @@
     "target": "ESNext",
     "resolveJsonModule": true,
     "types": ["@types/jest"],
-    "noEmit": true
+    "noEmit": true,
+    "lib": ["ESNext", "DOM"]
   },
   "exclude": ["node_modules"]
 }

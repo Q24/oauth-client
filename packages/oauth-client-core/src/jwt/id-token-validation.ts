@@ -1,4 +1,3 @@
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
 import { getNonce } from "../utils/nonce";
 import { epochSeconds } from "../utils/time";
 import { parseJwt } from "./parseJwt";
@@ -9,6 +8,7 @@ import type { JWTHeader } from "./model/jwt.model";
 import { Client } from "../client";
 import { JWK } from "../discovery/model/jwks.model";
 import { verifyJwt } from "../utils/verify-jwt/verify-jwt";
+import { discovery } from "../discovery/discovery";
 
 const supportedKeyAlgs = [
   "HS256",
@@ -29,7 +29,8 @@ export async function validateSignature(
   idTokenString: string,
   headerData: JWTHeader,
 ): Promise<boolean> {
-  const jwks = client.jwks;
+  const { jwks } = await discovery(client);
+
   if (!jwks?.keys) {
     client.logger.error("JWKs not defined");
     return false;
@@ -165,7 +166,6 @@ export async function validateIdToken(
   idTokenString: string,
 ): Promise<void> {
   client.logger.debug("Validating ID Token");
-  assertProviderMetadata(client.providerMetadata);
 
   validateJwtString(client, idTokenString);
   const { header, payload: idTokenPayload } =
@@ -184,7 +184,7 @@ export async function validateIdToken(
 
   // The Issuer Identifier for the OpenID Provider (which is typically obtained
   // during Discovery) MUST exactly match the value of the iss (issuer) Claim.
-  if (idTokenPayload.iss !== client.providerMetadata.issuer) {
+  if (idTokenPayload.iss !== client.config.issuer) {
     client.logger.error("Issuer of ID token not the same as configured issuer");
 
     throw Error("id_token_invalid__issuer_mismatch");

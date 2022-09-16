@@ -1,5 +1,5 @@
 import { Client } from "../client";
-import { StorageUtil } from "./storage";
+import { removeByRegex } from "./storage";
 
 /**
  * Generates a random 'discoveryState' string
@@ -29,7 +29,7 @@ const stateStorageId = (client: Client) => `${client.config.client_id}-state`;
  * Get the saved state string from sessionStorage
  */
 export function getState(client: Client): string | null {
-  const state = StorageUtil.read(stateStorageId(client));
+  const state = client.storage.getItem(stateStorageId(client));
   if (!state) {
     client.logger.debug("state was not found in storage", state);
     return null;
@@ -43,7 +43,7 @@ export function getState(client: Client): string | null {
  */
 export function saveState(client: Client, state: string): void {
   client.logger.debug("State saved");
-  StorageUtil.store(stateStorageId(client), state);
+  client.storage.setItem(stateStorageId(client), state);
 }
 
 /**
@@ -51,5 +51,5 @@ export function saveState(client: Client, state: string): void {
  */
 export function deleteState(client: Client): void {
   client.logger.debug(`Deleted state`);
-  StorageUtil.remove("-discoveryState");
+  removeByRegex(client.storage, "-discoveryState");
 }

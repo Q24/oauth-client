@@ -270,4 +270,20 @@ export interface OpenIDProviderMetadata {
    * given.
    */
   op_tos_uri?: string;
+
+  /**
+   * URL of an OP iframe that supports cross-origin communications for session
+   * state information with the RP Client, using the HTML5 postMessage API. The
+   * page is loaded from an invisible iframe embedded in an RP page so that it
+   * can run in the OP's security context. It accepts postMessage requests from
+   * the relevant RP iframe and uses postMessage to post back the login status
+   * of the End-User at the OP.
+   */
+  check_session_iframe?: string;
+
+  /**
+   * URL at the OP to which an RP can perform a redirect to request that the
+   * End-User be logged out at the OP.
+   */
+  end_session_endpoint?: string;
 }

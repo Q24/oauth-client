@@ -1,10 +1,9 @@
 import {
-  configure,
+  createClient,
   getStoredAuthResult as _getStoredAuthResult,
   OAuthClientConfig,
   getAuthHeader as _getAuthHeader,
   lazyRefresh,
-  cleanSessionStorage,
   deleteStoredAuthResults,
   getCsrfResult,
   getIdTokenHint,
@@ -13,6 +12,7 @@ import {
   silentLogout,
   AuthResult,
   AuthResultFilter,
+  cleanStorage,
 } from "@ilionx/oauth-client-core";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { OAuthContext, OAuthContextInterface } from "./oauth-context";
@@ -27,9 +27,49 @@ export function OAuthProvider({
   config,
   filters = [],
 }: OAuthProviderProps): JSX.Element {
+  const client = useMemo(
+    () =>
+      createClient({
+        client_id: config.client_id,
+        response_type: config.response_type,
+        redirect_uri: config.redirect_uri,
+        silent_refresh_uri: config.silent_refresh_uri,
+        silent_logout_uri: config.silent_logout_uri,
+        post_logout_redirect_uri: config.post_logout_redirect_uri,
+        csrf_token_endpoint: config.csrf_token_endpoint,
+        validate_token_endpoint: config.validate_token_endpoint,
+        is_session_alive_endpoint: config.is_session_alive_endpoint,
+        debug: config.debug,
+        trusted_audiences: config.trusted_audiences,
+        issuedAtMaxOffset: config.issuedAtMaxOffset,
+        defaultAuthResultFilters: config.defaultAuthResultFilters,
+        login_hint: config.login_hint,
+        issuer: config.issuer,
+        scope: config.scope,
+      }),
+    [
+      config.client_id,
+      config.response_type,
+      config.redirect_uri,
+      config.silent_refresh_uri,
+      config.silent_logout_uri,
+      config.post_logout_redirect_uri,
+      config.csrf_token_endpoint,
+      config.validate_token_endpoint,
+      config.is_session_alive_endpoint,
+      config.debug,
+      config.trusted_audiences,
+      config.issuedAtMaxOffset,
+      config.defaultAuthResultFilters,
+      config.login_hint,
+      config.issuer,
+      config.scope,
+    ]
+  );
+
   const getStoredAuthResult = useCallback(() => {
-    return _getStoredAuthResult(filters);
-  }, [filters]);
+    return _getStoredAuthResult(client, filters);
+  }, [client, filters]);
 
   const [authResult, setAuthResult] = useState<AuthResult | null>(() =>
     getStoredAuthResult()
@@ -37,10 +77,6 @@ export function OAuthProvider({
   const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = authResult?.access_token !== undefined;
-
-  useEffect(() => {
-    configure(config);
-  }, [config]);
 
   const getAuthHeader = useCallback((): string | null => {
     const authResult = getStoredAuthResult();
@@ -53,36 +89,36 @@ export function OAuthProvider({
   const silentRefresh = useCallback(async (): Promise<boolean> => {
     const token = getStoredAuthResult();
     if (token) {
-      return lazyRefresh(token);
+      return lazyRefresh(client, token);
     }
     return false;
-  }, [getStoredAuthResult]);
+  }, [client, getStoredAuthResult]);
 
   const login = useCallback(() => {
     setIsLoading(true);
-    return obtainSession()
+    return obtainSession(client)
       .finally(() => {
         setIsLoading(false);
       })
       .then((result) => {
         setAuthResult(result);
       });
-  }, []);
+  }, [client]);
 
   const providerValue = useMemo(
     (): OAuthContextInterface => ({
       isAuthenticated,
       isLoading,
       login,
-      getCsrfResult,
-      getStoredCsrfToken,
-      getStoredAuthResult,
-      getAuthHeader,
-      getIdTokenHint,
-      cleanSessionStorage,
-      deleteStoredAuthResults,
-      silentLogout,
-      silentRefresh,
+      getCsrfResult: getCsrfResult.bind(null, client),
+      getStoredCsrfToken: getStoredCsrfToken.bind(null, client),
+      getStoredAuthResult: getStoredAuthResult.bind(null, client),
+      getAuthHeader: getAuthHeader.bind(null, client),
+      getIdTokenHint: getIdTokenHint.bind(null, client),
+      cleanStorage: cleanStorage.bind(null, client),
+      deleteStoredAuthResults: deleteStoredAuthResults.bind(null, client),
+      silentLogout: silentLogout.bind(null, client),
+      silentRefresh: silentRefresh.bind(null, client),
     }),
     [
       isAuthenticated,
@@ -91,6 +127,7 @@ export function OAuthProvider({
       getStoredAuthResult,
       getAuthHeader,
       silentRefresh,
+      client,
     ]
   );
 

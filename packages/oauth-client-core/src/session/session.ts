@@ -1,0 +1,1 @@
+// https://openid.net/specs/openid-connect-session-1_0-17.html

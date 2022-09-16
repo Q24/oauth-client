@@ -1,4 +1,4 @@
-import { toUint8Array } from "./utils/text-encoding";
+import { toUint8Array } from "./text-encoding";
 
 export async function sha256(str: string): Promise<Uint8Array> {
   const buffer = toUint8Array(str);

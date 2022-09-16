@@ -1,9 +1,8 @@
 import { getAuthHeader } from "../authentication/auth-header";
 import { getStoredAuthResult } from "../authentication/auth-result";
 import { Client } from "../client";
-import { assertProviderMetadata } from "../discovery/assert-provider-metadata";
+import { discovery } from "../discovery/discovery";
 import { parseIdToken } from "../jwt/parseJwt";
-import { readUserInfoCache, setUserInfoCache } from "./user-info-state";
 
 import type { UserInfo } from "./user-info.model";
 
@@ -62,9 +61,10 @@ function verifyUserInfoResponse(client: Client, userInfo: UserInfo) {
  * When an error condition occurs, the UserInfo Endpoint returns an Error
  * Response as defined in Section 3 of OAuth 2.0 Bearer Token Usage [RFC6750].
  */
-function fetchUserInfo(client: Client): Promise<UserInfo> {
-  assertProviderMetadata(client.providerMetadata);
-  const userinfoEndpoint = client.providerMetadata.userinfo_endpoint;
+export async function fetchUserInfo(client: Client): Promise<UserInfo> {
+  const { providerMetadata } = await discovery(client);
+
+  const userinfoEndpoint = providerMetadata.userinfo_endpoint;
   if (!userinfoEndpoint) {
     client.logger.error(
       "Server does not implement user info endpoint, or userinfo endpoint is not set.",
@@ -72,60 +72,30 @@ function fetchUserInfo(client: Client): Promise<UserInfo> {
     throw new Error("User info endpoint not set");
   }
 
-  return new Promise<UserInfo>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const authResult = getStoredAuthResult(client);
-    if (!authResult) {
-      throw new Error("could not get auth result from local storage");
-    }
-    const authorization = getAuthHeader(authResult);
-
-    xhr.open("GET", userinfoEndpoint, true);
-    xhr.setRequestHeader("Authorization", authorization);
-    xhr.withCredentials = true;
-
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status <= 300) {
-          const userInfo = JSON.parse(xhr.responseText);
-
-          if (verifyUserInfoResponse(client, userInfo)) {
-            resolve(userInfo);
-          } else {
-            client.logger.error(
-              "The subject of the user info response is not the same as the id token",
-            );
-            reject("userinfo_response_invalid");
-          }
-        } else {
-          reject(xhr.statusText);
-        }
-      }
-    };
-    xhr.send();
-  });
-}
-
-/**
- * sets the local user info to the remote user info.
- *
- * @returns the user info
- */
-async function getRemoteUserInfo(client: Client): Promise<UserInfo> {
-  const userInfo = await fetchUserInfo(client);
-  setUserInfoCache(userInfo);
-  return userInfo;
-}
-
-/**
- * tries to get the local user info; if not found, get the remote user info.
- *
- * @returns the user info
- */
-export async function getUserInfo(client: Client): Promise<UserInfo> {
-  const cachedUserInfo = readUserInfoCache();
-  if (cachedUserInfo) {
-    return cachedUserInfo;
+  const authResult = getStoredAuthResult(client);
+  if (!authResult) {
+    throw new Error("could not get auth result from local storage");
   }
-  return getRemoteUserInfo(client);
+  const authorization = getAuthHeader(authResult);
+
+  const userInfoResponse = await fetch(userinfoEndpoint, {
+    headers: {
+      Authorization: authorization,
+    },
+  });
+
+  if (!userInfoResponse.ok) {
+    client.logger.error(
+      `User info request failed with status ${userInfoResponse.status}`,
+    );
+    throw new Error("User info request failed");
+  }
+
+  const userInfo = await userInfoResponse.json();
+  if (!verifyUserInfoResponse(client, userInfo)) {
+    client.logger.error("User info response does not match id token");
+    throw new Error("User info response does not match id token");
+  }
+
+  return userInfo;
 }

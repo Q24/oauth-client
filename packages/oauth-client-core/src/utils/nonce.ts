@@ -1,5 +1,5 @@
 import { Client } from "../client";
-import { StorageUtil } from "./storage";
+import { removeByRegex } from "./storage";
 
 /**
  * Generates a random 'nonce' string
@@ -24,7 +24,7 @@ const nonceStorageId = (client: Client) => `${client.config.client_id}-nonce`;
  * @returns {string}
  */
 export function getNonce(client: Client): string | null {
-  return StorageUtil.read(nonceStorageId(client));
+  return client.storage.getItem(nonceStorageId(client));
 }
 
 /**
@@ -32,12 +32,12 @@ export function getNonce(client: Client): string | null {
  * @param nonce
  */
 export function saveNonce(client: Client, nonce: string): void {
-  StorageUtil.store(nonceStorageId(client), nonce);
+  client.storage.setItem(nonceStorageId(client), nonce);
 }
 
 /**
  * Deletes the nonce from sessionStorage
  */
-export function deleteNonce(): void {
-  StorageUtil.remove("-nonce");
+export function deleteNonce(client: Client): void {
+  removeByRegex(client.storage, "-nonce");
 }

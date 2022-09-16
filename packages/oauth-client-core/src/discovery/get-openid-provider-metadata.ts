@@ -15,63 +15,22 @@ import type { OpenIDProviderMetadata } from "./model/openid-provider-metadata.mo
  * this specification and MUST be returned using the application/json content
  * type.
  */
-function fetchOpenIdProviderMetadata(
+export async function fetchOpenIdProviderMetadata(
   client: Client,
 ): Promise<OpenIDProviderMetadata> {
   client.logger.debug("getting provider metadata");
 
   const openIdConfigurationUrl = `${client.config.issuer}/.well-known/openid-configuration`;
 
-  return new Promise<OpenIDProviderMetadata>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.open("GET", openIdConfigurationUrl, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status >= 200 && xhr.status <= 300) {
-          const providerMetadata = JSON.parse(xhr.responseText);
-          client.logger.debug(
-            "successfully got provider metadata",
-            providerMetadata,
-          );
-
-          resolve(providerMetadata);
-        } else {
-          client.logger.error(
-            "could not get provider metadata",
-            xhr.statusText,
-          );
-          reject(xhr.statusText);
-        }
-      }
-    };
-    xhr.send();
-  });
-}
-
-/**
- * sets the local provider metadata to the remote provider metadata.
- *
- * @returns the metadata
- */
-export async function getRemoteOpenIdProviderMetadata(
-  client: Client,
-): Promise<OpenIDProviderMetadata> {
-  const providerMetadata = await fetchOpenIdProviderMetadata(client);
-  client.providerMetadata = providerMetadata;
-  return providerMetadata;
-}
-
-/**
- * tries to get the local metadata; if not found, get the remote metadata.
- *
- * @returns the metadata
- */
-export async function getOpenIdProviderMetadata(
-  client: Client,
-): Promise<OpenIDProviderMetadata> {
-  if (client.providerMetadata) {
-    return client.providerMetadata;
+  const response = await fetch(openIdConfigurationUrl);
+  if (!response.ok) {
+    client.logger.error("Failed to fetch OpenID Provider Metadata", response);
+    throw new Error(
+      `Failed to fetch OpenID Provider Metadata from ${openIdConfigurationUrl}`,
+    );
   }
-  return getRemoteOpenIdProviderMetadata(client);
+
+  const providerMetadata = await response.json();
+  client.logger.debug("got provider metadata", providerMetadata);
+  return providerMetadata;
 }

@@ -2,7 +2,7 @@
 
 This library implements the [OIDC implicit flow](https://openid.net/specs/openid-connect-implicit-1_0.html) / [OIDC Code flow with PKCE](https://openid.net/2015/05/26/enhancing-oauth-security-for-mobile-applications-with-pkse/) for use in a front-end web application. The library can be used directly with any framework of choice. While it is not strictly necessary to use wrapper, there is one [available for Angular](https://www.npmjs.com/package/@ilionx/oauth-client-angular).
 
-## Features
+# Features
 
 - Implicit Flow
 - Code Flow with PKCE
@@ -11,16 +11,17 @@ This library implements the [OIDC implicit flow](https://openid.net/specs/openid
 - OpenID Connect Session Management
 - Authetication using redirect
 
-## Roadmap
+# Roadmap
 
 - A future aim is to have this library certified as [OpenID Relying Party] (https://openid.net/certification/#RPs).
 - Add support for [all request parameters](https://openid.net/specs/openid-connect-implicit-1_0.html#RequestParameters).
-- Move to native Web Crypto API when IE11 support is not needed anymore.
 - Authentication using popup
 
-## API Reference
+# API Reference
 
 The API reference can be found in the `docs` folder.
+
+# Info
 
 ## How to set the OIDC Config
 
@@ -353,7 +354,7 @@ getStoredAuthResult([
 ]);
 ```
 
-## FAQ
+# FAQ
 
 ### What is a silent logout?
 
@@ -379,3 +380,10 @@ a silent refresh, a new access token is fetched in the background, without user 
 
 - The purpose of a **logout page** is to initiate and authorise the termination of a session.
 - The purpose of a **logged out page** is to show the user that he has been logged out. In addition, the **logged out page** is used to remove authentication information.
+
+# Related libraries
+
+- [djwt](https://github.com/timonson/djwt)
+- [oidc-client-ts](https://github.com/authts/oidc-client-ts)
+- [jose](https://github.com/panva/jose)
+- [jsrsasign](https://github.com/kjur/jsrsasign)

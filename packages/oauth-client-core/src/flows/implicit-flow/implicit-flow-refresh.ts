@@ -3,7 +3,6 @@ import {
   storeAuthResult,
 } from "../../authentication/auth-result";
 
-import { assertProviderMetadata } from "../../discovery/assert-provider-metadata";
 import { discovery } from "../../discovery/discovery";
 import {
   isValidNewAuthResult,
@@ -37,14 +36,13 @@ export async function silentRefresh(
   client: Client,
   authValidationOptions?: AuthValidationOptions,
 ): Promise<AuthResult> {
-  await discovery(client);
+  const { providerMetadata } = await discovery(client);
 
   const scopes: string[] =
     authValidationOptions?.scopes ??
     transformScopesStringToArray(client.config.scope);
   client.logger.debug("Silent refresh started");
 
-  assertProviderMetadata(client.providerMetadata);
   const promptNone = true;
 
   const authorizeParams = createImplicitFlowAuthorizeRequestParameters(
@@ -54,7 +52,7 @@ export async function silentRefresh(
   );
 
   const urlToLoad = `${
-    client.providerMetadata.authorization_endpoint
+    providerMetadata.authorization_endpoint
   }?${toUrlParameterString(authorizeParams)}`;
 
   const loadedUrl = await loadIframeUrl(urlToLoad);

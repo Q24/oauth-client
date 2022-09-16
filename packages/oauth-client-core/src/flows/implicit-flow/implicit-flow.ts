@@ -11,7 +11,7 @@ import {
   isValidNewAuthResult,
   isValidStoredAuthResult,
 } from "../../jwt/validate-auth-result";
-import { cleanSessionStorage } from "../../utils/clean-session-storage";
+import { cleanStorage } from "../../utils/clean-session-storage";
 import { transformScopesStringToArray } from "../../utils/scope";
 import { clearQueryParameters } from "../../utils/url";
 import {
@@ -51,7 +51,7 @@ export async function implicitFlow(
 ): Promise<AuthResult> {
   await discovery(client);
 
-  const sessionUpgradeToken = getSessionUpgradeToken();
+  const sessionUpgradeToken = getSessionUpgradeToken(client);
   if (sessionUpgradeToken) {
     return sessionUpgrade(client, sessionUpgradeToken);
   }
@@ -75,11 +75,11 @@ export async function implicitFlow(
 
   // 2. Get the auth result from the hash previously stored in session storage,
   //    and clear it afterwards.
-  const authResultFromStoredHash = getAuthResultFromStoredHash();
+  const authResultFromStoredHash = getAuthResultFromStoredHash(client);
   if (authResultFromStoredHash) {
     if (await isValidNewAuthResult(client, authResultFromStoredHash)) {
       storeAuthResult(client, authResultFromStoredHash);
-      deleteStoredHashString();
+      deleteStoredHashString(client);
       if (
         isValidStoredAuthResult(
           authResultFromStoredHash,
@@ -139,7 +139,7 @@ export async function implicitFlow(
 async function implicitFlowAuthorizeFlow(client: Client): Promise<AuthResult> {
   ensureNoErrorInParameters(client);
 
-  cleanSessionStorage(client);
+  cleanStorage(client);
 
   const scopes = transformScopesStringToArray(client.config.scope);
   const authorizeParams = createImplicitFlowAuthorizeRequestParameters(

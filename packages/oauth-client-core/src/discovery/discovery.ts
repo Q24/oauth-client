@@ -1,15 +1,12 @@
 import { Client } from "../client";
-import { getJwks } from "./get-jwks";
-import { getOpenIdProviderMetadata } from "./get-openid-provider-metadata";
+import { fetchJwks } from "./get-jwks";
+import { fetchOpenIdProviderMetadata } from "./get-openid-provider-metadata";
+import { Discovery } from "./model/discovery.model";
 
-/**
- * A singleton promise used for initialization.
- */
-let discoveryPromise: Promise<void> | null = null;
-
-async function _discovery(client: Client) {
-  await getOpenIdProviderMetadata(client);
-  await getJwks(client);
+async function _discovery(client: Client): Promise<Discovery> {
+  const providerMetadata = await fetchOpenIdProviderMetadata(client);
+  const jwks = await fetchJwks(client, providerMetadata.jwks_uri);
+  return { providerMetadata, jwks };
 }
 
 /**
@@ -21,14 +18,15 @@ async function _discovery(client: Client) {
  *
  * @returns A promise which will resolve when the discovery is complete
  */
-export async function discovery(client: Client): Promise<void> {
-  if (discoveryPromise) {
-    return discoveryPromise;
+export async function discovery(client: Client): Promise<Discovery> {
+  if (!client.__cache.discovery) {
+    try {
+      client.__cache.discovery = _discovery(client);
+    } catch (reason) {
+      client.logger.error("Discovery failed", reason);
+      client.__cache.discovery = null;
+      throw reason;
+    }
   }
-  discoveryPromise = _discovery(client).catch((reason) => {
-    discoveryPromise = null;
-    client.logger.error("Discovery failed", reason);
-    throw Error(reason);
-  });
-  return discoveryPromise;
+  return client.__cache.discovery;
 }

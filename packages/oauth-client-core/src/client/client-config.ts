@@ -28,7 +28,7 @@ export interface OAuthClientConfig {
   /**
    * The URL you want to use for a silent Logout, if your stack supports it.
    */
-  silent_logout_uri?: string;
+  front_channel_logout_uri?: string;
 
   /**
    * The URL you want to be redirected to after logging out
@@ -40,21 +40,6 @@ export interface OAuthClientConfig {
    * When using Open Id Connect, scope `openid` is mandatory
    */
   scope: string;
-
-  /**
-   * CSRF token endpoint
-   */
-  csrf_token_endpoint?: string;
-
-  /**
-   * Validate received token endpoint
-   */
-  validate_token_endpoint?: string;
-
-  /**
-   * Endpoint for checking if a session is still used somewhere
-   */
-  is_session_alive_endpoint?: string;
 
   /**
    * Verbose logging of inner workings of the package.

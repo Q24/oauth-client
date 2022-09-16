@@ -8,14 +8,17 @@ import { getState } from "../utils/state";
  * @throws `state_invalid` if state is not the same as the saved state.
  */
 export function validateState(client: Client, state: string): void {
-  client.logger.debug("Validating");
+  client.logger.debug("Validating state");
   const storedState = getState(client);
 
-  // We received a token from SSO, so we need to validate the state
-  if (!storedState || state !== storedState) {
-    client.logger.error("Authorisation Token not valid");
-    client.logger.debug("State NOT valid");
-    throw Error("state_invalid");
+  if (!storedState) {
+    client.logger.error("state was not found in storage");
+    throw new Error("state_invalid");
+  }
+
+  if (state !== storedState) {
+    client.logger.error("state does not match");
+    throw new Error("state_invalid");
   }
 
   client.logger.debug(

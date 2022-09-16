@@ -1,4 +1,3 @@
-import { assertProviderMetadata } from "../../discovery/assert-provider-metadata";
 import { timeout } from "../../utils/timeout";
 import {
   clearQueryParameters,
@@ -11,14 +10,14 @@ import { deleteStoredHashString, getStoredHashString } from "./hash";
 import type { AuthResult } from "../../jwt/model/auth-result.model";
 import { Client } from "../../client";
 
-export function getSessionUpgradeToken(): string | null {
+export function getSessionUpgradeToken(client: Client): string | null {
   const authResultFromUrl = getHashParameters<Partial<AuthResult>>();
   if (authResultFromUrl.session_upgrade_token) {
     clearQueryParameters();
     return authResultFromUrl.session_upgrade_token;
   }
 
-  const hashStringFromStorage = getStoredHashString();
+  const hashStringFromStorage = getStoredHashString(client);
   if (!hashStringFromStorage) {
     return null;
   }
@@ -28,7 +27,7 @@ export function getSessionUpgradeToken(): string | null {
   if (!hashResultFromStorage.session_upgrade_token) {
     return null;
   }
-  deleteStoredHashString();
+  deleteStoredHashString(client);
   return hashResultFromStorage.session_upgrade_token;
 }
 
@@ -55,8 +54,7 @@ export async function sessionUpgrade(
 
   // Do the authorize redirect
   const urlParams = toUrlParameterString(urlVars);
-  assertProviderMetadata(client.providerMetadata);
-  window.location.href = `${client.providerMetadata.issuer}/upgrade-session?${urlParams}`;
+  window.location.href = `${client.config.issuer}/upgrade-session?${urlParams}`;
 
   // Send Authorization code and code verifier to token endpoint -> server returns access token
   await timeout(7000);

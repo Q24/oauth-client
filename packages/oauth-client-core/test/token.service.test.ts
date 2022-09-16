@@ -86,7 +86,7 @@ describe("getIdTokenHint", () => {
   it("gets a id token with regex", () => {
     // Create a sample token in the storage for a non-standard client.
     window.sessionStorage.setItem(
-      `other_client-id-token-hint`,
+      "other_client-id-token-hint",
       constants.sampleIdTokenHint1,
     );
 
@@ -139,7 +139,7 @@ describe("getStoredToken", () => {
 describe("getStoredCsrfToken", () => {
   it("stores and retrieves csrf token", () => {
     // Create a sample token in the database
-    window.sessionStorage.setItem(`_csrf`, "csrf");
+    window.sessionStorage.setItem("_csrf", "csrf");
 
     // Verify that there are tokens in the storage.
     expect(getStoredCsrfToken(client)).not.toBeNull;

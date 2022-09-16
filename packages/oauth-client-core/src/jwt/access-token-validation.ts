@@ -1,6 +1,6 @@
 import { parseIdToken } from "./parseJwt";
 import type { AuthResult } from "./model/auth-result.model";
-import isCodeFlow from "../utils/is-code-flow";
+import isCodeFlow from "../flows/code-flow/is-code-flow";
 import { hashArrayToHex, hexToBuffer, sha256 } from "../crypto";
 import { Client } from "../client";
 import { base64urlEncode } from "../utils/base64-url";

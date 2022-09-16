@@ -72,9 +72,9 @@ export async function codeFlow(
     client.logger.debug("Found a valid auth result in storage, returning it.");
 
     return storedAuthResult;
-  } else {
-    client.logger.debug("There is no auth result in storage");
   }
+
+  client.logger.debug("There is no auth result in storage");
 
   client.logger.debug("Looking for a refresh token in storage");
   const refreshToken = getStoredRefreshToken(client);
@@ -102,7 +102,6 @@ export async function codeFlow(
 
 /**
  * Authorizes the user against the authentication server
- * @returns
  */
 async function codeFlowAuthorizeFlow(client: Client): Promise<AuthResult> {
   client.logger.debug("Do a authorize call");
@@ -117,11 +116,7 @@ async function codeFlowAuthorizeFlow(client: Client): Promise<AuthResult> {
 }
 
 /**
- * Gets a authentication token from the token endpoint
- *
- * @param oAuthCodeFlowAuthorizeResponse
- * @param config
- * @returns
+ * Gets a token set from the token endpoint
  */
 async function codeFlowAccessTokenFlow(
   client: Client,

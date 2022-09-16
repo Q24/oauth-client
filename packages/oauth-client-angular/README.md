@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/v/@hawaii-framework/ngx-oidc-implicit.svg?style=flat-square)](https://www.npmjs.com/package/@hawaii-framework/ngx-oidc-implicit)
+[![npm](https://img.shields.io/npm/v/@ilionx/oauth-client-core.svg?style=flat-square)](https://www.npmjs.com/package/@ilionx/oauth-client-core)
 
 # OAuth client for Angular
 

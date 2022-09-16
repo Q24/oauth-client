@@ -3,9 +3,13 @@ import {
   getStoredCsrfToken,
   getStoredAuthResult,
   getIdTokenHint,
-  cleanSessionStorage,
+  cleanStorage,
   deleteStoredAuthResults,
   silentLogout,
+  AuthResultFilter,
+  AuthResult,
+  CsrfResult,
+  SilentLogoutConfig,
 } from "@ilionx/oauth-client-core";
 import { createContext } from "react";
 
@@ -15,14 +19,24 @@ export interface OAuthContextInterface {
 
   login: () => void;
 
-  getCsrfResult: typeof getCsrfResult;
-  getStoredCsrfToken: typeof getStoredCsrfToken;
-  getStoredAuthResult: typeof getStoredAuthResult;
+  getCsrfResult: () => Promise<CsrfResult>;
+  getStoredCsrfToken: () => string | null;
+  getStoredAuthResult: (
+    extraAuthResultFilters?: AuthResultFilter[]
+  ) => AuthResult | null;
   getAuthHeader: () => string | null;
-  getIdTokenHint: typeof getIdTokenHint;
-  cleanSessionStorage: typeof cleanSessionStorage;
-  deleteStoredAuthResults: typeof deleteStoredAuthResults;
-  silentLogout: typeof silentLogout;
+  getIdTokenHint: (
+    options?:
+      | {
+          regex: boolean;
+        }
+      | undefined
+  ) => string | null;
+  cleanStorage: () => void;
+  deleteStoredAuthResults: (
+    authResultFilter?: (authResult: Readonly<AuthResult>) => boolean
+  ) => void;
+  silentLogout: (silentLogoutConfig?: SilentLogoutConfig) => Promise<void>;
   silentRefresh: () => Promise<boolean>;
 }
 

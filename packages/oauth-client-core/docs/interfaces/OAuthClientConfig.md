@@ -8,48 +8,48 @@ Config Object for OIDC Service
 
 ### Properties
 
-- [client_id](OAuthClientclient.config.md#client_id)
-- [csrf_token_endpoint](OAuthClientclient.config.md#csrf_token_endpoint)
-- [debug](OAuthClientclient.config.md#debug)
-- [defaultAuthResultFilters](OAuthClientclient.config.md#defaultauthresultfilters)
-- [is_session_alive_endpoint](OAuthClientclient.config.md#is_session_alive_endpoint)
-- [issuedAtMaxOffset](OAuthClientclient.config.md#issuedatmaxoffset)
-- [issuer](OAuthClientclient.config.md#issuer)
-- [login_hint](OAuthClientclient.config.md#login_hint)
-- [post_logout_redirect_uri](OAuthClientclient.config.md#post_logout_redirect_uri)
-- [redirect_uri](OAuthClientclient.config.md#redirect_uri)
-- [response_type](OAuthClientclient.config.md#response_type)
-- [scope](OAuthClientclient.config.md#scope)
-- [silent_logout_uri](OAuthClientclient.config.md#silent_logout_uri)
-- [silent_refresh_uri](OAuthClientclient.config.md#silent_refresh_uri)
-- [trusted_audiences](OAuthClientclient.config.md#trusted_audiences)
-- [validate_token_endpoint](OAuthClientclient.config.md#validate_token_endpoint)
+- [client\_id](OAuthClientConfig.md#client_id)
+- [csrf\_token\_endpoint](OAuthClientConfig.md#csrf_token_endpoint)
+- [debug](OAuthClientConfig.md#debug)
+- [defaultAuthResultFilters](OAuthClientConfig.md#defaultauthresultfilters)
+- [is\_session\_alive\_endpoint](OAuthClientConfig.md#is_session_alive_endpoint)
+- [issuedAtMaxOffset](OAuthClientConfig.md#issuedatmaxoffset)
+- [issuer](OAuthClientConfig.md#issuer)
+- [login\_hint](OAuthClientConfig.md#login_hint)
+- [post\_logout\_redirect\_uri](OAuthClientConfig.md#post_logout_redirect_uri)
+- [redirect\_uri](OAuthClientConfig.md#redirect_uri)
+- [response\_type](OAuthClientConfig.md#response_type)
+- [scope](OAuthClientConfig.md#scope)
+- [silent\_logout\_uri](OAuthClientConfig.md#silent_logout_uri)
+- [silent\_refresh\_uri](OAuthClientConfig.md#silent_refresh_uri)
+- [trusted\_audiences](OAuthClientConfig.md#trusted_audiences)
+- [validate\_token\_endpoint](OAuthClientConfig.md#validate_token_endpoint)
 
 ## Properties
 
-### client_id
+### client\_id
 
-• **client_id**: `string`
+• **client\_id**: `string`
 
 Set the ID of your client
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:10](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L10)
+[client/client-config.ts:10](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L10)
 
----
+___
 
-### csrf_token_endpoint
+### csrf\_token\_endpoint
 
-• `Optional` **csrf_token_endpoint**: `string`
+• `Optional` **csrf\_token\_endpoint**: `string`
 
 CSRF token endpoint
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:47](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L47)
+[client/client-config.ts:47](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L47)
 
----
+___
 
 ### debug
 
@@ -59,9 +59,9 @@ Verbose logging of inner workings of the package.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:62](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L62)
+[client/client-config.ts:62](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L62)
 
----
+___
 
 ### defaultAuthResultFilters
 
@@ -71,21 +71,21 @@ A list of filters each auth result must adhere to.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:84](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L84)
+[client/client-config.ts:84](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L84)
 
----
+___
 
-### is_session_alive_endpoint
+### is\_session\_alive\_endpoint
 
-• `Optional` **is_session_alive_endpoint**: `string`
+• `Optional` **is\_session\_alive\_endpoint**: `string`
 
 Endpoint for checking if a session is still used somewhere
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:57](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L57)
+[client/client-config.ts:57](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L57)
 
----
+___
 
 ### issuedAtMaxOffset
 
@@ -96,9 +96,9 @@ authentication result.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:74](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L74)
+[client/client-config.ts:74](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L74)
 
----
+___
 
 ### issuer
 
@@ -108,13 +108,13 @@ The base issuer URL.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:79](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L79)
+[client/client-config.ts:79](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L79)
 
----
+___
 
-### login_hint
+### login\_hint
 
-• `Optional` **login_hint**: `string`
+• `Optional` **login\_hint**: `string`
 
 Hint to the Authorization Server about the login identifier the End-User
 might use to log in (if necessary). This hint can be used by a Relying
@@ -127,46 +127,46 @@ left to the OpenID Provider's discretion.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:96](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L96)
+[client/client-config.ts:96](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L96)
 
----
+___
 
-### post_logout_redirect_uri
+### post\_logout\_redirect\_uri
 
-• `Optional` **post_logout_redirect_uri**: `string`
+• `Optional` **post\_logout\_redirect\_uri**: `string`
 
 The URL you want to be redirected to after logging out
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:36](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L36)
+[client/client-config.ts:36](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L36)
 
----
+___
 
-### redirect_uri
+### redirect\_uri
 
-• **redirect_uri**: `string`
+• **redirect\_uri**: `string`
 
 The URL you want to be redirected to after redirect from Authorization
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:21](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L21)
+[client/client-config.ts:21](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L21)
 
----
+___
 
-### response_type
+### response\_type
 
-• **response_type**: `"id_token"` \| `"id_token token"` \| `"code"`
+• **response\_type**: ``"id_token"`` \| ``"id_token token"`` \| ``"code"``
 
 What type of token(s) you wish to receive
 In case op Open Id Connect this is usually `token id_token`
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:16](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L16)
+[client/client-config.ts:16](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L16)
 
----
+___
 
 ### scope
 
@@ -177,53 +177,53 @@ When using Open Id Connect, scope `openid` is mandatory
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:42](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L42)
+[client/client-config.ts:42](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L42)
 
----
+___
 
-### silent_logout_uri
+### silent\_logout\_uri
 
-• `Optional` **silent_logout_uri**: `string`
+• `Optional` **silent\_logout\_uri**: `string`
 
 The URL you want to use for a silent Logout, if your stack supports it.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:31](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L31)
+[client/client-config.ts:31](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L31)
 
----
+___
 
-### silent_refresh_uri
+### silent\_refresh\_uri
 
-• `Optional` **silent_refresh_uri**: `string`
+• `Optional` **silent\_refresh\_uri**: `string`
 
 The URL you want to be redirected to after redirect from Authorization, while doing a silent access token refresh
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:26](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L26)
+[client/client-config.ts:26](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L26)
 
----
+___
 
-### trusted_audiences
+### trusted\_audiences
 
-• `Optional` **trusted_audiences**: `string`[]
+• `Optional` **trusted\_audiences**: `string`[]
 
 Audiences (client_ids) other than the current client which are allowed in
 the audiences claim.
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:68](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L68)
+[client/client-config.ts:68](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L68)
 
----
+___
 
-### validate_token_endpoint
+### validate\_token\_endpoint
 
-• `Optional` **validate_token_endpoint**: `string`
+• `Optional` **validate\_token\_endpoint**: `string`
 
 Validate received token endpoint
 
 #### Defined in
 
-[configuration/model/client.config.model.ts:52](https://github.com/Q24/oauth-client/blob/5af8134/packages/oauth-client-core/src/configuration/model/client.config.model.ts#L52)
+[client/client-config.ts:52](https://github.com/Q24/oauth-client/blob/fb10545/packages/oauth-client-core/src/client/client-config.ts#L52)

@@ -31,6 +31,8 @@
     "jest": "^29.0.1",
     "jest-environment-jsdom": "^29.0.1",
     "parcel": "^2.7.0",
+    "@parcel/transformer-typescript-types": "^2.7.0",
+    "@parcel/packager-ts": "^2.7.0",
     "prettier": "^2.7.1",
     "tsconfig": "*",
     "typedoc": "^0.23.13",
@@ -39,6 +41,7 @@
   },
   "scripts": {
     "watch": "parcel watch",
+    "prebuild": "rm -rf dist",
     "build": "parcel build && npm run copyCleanHashFragment && npm run typedoc",
     "lint": "eslint *.ts*",
     "prepublishOnly": "npm run build",
@@ -54,5 +57,13 @@
   "types": "./dist/index.d.ts",
   "publishConfig": {
     "access": "public"
+  },
+  "targets": {
+    "main": {
+      "optimize": true
+    },
+    "module": {
+      "optimize": true
+    }
   }
 }

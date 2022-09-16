@@ -19,7 +19,7 @@ export interface IdTokenPayload {
   sub: string;
 
   /**
-   * Audience(s) that this ID Token is intended for. 
+   * Audience(s) that this ID Token is intended for.
    *
    * It MUST contain the OAuth 2.0 client_id of the Relying Party as an audience
    * value. It MAY also contain identifiers for other audiences. In the general
@@ -31,7 +31,7 @@ export interface IdTokenPayload {
 
   /**
    * Expiration time on or after which the ID Token MUST NOT be accepted for
-   * processing. 
+   * processing.
    *
    * The processing of this parameter requires that the current date/time MUST
    * be before the expiration date/time listed in the value. Implementers MAY
@@ -52,7 +52,7 @@ export interface IdTokenPayload {
   iat: number;
 
   /**
-   * Time when the End-User authentication occurred. 
+   * Time when the End-User authentication occurred.
    *
    * Its value is a JSON number representing the number of seconds from
    * 1970-01-01T00:00:00Z as measured in UTC until the date/time. When a max_age
@@ -62,7 +62,7 @@ export interface IdTokenPayload {
   auth_time?: string;
   /**
    * String value used to associate a Client session with an ID Token, and to
-   * mitigate replay attacks. 
+   * mitigate replay attacks.
    *
    * The value is passed through unmodified from the Authentication Request to
    * the ID Token. Clients MUST verify that the nonce Claim Value is equal to
@@ -74,7 +74,7 @@ export interface IdTokenPayload {
   nonce: string;
 
   /**
-   * Access Token hash value. 
+   * Access Token hash value.
    *
    * If the ID Token is issued with an access_token in an Implicit Flow, this is
    * REQUIRED, which is the case for this subset of OpenID Connect. Its value is
@@ -88,7 +88,7 @@ export interface IdTokenPayload {
   at_hash: string;
 
   /**
-   * Authentication Context Class Reference. 
+   * Authentication Context Class Reference.
    *
    * String specifying an Authentication Context Class Reference value that
    * identifies the Authentication Context Class that the authentication
@@ -106,7 +106,7 @@ export interface IdTokenPayload {
   acr?: string;
 
   /**
-   * Authentication Methods References. 
+   * Authentication Methods References.
    *
    * JSON array of strings that are identifiers for authentication methods used
    * in the authentication. For instance, values might indicate that both
@@ -130,7 +130,7 @@ export interface IdTokenPayload {
 
   /**
    * Public key used to check the signature of an ID Token issued by a
-   * Self-Issued OpenID Provider, as specified in Section 3. 
+   * Self-Issued OpenID Provider, as specified in Section 3.
    *
    * The key is a bare key in JWK [JWK] format (not an X.509 certificate value).
    * Use of the sub_jwk Claim is REQUIRED when the OP is a Self-Issued OP and is
@@ -138,4 +138,9 @@ export interface IdTokenPayload {
    * object.
    */
   sub_jwk?: unknown;
+
+  /**
+   * Session ID.
+   **/
+  sid?: string;
 }
