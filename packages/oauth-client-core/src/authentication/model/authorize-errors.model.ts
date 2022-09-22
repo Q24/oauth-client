@@ -3,7 +3,7 @@
  * https://openid.net/specs/openid-connect-core-1_0.html#AuthError
  */
 export type AuthorizeErrors =
-  | "invalid_client"
+  "invalid_client"
   | "unauthorized_client"
   | "invalid_grant"
   | "unsupported_grant_type"

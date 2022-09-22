@@ -4,6 +4,7 @@ import { generateNonce, saveNonce } from "../../utils/nonce";
 import { generateState, saveState } from "../../utils/state";
 import { createCodeChallenge } from "./code-challenge";
 import { storeAndGetNewCodeVerifier } from "./code-verifier";
+import {cleanCode} from "../../utils/url";
 
 import type { OAuthCodeFlowAuthorizeParameters } from "./model/authorization-request.model";
 
@@ -31,7 +32,7 @@ export function createCodeFlowAuthorizeRequestParameters(): OAuthCodeFlowAuthori
   }
 
   if (config.redirect_uri) {
-    oAuthCodeFlowAuthorizeParameters.redirect_uri = config.redirect_uri;
+    oAuthCodeFlowAuthorizeParameters.redirect_uri = cleanCode(config.redirect_uri);
   }
   if (config.scope) {
     oAuthCodeFlowAuthorizeParameters.scope = config.scope;
