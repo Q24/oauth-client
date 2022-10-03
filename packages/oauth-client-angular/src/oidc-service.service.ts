@@ -113,6 +113,9 @@ export class OidcService {
               observer.complete();
             }
         );
+      } else {
+        observer.next(false);
+        observer.complete();
       }
     });
   }
