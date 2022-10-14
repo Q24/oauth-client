@@ -1,7 +1,0 @@
-{
-  "private": false,
-  "name": "oauth-client",
-  "workspaces": [
-    "packages/*"
-  ]
-}
